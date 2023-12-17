@@ -33,7 +33,9 @@ CREATE TABLE `authors` (
 
 CREATE TABLE `articles` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
-     `author` bigint(20) unsigned NOT NULL COMMENT 'author info',
+     `author_id` bigint(20) unsigned NOT NULL COMMENT 'author info',
+     `source_site_id` bigint(20) unsigned NOT NULL COMMENT '来源网站',
+     `language` varchar(20) NOT NULL DEFAULT '' COMMENT '文章语言类型',
      `publish_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'publish time',
      `url` varchar(1024) NOT NULL DEFAULT '' COMMENT '文章链接',
      `type` varchar(20) NOT NULL DEFAULT '' COMMENT '文章类别',
@@ -43,7 +45,6 @@ CREATE TABLE `articles` (
      `score` tinyint(4) NOT NULL COMMENT '分数',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-     `updated_by` bigint(20) unsigned NOT NULL COMMENT 'update user',
      PRIMARY KEY (`id`),
      KEY `publish_at` (`publish_at`),
      KEY `type` (`type`)

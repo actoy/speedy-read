@@ -23,3 +23,13 @@ func (s *SpeedyReadImpl) GetSiteInfo(ctx context.Context, req *speedy_read.GetSi
 func (s *SpeedyReadImpl) CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest) (resp *speedy_read.CreateSiteResponse, err error) {
 	return rpc.NewSiteHandler().CreateSiteInfo(ctx, req)
 }
+
+// ArticleList implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) ArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (resp *speedy_read.GetArticleListResponse, err error) {
+	return rpc.NewArticleHandler().GetArticleList(ctx, req)
+}
+
+// CreateArticle implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest) (resp *speedy_read.CreateArticleResponse, err error) {
+	return rpc.NewArticleHandler().CreateArticle(ctx, req)
+}

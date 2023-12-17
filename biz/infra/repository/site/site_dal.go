@@ -2,8 +2,7 @@ package site
 
 import (
 	"context"
-	"github.com/cloudwego/kitex/tool/internal_pkg/log"
-	site "speedy/read/biz/domain/aggregates/site"
+	"gorm.io/gorm"
 	"speedy/read/biz/infra"
 	"time"
 )
@@ -11,21 +10,45 @@ import (
 type SiteRepo struct {
 }
 
-func (dal *SiteRepo) Save(ctx context.Context, siteDO *site.Site) (int64, error) {
-	siteDO.CreatedAt = time.Now()
-	siteDO.UpdatedAt = time.Now()
-	result := infra.DB.Create(siteDO)
+func (dal *SiteRepo) Save(ctx context.Context, sitePO *Site) (int64, error) {
+	sitePO.CreatedAt = time.Now()
+	sitePO.UpdatedAt = time.Now()
+	result := infra.DB.Create(sitePO)
 	if result.Error != nil {
-		log.Info(ctx, "save site error: %v", result.Error)
+		return int64(0), result.Error
 	}
-	return siteDO.ID, nil
+	return sitePO.ID, nil
 }
 
-func (dal *SiteRepo) GetSiteList(ctx context.Context) ([]*site.Site, error) {
-	siteList := make([]*site.Site, 0)
+func (dal *SiteRepo) GetSiteList(ctx context.Context) ([]*Site, error) {
+	siteList := make([]*Site, 0)
 	result := infra.DB.Find(&siteList)
-	if result.Error != nil {
-		log.Info(ctx, "save site error: %v", result.Error)
+	if result.Error == nil {
+		return siteList, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
 	}
-	return siteList, nil
+	return nil, result.Error
+}
+
+func (dal *SiteRepo) GetSiteByUrl(ctx context.Context, url string) (*Site, error) {
+	sitePO := &Site{}
+	result := infra.DB.Where("url = ?", url).First(&sitePO)
+	if result.Error == nil {
+		return sitePO, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}
+
+func (dal *SiteRepo) GetSiteByID(ctx context.Context, id int64) (*Site, error) {
+	sitePO := &Site{}
+	result := infra.DB.First(&sitePO, id)
+	if result.Error == nil {
+		return sitePO, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
 }

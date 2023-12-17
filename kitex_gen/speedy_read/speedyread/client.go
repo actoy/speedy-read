@@ -14,6 +14,8 @@ type Client interface {
 	Echo(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 	GetSiteInfo(ctx context.Context, req *speedy_read.GetSiteRequest, callOptions ...callopt.Option) (r *speedy_read.GetSiteResponse, err error)
 	CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest, callOptions ...callopt.Option) (r *speedy_read.CreateSiteResponse, err error)
+	ArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest, callOptions ...callopt.Option) (r *speedy_read.GetArticleListResponse, err error)
+	CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest, callOptions ...callopt.Option) (r *speedy_read.CreateArticleResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +60,14 @@ func (p *kSpeedyReadClient) GetSiteInfo(ctx context.Context, req *speedy_read.Ge
 func (p *kSpeedyReadClient) CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest, callOptions ...callopt.Option) (r *speedy_read.CreateSiteResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CreateSiteInfo(ctx, req)
+}
+
+func (p *kSpeedyReadClient) ArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest, callOptions ...callopt.Option) (r *speedy_read.GetArticleListResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ArticleList(ctx, req)
+}
+
+func (p *kSpeedyReadClient) CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest, callOptions ...callopt.Option) (r *speedy_read.CreateArticleResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CreateArticle(ctx, req)
 }

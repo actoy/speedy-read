@@ -22,6 +22,8 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"echo":           kitex.NewMethodInfo(echoHandler, newSpeedyReadEchoArgs, newSpeedyReadEchoResult, false),
 		"GetSiteInfo":    kitex.NewMethodInfo(getSiteInfoHandler, newSpeedyReadGetSiteInfoArgs, newSpeedyReadGetSiteInfoResult, false),
 		"CreateSiteInfo": kitex.NewMethodInfo(createSiteInfoHandler, newSpeedyReadCreateSiteInfoArgs, newSpeedyReadCreateSiteInfoResult, false),
+		"ArticleList":    kitex.NewMethodInfo(articleListHandler, newSpeedyReadArticleListArgs, newSpeedyReadArticleListResult, false),
+		"CreateArticle":  kitex.NewMethodInfo(createArticleHandler, newSpeedyReadCreateArticleArgs, newSpeedyReadCreateArticleResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -92,6 +94,42 @@ func newSpeedyReadCreateSiteInfoResult() interface{} {
 	return speedy_read.NewSpeedyReadCreateSiteInfoResult()
 }
 
+func articleListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadArticleListArgs)
+	realResult := result.(*speedy_read.SpeedyReadArticleListResult)
+	success, err := handler.(speedy_read.SpeedyRead).ArticleList(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadArticleListArgs() interface{} {
+	return speedy_read.NewSpeedyReadArticleListArgs()
+}
+
+func newSpeedyReadArticleListResult() interface{} {
+	return speedy_read.NewSpeedyReadArticleListResult()
+}
+
+func createArticleHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadCreateArticleArgs)
+	realResult := result.(*speedy_read.SpeedyReadCreateArticleResult)
+	success, err := handler.(speedy_read.SpeedyRead).CreateArticle(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadCreateArticleArgs() interface{} {
+	return speedy_read.NewSpeedyReadCreateArticleArgs()
+}
+
+func newSpeedyReadCreateArticleResult() interface{} {
+	return speedy_read.NewSpeedyReadCreateArticleResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -127,6 +165,26 @@ func (p *kClient) CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSit
 	_args.Req = req
 	var _result speedy_read.SpeedyReadCreateSiteInfoResult
 	if err = p.c.Call(ctx, "CreateSiteInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (r *speedy_read.GetArticleListResponse, err error) {
+	var _args speedy_read.SpeedyReadArticleListArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadArticleListResult
+	if err = p.c.Call(ctx, "ArticleList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest) (r *speedy_read.CreateArticleResponse, err error) {
+	var _args speedy_read.SpeedyReadCreateArticleArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadCreateArticleResult
+	if err = p.c.Call(ctx, "CreateArticle", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

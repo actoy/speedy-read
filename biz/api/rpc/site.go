@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"context"
-	"log"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/app"
 	apiConvert "speedy/read/biz/conversion/api"
 	site "speedy/read/biz/domain/aggregates/site"
@@ -27,7 +27,7 @@ func NewSiteHandler() SiteHandlerI {
 func (s *SiteHandler) GetSiteInfo(ctx context.Context, req *speedy_read.GetSiteRequest) (resp *speedy_read.GetSiteResponse, err error) {
 	siteInfoList, err := s.SiteSvc.GetSiteInfo(ctx)
 	if err != nil {
-		log.Println("create site error " + err.Error())
+		klog.CtxErrorf(ctx, "get site info error %v", err)
 		return nil, err
 	}
 	siteList := make([]*speedy_read.SiteInfo, 0)
@@ -48,7 +48,7 @@ func (s *SiteHandler) CreateSiteInfo(ctx context.Context, req *speedy_read.Creat
 	}
 	id, err := s.SiteSvc.CreateSite(ctx, siteDO)
 	if err != nil {
-		log.Println("create site error " + err.Error())
+		klog.CtxErrorf(ctx, "create site error %v", err)
 		return nil, err
 	}
 	return &speedy_read.CreateSiteResponse{
