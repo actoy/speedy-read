@@ -14,7 +14,7 @@ func (r *LabelRefRepo) Save(ctx context.Context, labelRefPO *LabelRef) (int64, e
 	// todo: 重复插入
 	labelRefPO.CreatedAt = time.Now()
 	labelRefPO.UpdatedAt = time.Now()
-	result := infra.DB.Create(labelRefPO)
+	result := infra.DB.WithContext(ctx).Create(labelRefPO)
 	if result.Error != nil {
 		return int64(0), result.Error
 	}
@@ -23,7 +23,7 @@ func (r *LabelRefRepo) Save(ctx context.Context, labelRefPO *LabelRef) (int64, e
 
 func (r *LabelRefRepo) GetLabelRefListBySourceIDs(ctx context.Context, sourceID int64, sourceType string) ([]*LabelRef, error) {
 	refs := make([]*LabelRef, 0)
-	result := infra.DB.
+	result := infra.DB.WithContext(ctx).
 		Where("source_id = ? AND source_type = ?", sourceID, sourceType).
 		Find(&refs)
 	if result.Error == nil {

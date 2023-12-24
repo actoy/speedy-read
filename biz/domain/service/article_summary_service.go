@@ -60,12 +60,14 @@ func (impl *ArticleSummaryService) GetArticleSummaryList(ctx context.Context, pa
 			continue
 		}
 		summary.LabelList = labelList
-		article, err := impl.articleRepo.GetArticleByID(ctx, summary.ID)
-		if err != nil {
-			klog.CtxErrorf(ctx, "get label list error %v", err)
-			continue
+		if summary.Article != nil {
+			article, err := impl.articleRepo.GetArticleByID(ctx, summary.Article.ID)
+			if err != nil {
+				klog.CtxErrorf(ctx, "get label list error %v", err)
+				continue
+			}
+			summary.Article = article
 		}
-		summary.Article = article
 	}
 	return resp, nil
 }

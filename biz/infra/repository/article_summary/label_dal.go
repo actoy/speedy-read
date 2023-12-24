@@ -12,7 +12,7 @@ type LabelRepo struct {
 
 func (r *LabelRepo) Save(ctx context.Context, labelPO *Label) (int64, error) {
 	existLabelPO := &Label{}
-	result := infra.DB.Where("description", labelPO.Description).Find(&existLabelPO)
+	result := infra.DB.WithContext(ctx).Where("description", labelPO.Description).Find(&existLabelPO)
 	if result.Error == nil && existLabelPO.ID != 0 {
 		return existLabelPO.ID, nil
 	}
@@ -27,8 +27,8 @@ func (r *LabelRepo) Save(ctx context.Context, labelPO *Label) (int64, error) {
 
 func (r *LabelRepo) GetLabelListBySource(ctx context.Context, sourceID int64, sourceType string) ([]*Label, error) {
 	labelList := make([]*Label, 0)
-	result := infra.DB.Table("labels").Select("labels.description").
-		Joins("inner join label_refs on labels.id = label_ref.label_id").
+	result := infra.DB.WithContext(ctx).Table("labels").Select("labels.description").
+		Joins("inner join label_refs on labels.id = label_refs.label_id").
 		Where("source_id = ? AND source_type = ?", sourceID, sourceType).
 		Find(&labelList)
 	if result.Error == nil {

@@ -13,7 +13,7 @@ type SiteRepo struct {
 func (dal *SiteRepo) Save(ctx context.Context, sitePO *Site) (int64, error) {
 	sitePO.CreatedAt = time.Now()
 	sitePO.UpdatedAt = time.Now()
-	result := infra.DB.Create(sitePO)
+	result := infra.DB.WithContext(ctx).Create(sitePO)
 	if result.Error != nil {
 		return int64(0), result.Error
 	}
@@ -22,7 +22,7 @@ func (dal *SiteRepo) Save(ctx context.Context, sitePO *Site) (int64, error) {
 
 func (dal *SiteRepo) GetSiteList(ctx context.Context) ([]*Site, error) {
 	siteList := make([]*Site, 0)
-	result := infra.DB.Find(&siteList)
+	result := infra.DB.WithContext(ctx).Find(&siteList)
 	if result.Error == nil {
 		return siteList, nil
 	} else if result.Error == gorm.ErrRecordNotFound {
@@ -33,7 +33,7 @@ func (dal *SiteRepo) GetSiteList(ctx context.Context) ([]*Site, error) {
 
 func (dal *SiteRepo) GetSiteByUrl(ctx context.Context, url string) (*Site, error) {
 	sitePO := &Site{}
-	result := infra.DB.Where("url = ?", url).First(&sitePO)
+	result := infra.DB.WithContext(ctx).Where("url = ?", url).First(&sitePO)
 	if result.Error == nil {
 		return sitePO, nil
 	} else if result.Error == gorm.ErrRecordNotFound {
@@ -44,7 +44,7 @@ func (dal *SiteRepo) GetSiteByUrl(ctx context.Context, url string) (*Site, error
 
 func (dal *SiteRepo) GetSiteByID(ctx context.Context, id int64) (*Site, error) {
 	sitePO := &Site{}
-	result := infra.DB.First(&sitePO, id)
+	result := infra.DB.WithContext(ctx).First(&sitePO, id)
 	if result.Error == nil {
 		return sitePO, nil
 	} else if result.Error == gorm.ErrRecordNotFound {

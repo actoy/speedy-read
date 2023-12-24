@@ -16,7 +16,7 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 		return int64(0), errors.New("params po is error")
 	}
 	existArticleSummaryPO := &ArticleSummary{}
-	result := infra.DB.Where("article_id", articleSummaryPO.ArticleID).Find(&existArticleSummaryPO)
+	result := infra.DB.WithContext(ctx).Where("article_id", articleSummaryPO.ArticleID).Find(&existArticleSummaryPO)
 	// update
 	if result.Error == nil && existArticleSummaryPO.ID != 0 {
 		existArticleSummaryPO.Title = articleSummaryPO.Title
@@ -39,7 +39,7 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 
 func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*ArticleSummary, error) {
 	summaryList := make([]*ArticleSummary, 0)
-	result := infra.DB.Limit(int(limit)).
+	result := infra.DB.WithContext(ctx).Limit(int(limit)).
 		Offset(int(offSet)).
 		Find(&summaryList)
 	if result.Error == nil {

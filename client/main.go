@@ -17,7 +17,9 @@ func main() {
 	//testCreateSite(client)
 	//testGetSiteList(client)
 	//testCreateArticle(client)
-	testGetArticleList(client)
+	//testGetArticleList(client)
+	//testSaveArticleSummary(client)
+	testArticleSummaryList(client)
 }
 
 func testCreateSite(client speedyread.Client) {
@@ -78,4 +80,32 @@ func testGetArticleList(client speedyread.Client) {
 		klog.Error(err)
 	}
 	fmt.Print(articleList)
+}
+
+func testSaveArticleSummary(client speedyread.Client) {
+	createParams := &speedy_read.SaveArticleSummaryRequest{
+		ArticleID:      int64(1),
+		Title:          "this is Title",
+		Content:        "this is content",
+		ContentSummary: "this is content summary",
+		Summary:        "this is Summary",
+		Outline:        "this is outline",
+		Tags:           []string{"tag1", "tag2"},
+	}
+	id, err := client.SaveArticleSummary(context.Background(), createParams)
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(id)
+}
+
+func testArticleSummaryList(client speedyread.Client) {
+	SummaryList, err := client.GetArticleSummaryList(context.Background(), &speedy_read.ArticleSummaryListRequest{
+		Limit:  10,
+		Offset: 0,
+	})
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(SummaryList)
 }

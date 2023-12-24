@@ -14,6 +14,10 @@ type ArticleSummary struct {
 	UpdatedAt      time.Time
 }
 
+func (ArticleSummary) TableName() string {
+	return "article_summarys"
+}
+
 type Label struct {
 	ID          int64
 	Description string

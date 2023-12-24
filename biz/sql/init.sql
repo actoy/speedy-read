@@ -64,7 +64,7 @@ CREATE TABLE `article_metas` (
 
 CREATE TABLE `article_summarys` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
-     `article_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
+     `article_id` bigint(20) unsigned NOT NULL,
      `title` text NOT NULL COMMENT '标题',
      `summary` text NOT NULL COMMENT '摘要',
      `content` longtext NOT NULL COMMENT '原文内容',
@@ -72,8 +72,6 @@ CREATE TABLE `article_summarys` (
      `outline` text NOT NULL COMMENT '提纲',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-     `created_by` bigint(20) unsigned NOT NULL COMMENT 'create user',
-     `updated_by` bigint(20) unsigned NOT NULL COMMENT 'update user',
      PRIMARY KEY (`id`),
      KEY `article_id` (`article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='article summary';
@@ -84,5 +82,15 @@ CREATE TABLE `labels` (
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
      PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='labels 标签列'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='labels 标签列';
 
+CREATE TABLE `label_refs` (
+     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
+     `source_id` bigint(20) unsigned NOT NULL,
+     `source_type` varchar(31) NOT NULL DEFAULT '',
+     `label_id` bigint(20) unsigned NOT NULL,
+     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
+     PRIMARY KEY (`id`),
+     KEY `source` (`source_id`, `source_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='labels 标签关联表';

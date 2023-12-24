@@ -12,7 +12,7 @@ type AuthorRepo struct {
 
 func (dal *AuthorRepo) GetAuthorByID(ctx context.Context, id int64) (*Author, error) {
 	authorPO := &Author{}
-	result := infra.DB.First(&authorPO, id)
+	result := infra.DB.WithContext(ctx).First(&authorPO, id)
 	if result.Error == nil {
 		return authorPO, nil
 	} else if result.Error == gorm.ErrRecordNotFound {
@@ -23,7 +23,7 @@ func (dal *AuthorRepo) GetAuthorByID(ctx context.Context, id int64) (*Author, er
 
 func (dal *AuthorRepo) GetAuthorByAuthorName(ctx context.Context, AuthorName string) (*Author, error) {
 	authorPO := &Author{}
-	result := infra.DB.Where("author_name = ?", AuthorName).First(&authorPO)
+	result := infra.DB.WithContext(ctx).Where("author_name = ?", AuthorName).First(&authorPO)
 	if result.Error == nil {
 		return authorPO, nil
 	} else if result.Error == gorm.ErrRecordNotFound {
@@ -35,7 +35,7 @@ func (dal *AuthorRepo) GetAuthorByAuthorName(ctx context.Context, AuthorName str
 func (dal *AuthorRepo) Save(ctx context.Context, authorPO *Author) (int64, error) {
 	authorPO.CreatedAt = time.Now()
 	authorPO.UpdatedAt = time.Now()
-	result := infra.DB.Create(authorPO)
+	result := infra.DB.WithContext(ctx).Create(authorPO)
 	if result.Error != nil {
 		return int64(0), result.Error
 	}

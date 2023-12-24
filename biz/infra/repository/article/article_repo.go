@@ -69,7 +69,7 @@ func (r *Repository) GetArticleByID(ctx context.Context, articleID int64) (*arti
 	}
 	sitePO, err := r.siteRepo.GetSiteByID(ctx, articlePO.SourceSiteID)
 	if err != nil {
-		klog.Error(ctx, "get author by id error: %v", err)
+		klog.Error(ctx, "get site by id error: %v", err)
 		return nil, err
 	}
 
