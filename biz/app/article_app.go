@@ -10,7 +10,8 @@ import (
 
 type ArticleApplicationI interface {
 	CreateArticle(ctx context.Context, articleDO *article.Article) (int64, error)
-	GetArticleList(ctx context.Context) ([]*article.Article, error)
+	GetArticleList(ctx context.Context, limit, offSet int32) ([]*article.Article, error)
+	RejectArticle(ctx context.Context, articleID int64) error
 }
 
 type ArticleApplication struct {
@@ -58,6 +59,10 @@ func (impl *ArticleApplication) CreateArticle(ctx context.Context, articleDO *ar
 	return impl.articleRepo.Create(ctx, articleDO)
 }
 
-func (impl *ArticleApplication) GetArticleList(ctx context.Context) ([]*article.Article, error) {
-	return impl.articleRepo.ArticleList(ctx)
+func (impl *ArticleApplication) GetArticleList(ctx context.Context, limit, offSet int32) ([]*article.Article, error) {
+	return impl.articleRepo.ArticleList(ctx, limit, offSet)
+}
+
+func (impl *ArticleApplication) RejectArticle(ctx context.Context, articleID int64) error {
+	return impl.articleRepo.SetStatusReject(ctx, articleID)
 }

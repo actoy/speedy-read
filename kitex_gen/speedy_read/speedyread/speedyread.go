@@ -19,11 +19,14 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "SpeedyRead"
 	handlerType := (*speedy_read.SpeedyRead)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"echo":           kitex.NewMethodInfo(echoHandler, newSpeedyReadEchoArgs, newSpeedyReadEchoResult, false),
-		"GetSiteInfo":    kitex.NewMethodInfo(getSiteInfoHandler, newSpeedyReadGetSiteInfoArgs, newSpeedyReadGetSiteInfoResult, false),
-		"CreateSiteInfo": kitex.NewMethodInfo(createSiteInfoHandler, newSpeedyReadCreateSiteInfoArgs, newSpeedyReadCreateSiteInfoResult, false),
-		"ArticleList":    kitex.NewMethodInfo(articleListHandler, newSpeedyReadArticleListArgs, newSpeedyReadArticleListResult, false),
-		"CreateArticle":  kitex.NewMethodInfo(createArticleHandler, newSpeedyReadCreateArticleArgs, newSpeedyReadCreateArticleResult, false),
+		"echo":                  kitex.NewMethodInfo(echoHandler, newSpeedyReadEchoArgs, newSpeedyReadEchoResult, false),
+		"GetSiteInfo":           kitex.NewMethodInfo(getSiteInfoHandler, newSpeedyReadGetSiteInfoArgs, newSpeedyReadGetSiteInfoResult, false),
+		"CreateSiteInfo":        kitex.NewMethodInfo(createSiteInfoHandler, newSpeedyReadCreateSiteInfoArgs, newSpeedyReadCreateSiteInfoResult, false),
+		"ArticleList":           kitex.NewMethodInfo(articleListHandler, newSpeedyReadArticleListArgs, newSpeedyReadArticleListResult, false),
+		"CreateArticle":         kitex.NewMethodInfo(createArticleHandler, newSpeedyReadCreateArticleArgs, newSpeedyReadCreateArticleResult, false),
+		"RejectArticle":         kitex.NewMethodInfo(rejectArticleHandler, newSpeedyReadRejectArticleArgs, newSpeedyReadRejectArticleResult, false),
+		"SaveArticleSummary":    kitex.NewMethodInfo(saveArticleSummaryHandler, newSpeedyReadSaveArticleSummaryArgs, newSpeedyReadSaveArticleSummaryResult, false),
+		"GetArticleSummaryList": kitex.NewMethodInfo(getArticleSummaryListHandler, newSpeedyReadGetArticleSummaryListArgs, newSpeedyReadGetArticleSummaryListResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -130,6 +133,60 @@ func newSpeedyReadCreateArticleResult() interface{} {
 	return speedy_read.NewSpeedyReadCreateArticleResult()
 }
 
+func rejectArticleHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadRejectArticleArgs)
+	realResult := result.(*speedy_read.SpeedyReadRejectArticleResult)
+	success, err := handler.(speedy_read.SpeedyRead).RejectArticle(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadRejectArticleArgs() interface{} {
+	return speedy_read.NewSpeedyReadRejectArticleArgs()
+}
+
+func newSpeedyReadRejectArticleResult() interface{} {
+	return speedy_read.NewSpeedyReadRejectArticleResult()
+}
+
+func saveArticleSummaryHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadSaveArticleSummaryArgs)
+	realResult := result.(*speedy_read.SpeedyReadSaveArticleSummaryResult)
+	success, err := handler.(speedy_read.SpeedyRead).SaveArticleSummary(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadSaveArticleSummaryArgs() interface{} {
+	return speedy_read.NewSpeedyReadSaveArticleSummaryArgs()
+}
+
+func newSpeedyReadSaveArticleSummaryResult() interface{} {
+	return speedy_read.NewSpeedyReadSaveArticleSummaryResult()
+}
+
+func getArticleSummaryListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadGetArticleSummaryListArgs)
+	realResult := result.(*speedy_read.SpeedyReadGetArticleSummaryListResult)
+	success, err := handler.(speedy_read.SpeedyRead).GetArticleSummaryList(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadGetArticleSummaryListArgs() interface{} {
+	return speedy_read.NewSpeedyReadGetArticleSummaryListArgs()
+}
+
+func newSpeedyReadGetArticleSummaryListResult() interface{} {
+	return speedy_read.NewSpeedyReadGetArticleSummaryListResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -185,6 +242,36 @@ func (p *kClient) CreateArticle(ctx context.Context, req *speedy_read.CreateArti
 	_args.Req = req
 	var _result speedy_read.SpeedyReadCreateArticleResult
 	if err = p.c.Call(ctx, "CreateArticle", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest) (r *speedy_read.RejectArticleResponse, err error) {
+	var _args speedy_read.SpeedyReadRejectArticleArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadRejectArticleResult
+	if err = p.c.Call(ctx, "RejectArticle", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest) (r *speedy_read.SaveArticleSummaryResponse, err error) {
+	var _args speedy_read.SpeedyReadSaveArticleSummaryArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadSaveArticleSummaryResult
+	if err = p.c.Call(ctx, "SaveArticleSummary", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest) (r *speedy_read.ArticleSummaryListResponse, err error) {
+	var _args speedy_read.SpeedyReadGetArticleSummaryListArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadGetArticleSummaryListResult
+	if err = p.c.Call(ctx, "GetArticleSummaryList", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -16,6 +16,9 @@ type Client interface {
 	CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest, callOptions ...callopt.Option) (r *speedy_read.CreateSiteResponse, err error)
 	ArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest, callOptions ...callopt.Option) (r *speedy_read.GetArticleListResponse, err error)
 	CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest, callOptions ...callopt.Option) (r *speedy_read.CreateArticleResponse, err error)
+	RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest, callOptions ...callopt.Option) (r *speedy_read.RejectArticleResponse, err error)
+	SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest, callOptions ...callopt.Option) (r *speedy_read.SaveArticleSummaryResponse, err error)
+	GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryListResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -70,4 +73,19 @@ func (p *kSpeedyReadClient) ArticleList(ctx context.Context, req *speedy_read.Ge
 func (p *kSpeedyReadClient) CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest, callOptions ...callopt.Option) (r *speedy_read.CreateArticleResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CreateArticle(ctx, req)
+}
+
+func (p *kSpeedyReadClient) RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest, callOptions ...callopt.Option) (r *speedy_read.RejectArticleResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.RejectArticle(ctx, req)
+}
+
+func (p *kSpeedyReadClient) SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest, callOptions ...callopt.Option) (r *speedy_read.SaveArticleSummaryResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.SaveArticleSummary(ctx, req)
+}
+
+func (p *kSpeedyReadClient) GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryListResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetArticleSummaryList(ctx, req)
 }

@@ -33,3 +33,18 @@ func (s *SpeedyReadImpl) ArticleList(ctx context.Context, req *speedy_read.GetAr
 func (s *SpeedyReadImpl) CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest) (resp *speedy_read.CreateArticleResponse, err error) {
 	return rpc.NewArticleHandler().CreateArticle(ctx, req)
 }
+
+// RejectArticle implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest) (resp *speedy_read.RejectArticleResponse, err error) {
+	return rpc.NewArticleHandler().RejectArticle(ctx, req)
+}
+
+// SaveArticleSummary implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest) (resp *speedy_read.SaveArticleSummaryResponse, err error) {
+	return rpc.NewArticleSummaryHandler().Save(ctx, req)
+}
+
+// GetArticleSummaryList implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest) (resp *speedy_read.ArticleSummaryListResponse, err error) {
+	return rpc.NewArticleSummaryHandler().ArticleSummaryList(ctx, req)
+}

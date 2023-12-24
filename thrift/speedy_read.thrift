@@ -80,12 +80,60 @@ struct CreateArticleResponse {
     1: i64 ID
 }
 
+struct RejectArticleRequest {
+    1: i64 ArticleID
+}
+
+
+struct RejectArticleResponse {
+    1: bool Success
+}
+
+struct SaveArticleSummaryRequest {
+    1: i64 ArticleID
+    2: string Title
+    3: string Content // 原文内容
+    4: string Summary // 摘要
+    5: string ContentSummary // 一句话原文
+    6: string Outline
+    7: list<string> tags
+}
+
+struct SaveArticleSummaryResponse {
+    1: i64 ID
+}
+
+struct ArticleSummaryListRequest {
+    1: i32 Limit
+    2: i32 Offset
+}
+
+struct ArticleSummary {
+    1: i64 ID
+    2: Article Article
+    3: string Title
+    4: string Content // 原文内容
+    5: string Summary // 摘要
+    6: string ContentSummary // 一句话原文
+    7: string Outline
+    8: list<string> tags
+    9: string CreatedAt
+}
+
+struct ArticleSummaryListResponse {
+    1: list<ArticleSummary> ArticleSummaryList
+}
+
 service SpeedyRead {
     Response echo(1: Request req)
     // site
-    GetSiteResponse GetSiteInfo (1: GetSiteRequest req)
-    CreateSiteResponse CreateSiteInfo (1: CreateSiteRequest req)
+    GetSiteResponse GetSiteInfo (1: GetSiteRequest req) // 获取抓取网站的信息
+    CreateSiteResponse CreateSiteInfo (1: CreateSiteRequest req) // 新增抓取网站
     // article
-    GetArticleListResponse ArticleList(1:GetArticleListRequest req)
-    CreateArticleResponse CreateArticle(1:CreateArticleRequest req)
+    GetArticleListResponse ArticleList(1:GetArticleListRequest req) // 后台文章列表
+    CreateArticleResponse CreateArticle(1:CreateArticleRequest req) // 创建文章，用于接口创建文章原内容
+    RejectArticleResponse RejectArticle(1:RejectArticleRequest req) // 审批拒绝此篇文章
+    // article_summary
+    SaveArticleSummaryResponse SaveArticleSummary(1:SaveArticleSummaryRequest req) // 文章总结生成后更新
+    ArticleSummaryListResponse GetArticleSummaryList(1: ArticleSummaryListRequest req)
 }

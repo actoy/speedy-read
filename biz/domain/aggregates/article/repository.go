@@ -4,7 +4,9 @@ import "context"
 
 type ArticleRepo interface {
 	Create(ctx context.Context, articleDO *Article) (int64, error)
-	ArticleList(ctx context.Context) ([]*Article, error)
+	ArticleList(ctx context.Context, limit, offSet int32) ([]*Article, error)
+	SetStatusReject(ctx context.Context, articleID int64) error
+	GetArticleByID(ctx context.Context, articleID int64) (*Article, error)
 }
 
 type AuthorRepo interface {

@@ -3,6 +3,7 @@ package article
 import (
 	"context"
 	"gorm.io/gorm"
+	"speedy/read/biz/domain/aggregates/article"
 	"speedy/read/biz/infra"
 	"time"
 )
@@ -20,13 +21,41 @@ func (dal *ArticleRepo) Save(ctx context.Context, articlePO *Article) (int64, er
 	return articlePO.ID, nil
 }
 
-func (dal *ArticleRepo) GetArticleList(ctx context.Context) ([]*Article, error) {
+func (dal *ArticleRepo) GetArticleList(ctx context.Context, limit, offSet int32) ([]*Article, error) {
 	articleList := make([]*Article, 0)
-	result := infra.DB.Find(&articleList)
+	result := infra.DB.
+		Where("status =?", article.StatusInit).
+		Limit(int(limit)).
+		Offset(int(offSet)).
+		Order("created_at").
+		Find(&articleList)
 	if result.Error == nil {
 		return articleList, nil
 	} else if result.Error == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
 	return nil, result.Error
+}
+
+func (dal *ArticleRepo) GetArticleListByIDs(ctx context.Context, articleIDs []int64) ([]*Article, error) {
+	articleList := make([]*Article, 0)
+	result := infra.DB.Find(&articleList, articleIDs)
+	if result.Error == nil {
+		return articleList, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}
+
+func (dal *ArticleRepo) SetStatusReject(ctx context.Context, articleID int64) error {
+	result := infra.DB.Model(&Article{}).
+		Where("id = ?", articleID).
+		Update("status", article.StatusReject)
+	if result.Error == nil {
+		return nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+	return result.Error
 }
