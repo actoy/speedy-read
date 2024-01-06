@@ -11,7 +11,7 @@ type SpeedyReadImpl struct{}
 
 // Echo implements the SpeedyReadImpl interface.
 func (s *SpeedyReadImpl) Echo(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
-	return rpc.NewArticleHandler().Echo(ctx, req)
+	return rpc.NewDataCrawHandler().Echo(ctx, req)
 }
 
 // GetSiteInfo implements the SpeedyReadImpl interface.

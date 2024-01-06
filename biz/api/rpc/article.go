@@ -24,11 +24,6 @@ func NewArticleHandler() *ArticleHandler {
 	}
 }
 
-// Echo implements the SpeedyReadImpl interface.
-func (s *ArticleHandler) Echo(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
-	return &speedy_read.Response{Message: req.Message}, nil
-}
-
 func (s *ArticleHandler) GetArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (resp *speedy_read.GetArticleListResponse, err error) {
 	articleInfoList, err := s.articleSvc.GetArticleList(ctx, req.GetLimit(), req.GetOffset())
 	if err != nil {
