@@ -37,3 +37,6 @@
   * gpg --export -a 3a79bd29 > 3a79bd29.asc
   * rpm --import 3a79bd29.asc
   * rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+
+# 服务启动
+* nohup sh build.sh 1>/dev/null 2>&1 &
