@@ -5,6 +5,9 @@ import (
 )
 
 func CovertPO(siteDO *site.Site) *Site {
+	if siteDO == nil {
+		return nil
+	}
 	return &Site{
 		ID:          siteDO.ID,
 		SourceID:    siteDO.SourceID,
@@ -17,6 +20,9 @@ func CovertPO(siteDO *site.Site) *Site {
 }
 
 func CovertDO(sitePO *Site) *site.Site {
+	if sitePO == nil {
+		return nil
+	}
 	return &site.Site{
 		ID:          sitePO.ID,
 		SourceID:    sitePO.SourceID,
