@@ -14,7 +14,7 @@ func Init() {
 }
 
 func initMysql() {
-	dsn := "root:@tcp(127.0.0.1:3306)/speedy_read?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:@Free4me@tcp(127.0.0.1:3306)/speedy_read?charset=utf8mb4&parseTime=True&loc=Local"
 	openDBErr := error(nil)
 	DB, openDBErr = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if openDBErr != nil {
