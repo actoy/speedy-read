@@ -17,11 +17,11 @@ func main() {
 	//testCreateSite(client)
 	//testGetSiteList(client)
 	//testCreateArticle(client)
-	//testGetArticleList(client)
+	testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
 	//testEcho(client)
-	testArticleCount(client)
+	//testArticleCount(client)
 }
 
 func testCreateSite(client speedyread.Client) {
@@ -77,7 +77,10 @@ func testCreateArticle(client speedyread.Client) {
 }
 
 func testGetArticleList(client speedyread.Client) {
-	articleList, err := client.ArticleList(context.Background(), &speedy_read.GetArticleListRequest{})
+	articleList, err := client.ArticleList(context.Background(), &speedy_read.GetArticleListRequest{
+		Offset: 0,
+		Limit:  10,
+	})
 	if err != nil {
 		klog.Error(err)
 	}

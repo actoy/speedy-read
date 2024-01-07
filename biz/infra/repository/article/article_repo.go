@@ -53,10 +53,15 @@ func (r *Repository) ArticleList(ctx context.Context, limit, offSet int32) ([]*a
 		}
 		sitePO, err := r.siteRepo.GetSiteByID(ctx, po.SourceSiteID)
 		if err != nil {
-			klog.Error(ctx, "get author by id error: %v", err)
+			klog.Error(ctx, "get site by id error: %v", err)
 			continue
 		}
-		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, sitePO))
+		metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
+		if err != nil {
+			klog.Error(ctx, "get article meta by id error: %v", err)
+			continue
+		}
+		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, sitePO, metaPOList))
 	}
 	return articleList, nil
 }
@@ -80,8 +85,13 @@ func (r *Repository) GetArticleByID(ctx context.Context, articleID int64) (*arti
 		klog.Error(ctx, "get site by id error: %v", err)
 		return nil, err
 	}
+	metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, articlePO.ID)
+	if err != nil {
+		klog.Error(ctx, "get article meta by id error: %v", err)
+		return nil, err
+	}
 
-	return ConvertArticlePOToDO(articlePO, authorPO, sitePO), nil
+	return ConvertArticlePOToDO(articlePO, authorPO, sitePO, metaPOList), nil
 }
 
 func (r *Repository) SetStatusReject(ctx context.Context, articleID int64) error {

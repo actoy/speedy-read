@@ -25,23 +25,24 @@ func ConvertArticleDOToPO(articleDO *article.Article) *Article {
 	}
 }
 
-func ConvertArticlePOToDO(articlePO *Article, authorPO *Author, sitePO *site.Site) *article.Article {
+func ConvertArticlePOToDO(articlePO *Article, authorPO *Author, sitePO *site.Site, metaPOList []*ArticleMeta) *article.Article {
 	if authorPO == nil {
 		return nil
 	}
 	return &article.Article{
-		ID:         articlePO.ID,
-		Author:     ConvertAuthorPOToDO(authorPO),
-		SourceSite: site.CovertDO(sitePO, nil),
-		Language:   articlePO.Language,
-		PublishAt:  articlePO.PublishAt,
-		Url:        articlePO.Url,
-		Type:       articlePO.Type,
-		Title:      articlePO.Title,
-		Content:    articlePO.Content,
-		Status:     articlePO.Status,
-		CreatedAt:  articlePO.CreatedAt,
-		UpdatedAt:  articlePO.UpdatedAt,
+		ID:              articlePO.ID,
+		Author:          ConvertAuthorPOToDO(authorPO),
+		SourceSite:      site.CovertDO(sitePO, nil),
+		ArticleMetaList: ConvertArticleMetaListPOToDO(metaPOList),
+		Language:        articlePO.Language,
+		PublishAt:       articlePO.PublishAt,
+		Url:             articlePO.Url,
+		Type:            articlePO.Type,
+		Title:           articlePO.Title,
+		Content:         articlePO.Content,
+		Status:          articlePO.Status,
+		CreatedAt:       articlePO.CreatedAt,
+		UpdatedAt:       articlePO.UpdatedAt,
 	}
 }
 
@@ -101,4 +102,12 @@ func ConvertArticleMetaPOToDO(metaPO *ArticleMeta) *article.ArticleMeta {
 		CreatedAt: metaPO.CreatedAt,
 		UpdatedAt: metaPO.UpdatedAt,
 	}
+}
+
+func ConvertArticleMetaListPOToDO(metaPOList []*ArticleMeta) []*article.ArticleMeta {
+	result := make([]*article.ArticleMeta, 0)
+	for _, metaPO := range metaPOList {
+		result = append(result, ConvertArticleMetaPOToDO(metaPO))
+	}
+	return result
 }
