@@ -39,7 +39,7 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*ArticleSummary, error) {
 	summaryList := make([]*ArticleSummary, 0)
 	result := infra.DB.WithContext(ctx).Limit(int(limit)).
-		Offset(int(offSet)).
+		Offset(int(offSet * limit)).
 		Find(&summaryList)
 	if result.Error == nil {
 		return summaryList, nil

@@ -26,7 +26,7 @@ func (dal *ArticleRepo) GetArticleList(ctx context.Context, limit, offSet int32)
 	result := infra.DB.WithContext(ctx).
 		Where("status =?", article.StatusInit).
 		Limit(int(limit)).
-		Offset(int(offSet)).
+		Offset(int(offSet * limit)).
 		Order("created_at").
 		Find(&articleList)
 	if result.Error == nil {
