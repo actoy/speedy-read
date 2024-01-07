@@ -43,11 +43,10 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 		},
 		LabelList:      labels,
 		Title:          req.Title,
-		Content:        req.Content,
 		ContentSummary: req.ContentSummary,
 		Summary:        req.Summary,
 		Outline:        req.Outline,
-	})
+	}, req.Content)
 	if err != nil {
 		klog.CtxErrorf(ctx, "create article summary error %v", err)
 		return nil, err
@@ -70,4 +69,9 @@ func (s *ArticleSummaryHandler) ArticleSummaryList(ctx context.Context, req *spe
 	return &speedy_read.ArticleSummaryListResponse{
 		ArticleSummaryList: summaryList,
 	}, nil
+}
+
+func (s *ArticleSummaryHandler) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (resp *speedy_read.ArticleSummaryCountResponse, err error) {
+	resp.Count = s.articleSummarySvc.ArticleSummaryCount(ctx)
+	return resp, nil
 }

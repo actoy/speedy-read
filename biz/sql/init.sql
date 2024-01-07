@@ -68,7 +68,6 @@ CREATE TABLE `article_summarys` (
      `article_id` bigint(20) unsigned NOT NULL,
      `title` text NOT NULL COMMENT '标题',
      `summary` text NOT NULL COMMENT '摘要',
-     `content` longtext NOT NULL COMMENT '原文内容',
      `content_summary` text NOT NULL COMMENT '一句话原文',
      `outline` text NOT NULL COMMENT '提纲',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',

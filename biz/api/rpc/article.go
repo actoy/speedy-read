@@ -13,6 +13,7 @@ type ArticleHandlerI interface {
 	GetArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (resp *speedy_read.GetArticleListResponse, err error)
 	CreateArticle(ctx context.Context, req *speedy_read.CreateArticleRequest) (resp *speedy_read.CreateArticleResponse, err error)
 	RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest) (resp *speedy_read.RejectArticleResponse, err error)
+	ArticleCount(ctx context.Context, req *speedy_read.ArticleCountRequest) (resp *speedy_read.ArticleCountResponse, err error)
 }
 
 type ArticleHandler struct {
@@ -62,4 +63,15 @@ func (s *ArticleHandler) RejectArticle(ctx context.Context, req *speedy_read.Rej
 	return &speedy_read.RejectArticleResponse{
 		Success: true,
 	}, nil
+}
+
+func (s *ArticleHandler) ArticleCount(ctx context.Context, req *speedy_read.ArticleCountRequest) (resp *speedy_read.ArticleCountResponse, err error) {
+	count, err := s.articleSvc.ArticleCount(ctx, req.GetStatus())
+	if err != nil {
+		klog.CtxErrorf(ctx, "get article count error %v", err)
+		resp.Count = 0
+		return resp, err
+	}
+	resp.Count = count
+	return resp, nil
 }

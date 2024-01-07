@@ -10,6 +10,7 @@ type SummaryListParams struct {
 type ArticleSummaryRepo interface {
 	CreateSummary(ctx context.Context, articleSummaryDO *ArticleSummary) (int64, error)
 	ArticleSummaryList(ctx context.Context, params SummaryListParams) ([]*ArticleSummary, error)
+	GetArticleSummaryCount(ctx context.Context) (int32, error)
 }
 
 type SourceType string

@@ -11,7 +11,6 @@ type ArticleSummary struct {
 	LabelList      []*Label
 	Title          string
 	Summary        string
-	Content        string
 	ContentSummary string
 	Outline        string
 	CreatedAt      time.Time

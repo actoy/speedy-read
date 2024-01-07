@@ -123,3 +123,11 @@ func (r *Repository) GetArticleMetaByArticleID(ctx context.Context, articleID in
 	}
 	return metaList, nil
 }
+
+func (r *Repository) SetStatusPass(ctx context.Context, articleID int64, content string) error {
+	return r.articleRepo.SetStatusPass(ctx, articleID, content)
+}
+
+func (r *Repository) GetArticleCount(ctx context.Context, status int32) (int32, error) {
+	return r.articleRepo.GetArticleCount(ctx, status)
+}

@@ -60,3 +60,7 @@ func (r *Repository) CreateLabel(ctx context.Context, descriptionList []string, 
 	}
 	return nil
 }
+
+func (r *Repository) GetArticleSummaryCount(ctx context.Context) (int32, error) {
+	return r.articleSummaryRepo.GetArticleSummaryCount(ctx)
+}

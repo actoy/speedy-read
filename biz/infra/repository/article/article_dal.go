@@ -59,3 +59,28 @@ func (dal *ArticleRepo) SetStatusReject(ctx context.Context, articleID int64) er
 	}
 	return result.Error
 }
+
+func (dal *ArticleRepo) SetStatusPass(ctx context.Context, articleID int64, content string) error {
+	result := infra.DB.WithContext(ctx).Model(&Article{}).
+		Where("id = ?", articleID).
+		Update("status", article.StatusReject).
+		Update("content", content)
+	if result.Error == nil {
+		return nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil
+	}
+	return result.Error
+}
+
+func (dal *ArticleRepo) GetArticleCount(ctx context.Context, status int32) (int32, error) {
+	var count int64
+	result := infra.DB.WithContext(ctx).
+		Where("status =?", status).Count(&count)
+	if result.Error == nil {
+		return int32(0), nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return int32(count), nil
+	}
+	return int32(0), result.Error
+}

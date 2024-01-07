@@ -22,7 +22,6 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 		existArticleSummaryPO.Title = articleSummaryPO.Title
 		existArticleSummaryPO.Summary = articleSummaryPO.Summary
 		existArticleSummaryPO.ContentSummary = articleSummaryPO.ContentSummary
-		existArticleSummaryPO.Content = articleSummaryPO.Content
 		existArticleSummaryPO.Outline = articleSummaryPO.Outline
 		existArticleSummaryPO.UpdatedAt = time.Now()
 		infra.DB.Save(existArticleSummaryPO)
@@ -48,4 +47,15 @@ func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, o
 		return summaryList, nil
 	}
 	return summaryList, result.Error
+}
+
+func (r *ArticleSummaryRepo) GetArticleSummaryCount(ctx context.Context) (int32, error) {
+	var count int64
+	result := infra.DB.WithContext(ctx).Count(&count)
+	if result.Error == nil {
+		return int32(0), nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return int32(count), nil
+	}
+	return int32(0), result.Error
 }

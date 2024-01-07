@@ -77,10 +77,14 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 			continue
 		}
 		itemType := ""
+		articleUrl := item.ArticleUrl
 		if strings.Contains(item.ArticleUrl, "article") {
 			itemType = article.TypeArticle
+			articleUrl = item.ArticleUrl
 		} else if strings.Contains(item.ArticleUrl, "news") {
 			itemType = article.TypeNew
+			flagList := strings.Split(item.Guid, ":")
+			articleUrl = "https://seekingalpha.com/news/" + flagList[2]
 		}
 		id, err := articleSvc.CreateArticle(ctx, &article.Article{
 			Author: &article.Author{
@@ -93,7 +97,7 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 			},
 			ArticleMetaList: dearSeekingAlphaMeta(item.Stock),
 			Status:          article.StatusInit,
-			Url:             item.ArticleUrl,
+			Url:             articleUrl,
 			Title:           item.Title,
 			PublishAt:       publishAt,
 			Type:            itemType,

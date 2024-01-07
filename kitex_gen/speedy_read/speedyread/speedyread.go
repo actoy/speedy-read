@@ -25,8 +25,10 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"ArticleList":           kitex.NewMethodInfo(articleListHandler, newSpeedyReadArticleListArgs, newSpeedyReadArticleListResult, false),
 		"CreateArticle":         kitex.NewMethodInfo(createArticleHandler, newSpeedyReadCreateArticleArgs, newSpeedyReadCreateArticleResult, false),
 		"RejectArticle":         kitex.NewMethodInfo(rejectArticleHandler, newSpeedyReadRejectArticleArgs, newSpeedyReadRejectArticleResult, false),
+		"ArticleCount":          kitex.NewMethodInfo(articleCountHandler, newSpeedyReadArticleCountArgs, newSpeedyReadArticleCountResult, false),
 		"SaveArticleSummary":    kitex.NewMethodInfo(saveArticleSummaryHandler, newSpeedyReadSaveArticleSummaryArgs, newSpeedyReadSaveArticleSummaryResult, false),
 		"GetArticleSummaryList": kitex.NewMethodInfo(getArticleSummaryListHandler, newSpeedyReadGetArticleSummaryListArgs, newSpeedyReadGetArticleSummaryListResult, false),
+		"ArticleSummaryCount":   kitex.NewMethodInfo(articleSummaryCountHandler, newSpeedyReadArticleSummaryCountArgs, newSpeedyReadArticleSummaryCountResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -151,6 +153,24 @@ func newSpeedyReadRejectArticleResult() interface{} {
 	return speedy_read.NewSpeedyReadRejectArticleResult()
 }
 
+func articleCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadArticleCountArgs)
+	realResult := result.(*speedy_read.SpeedyReadArticleCountResult)
+	success, err := handler.(speedy_read.SpeedyRead).ArticleCount(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadArticleCountArgs() interface{} {
+	return speedy_read.NewSpeedyReadArticleCountArgs()
+}
+
+func newSpeedyReadArticleCountResult() interface{} {
+	return speedy_read.NewSpeedyReadArticleCountResult()
+}
+
 func saveArticleSummaryHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*speedy_read.SpeedyReadSaveArticleSummaryArgs)
 	realResult := result.(*speedy_read.SpeedyReadSaveArticleSummaryResult)
@@ -185,6 +205,24 @@ func newSpeedyReadGetArticleSummaryListArgs() interface{} {
 
 func newSpeedyReadGetArticleSummaryListResult() interface{} {
 	return speedy_read.NewSpeedyReadGetArticleSummaryListResult()
+}
+
+func articleSummaryCountHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadArticleSummaryCountArgs)
+	realResult := result.(*speedy_read.SpeedyReadArticleSummaryCountResult)
+	success, err := handler.(speedy_read.SpeedyRead).ArticleSummaryCount(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadArticleSummaryCountArgs() interface{} {
+	return speedy_read.NewSpeedyReadArticleSummaryCountArgs()
+}
+
+func newSpeedyReadArticleSummaryCountResult() interface{} {
+	return speedy_read.NewSpeedyReadArticleSummaryCountResult()
 }
 
 type kClient struct {
@@ -257,6 +295,16 @@ func (p *kClient) RejectArticle(ctx context.Context, req *speedy_read.RejectArti
 	return _result.GetSuccess(), nil
 }
 
+func (p *kClient) ArticleCount(ctx context.Context, req *speedy_read.ArticleCountRequest) (r *speedy_read.ArticleCountResponse, err error) {
+	var _args speedy_read.SpeedyReadArticleCountArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadArticleCountResult
+	if err = p.c.Call(ctx, "ArticleCount", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
 func (p *kClient) SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest) (r *speedy_read.SaveArticleSummaryResponse, err error) {
 	var _args speedy_read.SpeedyReadSaveArticleSummaryArgs
 	_args.Req = req
@@ -272,6 +320,16 @@ func (p *kClient) GetArticleSummaryList(ctx context.Context, req *speedy_read.Ar
 	_args.Req = req
 	var _result speedy_read.SpeedyReadGetArticleSummaryListResult
 	if err = p.c.Call(ctx, "GetArticleSummaryList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (r *speedy_read.ArticleSummaryCountResponse, err error) {
+	var _args speedy_read.SpeedyReadArticleSummaryCountArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadArticleSummaryCountResult
+	if err = p.c.Call(ctx, "ArticleSummaryCount", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -7,6 +7,8 @@ type ArticleRepo interface {
 	ArticleList(ctx context.Context, limit, offSet int32) ([]*Article, error)
 	SetStatusReject(ctx context.Context, articleID int64) error
 	GetArticleByID(ctx context.Context, articleID int64) (*Article, error)
+	SetStatusPass(ctx context.Context, articleID int64, content string) error
+	GetArticleCount(ctx context.Context, status int32) (int32, error)
 }
 
 type AuthorRepo interface {

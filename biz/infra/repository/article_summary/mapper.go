@@ -24,7 +24,6 @@ func ConvertArticleSummaryPOToDO(summaryPO *ArticleSummary) *article_summary.Art
 		},
 		Title:          summaryPO.Title,
 		Summary:        summaryPO.Summary,
-		Content:        summaryPO.Content,
 		ContentSummary: summaryPO.ContentSummary,
 		Outline:        summaryPO.Outline,
 		CreatedAt:      summaryPO.CreatedAt,
@@ -58,7 +57,6 @@ func ConvertArticleSummaryDOToPO(do *article_summary.ArticleSummary) *ArticleSum
 		ArticleID:      do.Article.ID,
 		Title:          do.Title,
 		Summary:        do.Summary,
-		Content:        do.Content,
 		ContentSummary: do.ContentSummary,
 		Outline:        do.Outline,
 	}

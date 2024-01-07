@@ -48,3 +48,13 @@ func (s *SpeedyReadImpl) SaveArticleSummary(ctx context.Context, req *speedy_rea
 func (s *SpeedyReadImpl) GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest) (resp *speedy_read.ArticleSummaryListResponse, err error) {
 	return rpc.NewArticleSummaryHandler().ArticleSummaryList(ctx, req)
 }
+
+// ArticleCount implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) ArticleCount(ctx context.Context, req *speedy_read.ArticleCountRequest) (resp *speedy_read.ArticleCountResponse, err error) {
+	return rpc.NewArticleHandler().ArticleCount(ctx, req)
+}
+
+// ArticleSummaryCount implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (resp *speedy_read.ArticleSummaryCountResponse, err error) {
+	return rpc.NewArticleSummaryHandler().ArticleSummaryCount(ctx, req)
+}

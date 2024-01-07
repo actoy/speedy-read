@@ -7,7 +7,6 @@ type ArticleSummary struct {
 	ArticleID      int64
 	Title          string
 	Summary        string
-	Content        string
 	ContentSummary string
 	Outline        string
 	CreatedAt      time.Time

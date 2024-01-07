@@ -147,6 +147,22 @@ struct ArticleSummaryListResponse {
     1: list<ArticleSummary> ArticleSummaryList
 }
 
+struct ArticleCountRequest {
+    1: i32 Status
+}
+
+struct ArticleCountResponse {
+    1: i32 Count
+}
+
+struct ArticleSummaryCountRequest {
+
+}
+
+struct ArticleSummaryCountResponse {
+    1: i32 Count
+}
+
 service SpeedyRead {
     Response echo(1: Request req)
     // site
@@ -156,7 +172,9 @@ service SpeedyRead {
     GetArticleListResponse ArticleList(1:GetArticleListRequest req) // 后台文章列表
     CreateArticleResponse CreateArticle(1:CreateArticleRequest req) // 创建文章，用于接口创建文章原内容
     RejectArticleResponse RejectArticle(1:RejectArticleRequest req) // 审批拒绝此篇文章
+    ArticleCountResponse ArticleCount(1: ArticleCountRequest req) //
     // article_summary
     SaveArticleSummaryResponse SaveArticleSummary(1:SaveArticleSummaryRequest req) // 文章总结生成后更新
     ArticleSummaryListResponse GetArticleSummaryList(1: ArticleSummaryListRequest req)
+    ArticleSummaryCountResponse ArticleSummaryCount(1: ArticleSummaryCountRequest req) //
 }

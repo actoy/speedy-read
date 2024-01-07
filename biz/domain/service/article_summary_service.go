@@ -8,7 +8,7 @@ import (
 )
 
 type ArticleSummaryServiceI interface {
-	CreateArticleSummary(ctx context.Context, articleSummaryDO *article_summary.ArticleSummary) (int64, error)
+	CreateArticleSummary(ctx context.Context, articleSummaryDO *article_summary.ArticleSummary, content string) (int64, error)
 	GetArticleSummaryList(ctx context.Context, params article_summary.SummaryListParams) (
 		resp []*article_summary.ArticleSummary, err error)
 }
@@ -28,7 +28,8 @@ func NewArticleSummaryService(summaryRepo article_summary.ArticleSummaryRepo,
 	}
 }
 
-func (impl *ArticleSummaryService) CreateArticleSummary(ctx context.Context, articleSummaryDO *article_summary.ArticleSummary) (int64, error) {
+func (impl *ArticleSummaryService) CreateArticleSummary(ctx context.Context,
+	articleSummaryDO *article_summary.ArticleSummary, content string) (int64, error) {
 	id, err := impl.summaryRepo.CreateSummary(ctx, articleSummaryDO)
 	if err != nil {
 		return int64(0), err
@@ -44,6 +45,7 @@ func (impl *ArticleSummaryService) CreateArticleSummary(ctx context.Context, art
 	if err != nil {
 		return int64(0), err
 	}
+	impl.articleRepo.SetStatusPass(ctx, articleSummaryDO.Article.ID, content)
 	return id, nil
 }
 
