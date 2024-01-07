@@ -13,9 +13,8 @@ type SeekingChannel struct {
 
 type SeekingItem struct {
 	Title      string         `xml:"title"`
-	Link       string         `xml:"link"`
+	ArticleUrl string         `xml:"link"`
 	PubDate    string         `xml:"pubDate"`
-	ArticleUrl string         `xml:"guid"`
 	AuthorName string         `xml:"author_name"`
 	Stock      []SeekingStock `xml:"stock"`
 }
