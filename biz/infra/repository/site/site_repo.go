@@ -54,3 +54,15 @@ func (r *Repository) GetSiteByUrl(ctx context.Context, url string) (*site.Site, 
 	}
 	return CovertDO(sitePO, siteMetaPO), nil
 }
+
+func (r *Repository) GetSiteByID(ctx context.Context, id int64) (*site.Site, error) {
+	sitePO, err := r.SiteRepo.GetSiteByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	siteMetaPO, err := r.SiteMetaRepo.GetSiteMetaBySiteID(ctx, sitePO.ID)
+	if err != nil {
+		return nil, err
+	}
+	return CovertDO(sitePO, siteMetaPO), nil
+}

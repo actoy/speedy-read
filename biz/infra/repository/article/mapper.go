@@ -2,6 +2,7 @@ package article
 
 import (
 	"speedy/read/biz/domain/aggregates/article"
+	siteDomain "speedy/read/biz/domain/aggregates/site"
 	"speedy/read/biz/infra/repository/site"
 )
 
@@ -25,14 +26,14 @@ func ConvertArticleDOToPO(articleDO *article.Article) *Article {
 	}
 }
 
-func ConvertArticlePOToDO(articlePO *Article, authorPO *Author, sitePO *site.Site, metaPOList []*ArticleMeta) *article.Article {
+func ConvertArticlePOToDO(articlePO *Article, authorPO *Author, siteDO *siteDomain.Site, metaPOList []*ArticleMeta) *article.Article {
 	if authorPO == nil {
 		return nil
 	}
 	return &article.Article{
 		ID:              articlePO.ID,
 		Author:          ConvertAuthorPOToDO(authorPO),
-		SourceSite:      site.CovertDO(sitePO, nil),
+		SourceSite:      siteDO,
 		ArticleMetaList: ConvertArticleMetaListPOToDO(metaPOList),
 		Language:        articlePO.Language,
 		PublishAt:       articlePO.PublishAt,

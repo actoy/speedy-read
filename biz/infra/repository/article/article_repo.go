@@ -10,7 +10,7 @@ import (
 type Repository struct {
 	articleRepo     *ArticleRepo
 	authorRepo      *AuthorRepo
-	siteRepo        *site.SiteRepo
+	siteRepo        site.Repository
 	articleMetaRepo *ArticleMetaRepo
 }
 
@@ -18,7 +18,7 @@ func NewArticleRepository() article.ArticleRepo {
 	return &Repository{
 		articleRepo:     &ArticleRepo{},
 		authorRepo:      &AuthorRepo{},
-		siteRepo:        &site.SiteRepo{},
+		siteRepo:        site.Repository{},
 		articleMetaRepo: &ArticleMetaRepo{},
 	}
 }
@@ -51,17 +51,17 @@ func (r *Repository) ArticleList(ctx context.Context, limit, offSet int32) ([]*a
 			klog.Error(ctx, "get author by id error: %v", err)
 			continue
 		}
-		sitePO, err := r.siteRepo.GetSiteByID(ctx, po.SourceSiteID)
+		siteDO, err := r.siteRepo.GetSiteByID(ctx, po.SourceSiteID)
 		if err != nil {
 			klog.Error(ctx, "get site by id error: %v", err)
 			continue
 		}
-		metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
-		if err != nil {
-			klog.Error(ctx, "get article meta by id error: %v", err)
-			continue
-		}
-		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, sitePO, metaPOList))
+		//metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
+		//if err != nil {
+		//	klog.Error(ctx, "get article meta by id error: %v", err)
+		//	continue
+		//}
+		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, siteDO, []*ArticleMeta{}))
 	}
 	return articleList, nil
 }
@@ -80,7 +80,7 @@ func (r *Repository) GetArticleByID(ctx context.Context, articleID int64) (*arti
 		klog.Error(ctx, "get author by id error: %v", err)
 		return nil, err
 	}
-	sitePO, err := r.siteRepo.GetSiteByID(ctx, articlePO.SourceSiteID)
+	siteDO, err := r.siteRepo.GetSiteByID(ctx, articlePO.SourceSiteID)
 	if err != nil {
 		klog.Error(ctx, "get site by id error: %v", err)
 		return nil, err
@@ -91,7 +91,7 @@ func (r *Repository) GetArticleByID(ctx context.Context, articleID int64) (*arti
 		return nil, err
 	}
 
-	return ConvertArticlePOToDO(articlePO, authorPO, sitePO, metaPOList), nil
+	return ConvertArticlePOToDO(articlePO, authorPO, siteDO, metaPOList), nil
 }
 
 func (r *Repository) SetStatusReject(ctx context.Context, articleID int64) error {
