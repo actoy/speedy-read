@@ -72,6 +72,8 @@ func (s *ArticleSummaryHandler) ArticleSummaryList(ctx context.Context, req *spe
 }
 
 func (s *ArticleSummaryHandler) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (resp *speedy_read.ArticleSummaryCountResponse, err error) {
-	resp.Count = s.articleSummarySvc.ArticleSummaryCount(ctx)
-	return resp, nil
+	count := s.articleSummarySvc.ArticleSummaryCount(ctx)
+	return &speedy_read.ArticleSummaryCountResponse{
+		Count: count,
+	}, nil
 }

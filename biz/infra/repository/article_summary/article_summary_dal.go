@@ -51,11 +51,9 @@ func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, o
 
 func (r *ArticleSummaryRepo) GetArticleSummaryCount(ctx context.Context) (int32, error) {
 	var count int64
-	result := infra.DB.WithContext(ctx).Count(&count)
-	if result.Error == nil {
+	result := infra.DB.WithContext(ctx).Model(&ArticleSummary{}).Count(&count)
+	if result.Error != nil {
 		return int32(0), nil
-	} else if result.Error == gorm.ErrRecordNotFound {
-		return int32(count), nil
 	}
-	return int32(0), result.Error
+	return int32(count), result.Error
 }

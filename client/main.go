@@ -20,7 +20,8 @@ func main() {
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	testEcho(client)
+	//testEcho(client)
+	testArticleCount(client)
 }
 
 func testCreateSite(client speedyread.Client) {
@@ -116,6 +117,17 @@ func testEcho(client speedyread.Client) {
 		Message: "message",
 	}
 	resp, err := client.Echo(context.Background(), req)
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(resp)
+}
+
+func testArticleCount(client speedyread.Client) {
+	req := &speedy_read.ArticleCountRequest{
+		Status: 1,
+	}
+	resp, err := client.ArticleCount(context.Background(), req)
 	if err != nil {
 		klog.Error(err)
 	}

@@ -69,9 +69,11 @@ func (s *ArticleHandler) ArticleCount(ctx context.Context, req *speedy_read.Arti
 	count, err := s.articleSvc.ArticleCount(ctx, req.GetStatus())
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article count error %v", err)
-		resp.Count = 0
-		return resp, err
+		return &speedy_read.ArticleCountResponse{
+			Count: 0,
+		}, err
 	}
-	resp.Count = count
-	return resp, nil
+	return &speedy_read.ArticleCountResponse{
+		Count: count,
+	}, nil
 }
