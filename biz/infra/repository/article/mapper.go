@@ -32,7 +32,7 @@ func ConvertArticlePOToDO(articlePO *Article, authorPO *Author, sitePO *site.Sit
 	return &article.Article{
 		ID:         articlePO.ID,
 		Author:     ConvertAuthorPOToDO(authorPO),
-		SourceSite: site.CovertDO(sitePO),
+		SourceSite: site.CovertDO(sitePO, nil),
 		Language:   articlePO.Language,
 		PublishAt:  articlePO.PublishAt,
 		Url:        articlePO.Url,
@@ -70,5 +70,35 @@ func ConvertAuthorPOToDO(authorPO *Author) *article.Author {
 		Image:      authorPO.Image,
 		CreatedAt:  authorPO.CreatedAt,
 		UpdatedAt:  authorPO.UpdatedAt,
+	}
+}
+
+func ConvertArticleMetaDOToPO(metaDO *article.ArticleMeta) *ArticleMeta {
+	if metaDO == nil {
+		return nil
+	}
+	return &ArticleMeta{
+		ID:        metaDO.ID,
+		ArticleID: metaDO.ArticleID,
+		MetaType:  metaDO.MetaType,
+		MetaKey:   metaDO.MetaKey,
+		MetaValue: metaDO.MetaValue,
+		CreatedAt: metaDO.CreatedAt,
+		UpdatedAt: metaDO.UpdatedAt,
+	}
+}
+
+func ConvertArticleMetaPOToDO(metaPO *ArticleMeta) *article.ArticleMeta {
+	if metaPO == nil {
+		return nil
+	}
+	return &article.ArticleMeta{
+		ID:        metaPO.ID,
+		ArticleID: metaPO.ArticleID,
+		MetaType:  metaPO.MetaType,
+		MetaKey:   metaPO.MetaKey,
+		MetaValue: metaPO.MetaValue,
+		CreatedAt: metaPO.CreatedAt,
+		UpdatedAt: metaPO.UpdatedAt,
 	}
 }

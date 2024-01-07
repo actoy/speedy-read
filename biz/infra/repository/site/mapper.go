@@ -10,8 +10,6 @@ func CovertPO(siteDO *site.Site) *Site {
 	}
 	return &Site{
 		ID:          siteDO.ID,
-		SourceID:    siteDO.SourceID,
-		SourceType:  siteDO.SourceType,
 		Url:         siteDO.Url,
 		Description: siteDO.Description,
 		Tag:         siteDO.Tag,
@@ -20,18 +18,43 @@ func CovertPO(siteDO *site.Site) *Site {
 	}
 }
 
-func CovertDO(sitePO *Site) *site.Site {
+func ConvertMetaDOToPO(metaDO *site.SiteMeta) *SiteMeta {
+	if metaDO == nil {
+		return nil
+	}
+	return &SiteMeta{
+		ID:        metaDO.ID,
+		SiteID:    metaDO.SiteID,
+		MetaType:  metaDO.MetaType,
+		MetaKey:   metaDO.MetaKey,
+		MetaValue: metaDO.MetaValue,
+	}
+}
+
+func CovertDO(sitePO *Site, metaPO *SiteMeta) *site.Site {
 	if sitePO == nil {
 		return nil
 	}
 	return &site.Site{
 		ID:          sitePO.ID,
-		SourceID:    sitePO.SourceID,
-		SourceType:  sitePO.SourceType,
+		SiteMeta:    ConvertMetaPOToDO(metaPO),
 		Url:         sitePO.Url,
 		Description: sitePO.Description,
 		Tag:         sitePO.Tag,
 		CreatedAt:   sitePO.CreatedAt,
 		UpdatedAt:   sitePO.UpdatedAt,
+	}
+}
+
+func ConvertMetaPOToDO(metaPO *SiteMeta) *site.SiteMeta {
+	if metaPO == nil {
+		return nil
+	}
+	return &site.SiteMeta{
+		ID:        metaPO.ID,
+		SiteID:    metaPO.SiteID,
+		MetaType:  metaPO.MetaType,
+		MetaKey:   metaPO.MetaKey,
+		MetaValue: metaPO.MetaValue,
 	}
 }

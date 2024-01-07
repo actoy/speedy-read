@@ -9,10 +9,17 @@ import (
 func SiteDOToThrift(siteDO *site.Site) *speedy_read.SiteInfo {
 	return &speedy_read.SiteInfo{
 		ID:          utils.Int64ToString(siteDO.ID),
-		SourceID:    utils.Int64ToString(siteDO.SourceID),
-		SourceType:  siteDO.SourceType,
+		SiteMeta:    SiteMetaDOToThrift(siteDO.SiteMeta),
 		Url:         siteDO.Url,
 		Description: siteDO.Description,
 		Tag:         siteDO.Tag,
+	}
+}
+
+func SiteMetaDOToThrift(siteMetaDO *site.SiteMeta) *speedy_read.SiteMeta {
+	return &speedy_read.SiteMeta{
+		MetaType:  siteMetaDO.MetaType,
+		MetaValue: siteMetaDO.MetaValue,
+		MetaKey:   siteMetaDO.MetaKey,
 	}
 }

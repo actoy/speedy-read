@@ -42,10 +42,14 @@ func (s *SiteHandler) GetSiteInfo(ctx context.Context, req *speedy_read.GetSiteR
 
 func (s *SiteHandler) CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest) (resp *speedy_read.CreateSiteResponse, err error) {
 	siteDO := &site.Site{
-		SourceID:    utils.StringToInt64(req.SourceID),
-		SourceType:  req.SourceType,
 		Url:         req.Url,
 		Description: req.Description,
+		SiteMeta: &site.SiteMeta{
+			MetaType:  req.MetaType,
+			MetaValue: req.MetaValue,
+			MetaKey:   req.MetaKey,
+		},
+		Tag: req.Tag,
 	}
 	id, err := s.SiteSvc.CreateSite(ctx, siteDO)
 	if err != nil {

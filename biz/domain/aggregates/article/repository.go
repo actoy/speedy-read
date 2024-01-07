@@ -14,3 +14,8 @@ type AuthorRepo interface {
 	GetAuthorByID(ctx context.Context, id int64) (*Author, error)
 	GetAuthorByAuthorName(ctx context.Context, AuthorName string) (*Author, error)
 }
+
+type ArticleMetaRepo interface {
+	CreateArticleMeta(ctx context.Context, articleMetaOD *ArticleMeta) (int64, error)
+	GetArticleMetaByArticleID(ctx context.Context, articleID int64) ([]*ArticleMeta, error)
+}

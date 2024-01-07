@@ -18,6 +18,14 @@ func (c *ArticleConvertImpl) ArticleDOToThrift(source *article.Article) *speedyr
 		speedy_readArticle.ID = api.Int64ToString((*source).ID)
 		speedy_readArticle.Author = c.pArticleAuthorToPSpeedy_readAuthor((*source).Author)
 		speedy_readArticle.Site = c.pSiteSiteToPSpeedy_readSiteInfo((*source).SourceSite)
+		var pSpeedy_readArticleMetaList []*speedyread.ArticleMeta
+		if (*source).ArticleMetaList != nil {
+			pSpeedy_readArticleMetaList = make([]*speedyread.ArticleMeta, len((*source).ArticleMetaList))
+			for i := 0; i < len((*source).ArticleMetaList); i++ {
+				pSpeedy_readArticleMetaList[i] = c.pArticleArticleMetaToPSpeedy_readArticleMeta((*source).ArticleMetaList[i])
+			}
+		}
+		speedy_readArticle.ArticleMetaList = pSpeedy_readArticleMetaList
 		speedy_readArticle.Language = (*source).Language
 		speedy_readArticle.PublishAt = api.TimeToString((*source).PublishAt)
 		speedy_readArticle.Url = (*source).Url
@@ -39,6 +47,14 @@ func (c *ArticleConvertImpl) ArticleThriftToDO(source *speedyread.Article) *arti
 		articleArticle.ID = api.StringToInt64((*source).ID)
 		articleArticle.Author = c.pSpeedy_readAuthorToPArticleAuthor((*source).Author)
 		articleArticle.SourceSite = c.pSpeedy_readSiteInfoToPSiteSite((*source).Site)
+		var pArticleArticleMetaList []*article.ArticleMeta
+		if (*source).ArticleMetaList != nil {
+			pArticleArticleMetaList = make([]*article.ArticleMeta, len((*source).ArticleMetaList))
+			for i := 0; i < len((*source).ArticleMetaList); i++ {
+				pArticleArticleMetaList[i] = c.pSpeedy_readArticleMetaToPArticleArticleMeta((*source).ArticleMetaList[i])
+			}
+		}
+		articleArticle.ArticleMetaList = pArticleArticleMetaList
 		articleArticle.Language = (*source).Language
 		articleArticle.PublishAt = api.StringToTime((*source).PublishAt)
 		articleArticle.Url = (*source).Url
@@ -52,6 +68,21 @@ func (c *ArticleConvertImpl) ArticleThriftToDO(source *speedyread.Article) *arti
 		pArticleArticle = &articleArticle
 	}
 	return pArticleArticle
+}
+func (c *ArticleConvertImpl) pArticleArticleMetaToPSpeedy_readArticleMeta(source *article.ArticleMeta) *speedyread.ArticleMeta {
+	var pSpeedy_readArticleMeta *speedyread.ArticleMeta
+	if source != nil {
+		var speedy_readArticleMeta speedyread.ArticleMeta
+		speedy_readArticleMeta.ID = api.Int64ToString((*source).ID)
+		speedy_readArticleMeta.ArticleID = api.Int64ToString((*source).ArticleID)
+		speedy_readArticleMeta.MetaType = (*source).MetaType
+		speedy_readArticleMeta.MetaKey = (*source).MetaKey
+		speedy_readArticleMeta.MetaValue = (*source).MetaValue
+		speedy_readArticleMeta.CreatedAt = api.TimeToString((*source).CreatedAt)
+		speedy_readArticleMeta.UpdatedAt = api.TimeToString((*source).UpdatedAt)
+		pSpeedy_readArticleMeta = &speedy_readArticleMeta
+	}
+	return pSpeedy_readArticleMeta
 }
 func (c *ArticleConvertImpl) pArticleAuthorToPSpeedy_readAuthor(source *article.Author) *speedyread.Author {
 	var pSpeedy_readAuthor *speedyread.Author
@@ -67,13 +98,27 @@ func (c *ArticleConvertImpl) pArticleAuthorToPSpeedy_readAuthor(source *article.
 	}
 	return pSpeedy_readAuthor
 }
+func (c *ArticleConvertImpl) pSiteSiteMetaToPSpeedy_readSiteMeta(source *site.SiteMeta) *speedyread.SiteMeta {
+	var pSpeedy_readSiteMeta *speedyread.SiteMeta
+	if source != nil {
+		var speedy_readSiteMeta speedyread.SiteMeta
+		speedy_readSiteMeta.ID = api.Int64ToString((*source).ID)
+		speedy_readSiteMeta.SiteID = api.Int64ToString((*source).SiteID)
+		speedy_readSiteMeta.MetaType = (*source).MetaType
+		speedy_readSiteMeta.MetaKey = (*source).MetaKey
+		speedy_readSiteMeta.MetaValue = (*source).MetaValue
+		speedy_readSiteMeta.CreatedAt = api.TimeToString((*source).CreatedAt)
+		speedy_readSiteMeta.UpdatedAt = api.TimeToString((*source).UpdatedAt)
+		pSpeedy_readSiteMeta = &speedy_readSiteMeta
+	}
+	return pSpeedy_readSiteMeta
+}
 func (c *ArticleConvertImpl) pSiteSiteToPSpeedy_readSiteInfo(source *site.Site) *speedyread.SiteInfo {
 	var pSpeedy_readSiteInfo *speedyread.SiteInfo
 	if source != nil {
 		var speedy_readSiteInfo speedyread.SiteInfo
 		speedy_readSiteInfo.ID = api.Int64ToString((*source).ID)
-		speedy_readSiteInfo.SourceID = api.Int64ToString((*source).SourceID)
-		speedy_readSiteInfo.SourceType = (*source).SourceType
+		speedy_readSiteInfo.SiteMeta = c.pSiteSiteMetaToPSpeedy_readSiteMeta((*source).SiteMeta)
 		speedy_readSiteInfo.Url = (*source).Url
 		speedy_readSiteInfo.Description = (*source).Description
 		speedy_readSiteInfo.Tag = (*source).Tag
@@ -82,6 +127,21 @@ func (c *ArticleConvertImpl) pSiteSiteToPSpeedy_readSiteInfo(source *site.Site) 
 		pSpeedy_readSiteInfo = &speedy_readSiteInfo
 	}
 	return pSpeedy_readSiteInfo
+}
+func (c *ArticleConvertImpl) pSpeedy_readArticleMetaToPArticleArticleMeta(source *speedyread.ArticleMeta) *article.ArticleMeta {
+	var pArticleArticleMeta *article.ArticleMeta
+	if source != nil {
+		var articleArticleMeta article.ArticleMeta
+		articleArticleMeta.ID = api.StringToInt64((*source).ID)
+		articleArticleMeta.ArticleID = api.StringToInt64((*source).ArticleID)
+		articleArticleMeta.MetaType = (*source).MetaType
+		articleArticleMeta.MetaKey = (*source).MetaKey
+		articleArticleMeta.MetaValue = (*source).MetaValue
+		articleArticleMeta.CreatedAt = api.StringToTime((*source).CreatedAt)
+		articleArticleMeta.UpdatedAt = api.StringToTime((*source).UpdatedAt)
+		pArticleArticleMeta = &articleArticleMeta
+	}
+	return pArticleArticleMeta
 }
 func (c *ArticleConvertImpl) pSpeedy_readAuthorToPArticleAuthor(source *speedyread.Author) *article.Author {
 	var pArticleAuthor *article.Author
@@ -102,8 +162,7 @@ func (c *ArticleConvertImpl) pSpeedy_readSiteInfoToPSiteSite(source *speedyread.
 	if source != nil {
 		var siteSite site.Site
 		siteSite.ID = api.StringToInt64((*source).ID)
-		siteSite.SourceID = api.StringToInt64((*source).SourceID)
-		siteSite.SourceType = (*source).SourceType
+		siteSite.SiteMeta = c.pSpeedy_readSiteMetaToPSiteSiteMeta((*source).SiteMeta)
 		siteSite.Url = (*source).Url
 		siteSite.Description = (*source).Description
 		siteSite.Tag = (*source).Tag
@@ -112,4 +171,19 @@ func (c *ArticleConvertImpl) pSpeedy_readSiteInfoToPSiteSite(source *speedyread.
 		pSiteSite = &siteSite
 	}
 	return pSiteSite
+}
+func (c *ArticleConvertImpl) pSpeedy_readSiteMetaToPSiteSiteMeta(source *speedyread.SiteMeta) *site.SiteMeta {
+	var pSiteSiteMeta *site.SiteMeta
+	if source != nil {
+		var siteSiteMeta site.SiteMeta
+		siteSiteMeta.ID = api.StringToInt64((*source).ID)
+		siteSiteMeta.SiteID = api.StringToInt64((*source).SiteID)
+		siteSiteMeta.MetaType = (*source).MetaType
+		siteSiteMeta.MetaKey = (*source).MetaKey
+		siteSiteMeta.MetaValue = (*source).MetaValue
+		siteSiteMeta.CreatedAt = api.StringToTime((*source).CreatedAt)
+		siteSiteMeta.UpdatedAt = api.StringToTime((*source).UpdatedAt)
+		pSiteSiteMeta = &siteSiteMeta
+	}
+	return pSiteSiteMeta
 }

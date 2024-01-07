@@ -8,22 +8,30 @@ import (
 )
 
 type Repository struct {
-	articleRepo *ArticleRepo
-	authorRepo  *AuthorRepo
-	siteRepo    *site.SiteRepo
+	articleRepo     *ArticleRepo
+	authorRepo      *AuthorRepo
+	siteRepo        *site.SiteRepo
+	articleMetaRepo *ArticleMetaRepo
 }
 
 func NewArticleRepository() article.ArticleRepo {
 	return &Repository{
-		articleRepo: &ArticleRepo{},
-		authorRepo:  &AuthorRepo{},
-		siteRepo:    &site.SiteRepo{},
+		articleRepo:     &ArticleRepo{},
+		authorRepo:      &AuthorRepo{},
+		siteRepo:        &site.SiteRepo{},
+		articleMetaRepo: &ArticleMetaRepo{},
 	}
 }
 
 func NewAuthorRepository() article.AuthorRepo {
 	return &Repository{
 		authorRepo: &AuthorRepo{},
+	}
+}
+
+func NewArticleMetaRepository() article.ArticleMetaRepo {
+	return &Repository{
+		articleMetaRepo: &ArticleMetaRepo{},
 	}
 }
 
@@ -98,4 +106,20 @@ func (r *Repository) GetAuthorByID(ctx context.Context, id int64) (*article.Auth
 
 func (r *Repository) CreateAuthor(ctx context.Context, authorDO *article.Author) (int64, error) {
 	return r.authorRepo.Save(ctx, ConvertAuthorDOToPO(authorDO))
+}
+
+func (r *Repository) CreateArticleMeta(ctx context.Context, articleMetaDO *article.ArticleMeta) (int64, error) {
+	return r.articleMetaRepo.Save(ctx, ConvertArticleMetaDOToPO(articleMetaDO))
+}
+
+func (r *Repository) GetArticleMetaByArticleID(ctx context.Context, articleID int64) ([]*article.ArticleMeta, error) {
+	metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, articleID)
+	if err != nil {
+		return nil, err
+	}
+	metaList := make([]*article.ArticleMeta, 0)
+	for _, po := range metaPOList {
+		metaList = append(metaList, ConvertArticleMetaPOToDO(po))
+	}
+	return metaList, nil
 }

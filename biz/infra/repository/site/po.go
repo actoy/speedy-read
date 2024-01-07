@@ -1,14 +1,28 @@
 package site
 
-import "time"
+import (
+	"time"
+)
 
 type Site struct {
 	ID          int64
-	SourceID    int64
-	SourceType  string
 	Url         string
 	Description string
 	Tag         string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+}
+
+type SiteMeta struct {
+	ID        int64
+	SiteID    int64
+	MetaType  string
+	MetaKey   string
+	MetaValue string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (SiteMeta) TableName() string {
+	return "site_metas"
 }

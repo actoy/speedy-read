@@ -17,21 +17,31 @@ struct GetSiteResponse {
 
 struct SiteInfo {
   1: string ID
-  2: string SourceID
-  3: string SourceType
-  4: string Url
-  5: string Description
-  6: string Tag
-  7: string CreatedAt
-  8: string UpdatedAt
-}
-
-struct CreateSiteRequest {
-  1: string SourceID
-  2: string SourceType
+  2: SiteMeta SiteMeta
   3: string Url
   4: string Description
   5: string Tag
+  6: string CreatedAt
+  7: string UpdatedAt
+}
+
+struct SiteMeta {
+  1: string ID
+  2: string SiteID
+  3: string MetaType
+  4: string MetaKey
+  5: string MetaValue
+  6: string CreatedAt
+  7: string UpdatedAt
+}
+
+struct CreateSiteRequest {
+  1: string MetaType
+  2: string MetaKey
+  3: string MetaValue
+  4: string Url
+  5: string Description
+  6: string Tag
 }
 
 
@@ -52,16 +62,17 @@ struct Article {
     1: string ID
     2: Author Author
     3: SiteInfo Site
-    4: string Language
-    5: string PublishAt
-    6: string Url
-    7: string Type
-    8: string Title
-    9: string Content
-    10: i32 Status
-    11: i32 Score
-    12: string CreatedAt
-    13: string UpdatedAt
+    4: list<ArticleMeta> ArticleMetaList
+    5: string Language
+    6: string PublishAt
+    7: string Url
+    8: string Type
+    9: string Title
+    10: string Content
+    11: i32 Status
+    12: i32 Score
+    13: string CreatedAt
+    14: string UpdatedAt
 }
 
 struct Author {
@@ -71,6 +82,16 @@ struct Author {
 	4: string Image
     5: string CreatedAt
     6: string UpdatedAt
+}
+
+struct ArticleMeta {
+  1: string ID
+  2: string ArticleID
+  3: string MetaType
+  4: string MetaKey
+  5: string MetaValue
+  6: string CreatedAt
+  7: string UpdatedAt
 }
 
 struct CreateArticleRequest {

@@ -31,3 +31,17 @@ type Author struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
+
+type ArticleMeta struct {
+	ID        int64
+	ArticleID int64
+	MetaType  string
+	MetaKey   string
+	MetaValue string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (ArticleMeta) TableName() string {
+	return "article_metas"
+}

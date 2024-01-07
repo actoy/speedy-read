@@ -1,25 +1,24 @@
-CREATE TABLE `stock_symbols` (
+CREATE TABLE `site_metas` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
-     `symbol` varchar(63) NOT NULL DEFAULT '' COMMENT '股票代码',
-     `desc_zh` varchar(63) NOT NULL DEFAULT '' COMMENT '中文名称',
-     `desc_en` varchar(63) NOT NULL DEFAULT '' COMMENT '英文名称',
+     `site_id` bigint(20) unsigned NOT NULL COMMENT 'site_id',
+     `meta_type` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta type',
+     `meta_key` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta key',
+     `meta_value` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta value',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
      PRIMARY KEY (`id`),
-     KEY `symbol` (`symbol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='stock code';
+     KEY `site_id` (`site_id`),
+     KEY `meta` (`meta_key`, `meta_value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='site meta';
 
 CREATE TABLE `sites` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
-     `source_id` bigint(20) unsigned NOT NULL COMMENT '关联sourceID',
-     `source_type` varchar(255) NOT NULL DEFAULT ''COMMENT '关联sourceType',
      `url` varchar(1024) NOT NULL DEFAULT '' COMMENT '地址',
      `description` varchar(1024) NOT NULL DEFAULT '' COMMENT '简介',
      `tag` varchar(63) NOT NULL DEFAULT ''COMMENT '网站标识',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-     PRIMARY KEY (`id`),
-     KEY `meta` (`source_id`, `source_type`)
+     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='sites';
 
 CREATE TABLE `authors` (
@@ -53,7 +52,8 @@ CREATE TABLE `articles` (
 
 CREATE TABLE `article_metas` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
-     `article_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
+     `article_id` bigint(20) unsigned NOT NULL COMMENT 'article id',
+     `meta_type` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta type',
      `meta_key` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta key',
      `meta_value` varchar(255) NOT NULL DEFAULT '' COMMENT 'meta value',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',

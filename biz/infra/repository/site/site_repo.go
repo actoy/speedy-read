@@ -6,17 +6,25 @@ import (
 )
 
 type Repository struct {
-	SiteRepo *SiteRepo
+	SiteRepo     *SiteRepo
+	SiteMetaRepo *SiteMetaRepo
 }
 
 func NewSiteRepository() site.SiteRepo {
 	return &Repository{
-		SiteRepo: &SiteRepo{},
+		SiteRepo:     &SiteRepo{},
+		SiteMetaRepo: &SiteMetaRepo{},
 	}
 }
 
 func (r *Repository) Create(ctx context.Context, siteDO *site.Site) (int64, error) {
-	return r.SiteRepo.Save(ctx, CovertPO(siteDO))
+	siteID, err := r.SiteRepo.Save(ctx, CovertPO(siteDO))
+	if err != nil {
+		return int64(0), err
+	}
+	siteDO.SiteMeta.SiteID = siteID
+	r.SiteMetaRepo.Save(ctx, ConvertMetaDOToPO(siteDO.SiteMeta))
+	return siteID, nil
 }
 
 func (r *Repository) GetSiteList(ctx context.Context) ([]*site.Site, error) {
@@ -26,7 +34,11 @@ func (r *Repository) GetSiteList(ctx context.Context) ([]*site.Site, error) {
 	}
 	siteList := make([]*site.Site, 0)
 	for _, po := range sitePOList {
-		siteList = append(siteList, CovertDO(po))
+		siteMetaPO, err := r.SiteMetaRepo.GetSiteMetaBySiteID(ctx, po.ID)
+		if err != nil {
+			continue
+		}
+		siteList = append(siteList, CovertDO(po, siteMetaPO))
 	}
 	return siteList, nil
 }
@@ -36,5 +48,9 @@ func (r *Repository) GetSiteByUrl(ctx context.Context, url string) (*site.Site, 
 	if err != nil {
 		return nil, err
 	}
-	return CovertDO(sitePO), nil
+	siteMetaPO, err := r.SiteMetaRepo.GetSiteMetaBySiteID(ctx, sitePO.ID)
+	if err != nil {
+		return nil, err
+	}
+	return CovertDO(sitePO, siteMetaPO), nil
 }

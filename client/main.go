@@ -15,20 +15,22 @@ func main() {
 		klog.Error(err)
 	}
 	//testCreateSite(client)
-	testGetSiteList(client)
+	//testGetSiteList(client)
 	//testCreateArticle(client)
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	//testEcho(client)
+	testEcho(client)
 }
 
 func testCreateSite(client speedyread.Client) {
 	createParams := &speedy_read.CreateSiteRequest{
-		SourceID:    "1",
-		SourceType:  "sourceType",
-		Url:         "url",
-		Description: "desc",
+		Url:         "https://seekingalpha.com/api/sa/combined/TSLA.xml",
+		Description: "seeking alpha Tesla",
+		Tag:         "SeekingAlpha",
+		MetaType:    "stock",
+		MetaValue:   "TSLA",
+		MetaKey:     "Tesla, Inc.",
 	}
 	id, err := client.CreateSiteInfo(context.Background(), createParams)
 	if err != nil {
@@ -54,8 +56,6 @@ func testCreateArticle(client speedyread.Client) {
 				Image:      "image",
 			},
 			Site: &speedy_read.SiteInfo{
-				SourceID:    "1",
-				SourceType:  "sourceType",
 				Url:         "url",
 				Description: "desc",
 			},
