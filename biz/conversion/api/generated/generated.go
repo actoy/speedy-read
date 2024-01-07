@@ -15,7 +15,7 @@ func (c *ArticleConvertImpl) ArticleDOToThrift(source *article.Article) *speedyr
 	var pSpeedy_readArticle *speedyread.Article
 	if source != nil {
 		var speedy_readArticle speedyread.Article
-		speedy_readArticle.ID = (*source).ID
+		speedy_readArticle.ID = api.Int64ToString((*source).ID)
 		speedy_readArticle.Author = c.pArticleAuthorToPSpeedy_readAuthor((*source).Author)
 		speedy_readArticle.Site = c.pSiteSiteToPSpeedy_readSiteInfo((*source).SourceSite)
 		speedy_readArticle.Language = (*source).Language
@@ -36,7 +36,7 @@ func (c *ArticleConvertImpl) ArticleThriftToDO(source *speedyread.Article) *arti
 	var pArticleArticle *article.Article
 	if source != nil {
 		var articleArticle article.Article
-		articleArticle.ID = (*source).ID
+		articleArticle.ID = api.StringToInt64((*source).ID)
 		articleArticle.Author = c.pSpeedy_readAuthorToPArticleAuthor((*source).Author)
 		articleArticle.SourceSite = c.pSpeedy_readSiteInfoToPSiteSite((*source).Site)
 		articleArticle.Language = (*source).Language
@@ -57,7 +57,7 @@ func (c *ArticleConvertImpl) pArticleAuthorToPSpeedy_readAuthor(source *article.
 	var pSpeedy_readAuthor *speedyread.Author
 	if source != nil {
 		var speedy_readAuthor speedyread.Author
-		speedy_readAuthor.ID = (*source).ID
+		speedy_readAuthor.ID = api.Int64ToString((*source).ID)
 		speedy_readAuthor.Url = (*source).Url
 		speedy_readAuthor.AuthorName = (*source).AuthorName
 		speedy_readAuthor.Image = (*source).Image
@@ -71,11 +71,12 @@ func (c *ArticleConvertImpl) pSiteSiteToPSpeedy_readSiteInfo(source *site.Site) 
 	var pSpeedy_readSiteInfo *speedyread.SiteInfo
 	if source != nil {
 		var speedy_readSiteInfo speedyread.SiteInfo
-		speedy_readSiteInfo.ID = (*source).ID
-		speedy_readSiteInfo.SourceID = (*source).SourceID
+		speedy_readSiteInfo.ID = api.Int64ToString((*source).ID)
+		speedy_readSiteInfo.SourceID = api.Int64ToString((*source).SourceID)
 		speedy_readSiteInfo.SourceType = (*source).SourceType
 		speedy_readSiteInfo.Url = (*source).Url
 		speedy_readSiteInfo.Description = (*source).Description
+		speedy_readSiteInfo.Tag = (*source).Tag
 		speedy_readSiteInfo.CreatedAt = api.TimeToString((*source).CreatedAt)
 		speedy_readSiteInfo.UpdatedAt = api.TimeToString((*source).UpdatedAt)
 		pSpeedy_readSiteInfo = &speedy_readSiteInfo
@@ -86,7 +87,7 @@ func (c *ArticleConvertImpl) pSpeedy_readAuthorToPArticleAuthor(source *speedyre
 	var pArticleAuthor *article.Author
 	if source != nil {
 		var articleAuthor article.Author
-		articleAuthor.ID = (*source).ID
+		articleAuthor.ID = api.StringToInt64((*source).ID)
 		articleAuthor.Url = (*source).Url
 		articleAuthor.AuthorName = (*source).AuthorName
 		articleAuthor.Image = (*source).Image
@@ -100,11 +101,12 @@ func (c *ArticleConvertImpl) pSpeedy_readSiteInfoToPSiteSite(source *speedyread.
 	var pSiteSite *site.Site
 	if source != nil {
 		var siteSite site.Site
-		siteSite.ID = (*source).ID
-		siteSite.SourceID = (*source).SourceID
+		siteSite.ID = api.StringToInt64((*source).ID)
+		siteSite.SourceID = api.StringToInt64((*source).SourceID)
 		siteSite.SourceType = (*source).SourceType
 		siteSite.Url = (*source).Url
 		siteSite.Description = (*source).Description
+		siteSite.Tag = (*source).Tag
 		siteSite.CreatedAt = api.StringToTime((*source).CreatedAt)
 		siteSite.UpdatedAt = api.StringToTime((*source).UpdatedAt)
 		pSiteSite = &siteSite

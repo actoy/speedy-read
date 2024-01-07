@@ -7,6 +7,7 @@ import (
 	"speedy/read/biz/conversion"
 	"speedy/read/biz/domain/aggregates/article"
 	"speedy/read/biz/domain/aggregates/article_summary"
+	"speedy/read/biz/utils"
 	"speedy/read/kitex_gen/speedy_read"
 )
 
@@ -26,7 +27,7 @@ func NewArticleSummaryHandler() *ArticleSummaryHandler {
 }
 
 func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest) (resp *speedy_read.SaveArticleSummaryResponse, err error) {
-	if req.ArticleID == 0 {
+	if len(req.ArticleID) == 0 {
 		klog.CtxErrorf(ctx, "params error")
 		return nil, err
 	}
@@ -38,7 +39,7 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 	}
 	id, err := s.articleSummarySvc.CreateArticle(ctx, &article_summary.ArticleSummary{
 		Article: &article.Article{
-			ID: req.ArticleID,
+			ID: utils.StringToInt64(req.ArticleID),
 		},
 		LabelList:      labels,
 		Title:          req.Title,
@@ -52,7 +53,7 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 		return nil, err
 	}
 	return &speedy_read.SaveArticleSummaryResponse{
-		ID: id,
+		ID: utils.Int64ToString(id),
 	}, nil
 }
 

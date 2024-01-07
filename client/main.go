@@ -15,17 +15,17 @@ func main() {
 		klog.Error(err)
 	}
 	//testCreateSite(client)
-	//testGetSiteList(client)
+	testGetSiteList(client)
 	//testCreateArticle(client)
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	testEcho(client)
+	//testEcho(client)
 }
 
 func testCreateSite(client speedyread.Client) {
 	createParams := &speedy_read.CreateSiteRequest{
-		SourceID:    int64(1),
+		SourceID:    "1",
 		SourceType:  "sourceType",
 		Url:         "url",
 		Description: "desc",
@@ -54,7 +54,7 @@ func testCreateArticle(client speedyread.Client) {
 				Image:      "image",
 			},
 			Site: &speedy_read.SiteInfo{
-				SourceID:    int64(1),
+				SourceID:    "1",
 				SourceType:  "sourceType",
 				Url:         "url",
 				Description: "desc",
@@ -85,7 +85,7 @@ func testGetArticleList(client speedyread.Client) {
 
 func testSaveArticleSummary(client speedyread.Client) {
 	createParams := &speedy_read.SaveArticleSummaryRequest{
-		ArticleID:      int64(1),
+		ArticleID:      "1",
 		Title:          "this is Title",
 		Content:        "this is content",
 		ContentSummary: "this is content summary",

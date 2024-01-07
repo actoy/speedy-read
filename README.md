@@ -40,3 +40,6 @@
 
 # 服务启动
 * nohup sh build.sh 1>/dev/null 2>&1 &
+
+# Thrift 生成server
+* kitex -module speedy/read -service speedy-read thrift/speedy_read.thrift 

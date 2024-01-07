@@ -5,6 +5,7 @@ import (
 	"speedy/read/biz/conversion/api"
 	"speedy/read/biz/conversion/api/generated"
 	"speedy/read/biz/domain/aggregates/article_summary"
+	"speedy/read/biz/utils"
 	"speedy/read/kitex_gen/speedy_read"
 )
 
@@ -19,7 +20,7 @@ var (
 
 func ArticleSummaryDOToThrift(do *article_summary.ArticleSummary) *speedy_read.ArticleSummary {
 	return &speedy_read.ArticleSummary{
-		ID:             do.ID,
+		ID:             utils.Int64ToString(do.ID),
 		Article:        ArticleDOToThrift(do.Article),
 		Title:          do.Title,
 		Content:        do.Content,

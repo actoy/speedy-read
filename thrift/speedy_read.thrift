@@ -16,25 +16,27 @@ struct GetSiteResponse {
 }
 
 struct SiteInfo {
-  1: i64 ID
-  2: i64 SourceID
+  1: string ID
+  2: string SourceID
   3: string SourceType
   4: string Url
   5: string Description
-  6: string CreatedAt
-  7: string UpdatedAt
+  6: string Tag
+  7: string CreatedAt
+  8: string UpdatedAt
 }
 
 struct CreateSiteRequest {
-  1: i64 SourceID
+  1: string SourceID
   2: string SourceType
   3: string Url
   4: string Description
+  5: string Tag
 }
 
 
 struct CreateSiteResponse {
-    1: i64 ID
+    1: string ID
 }
 
 struct GetArticleListRequest {
@@ -47,7 +49,7 @@ struct GetArticleListResponse {
 }
 
 struct Article {
-    1: i64 ID
+    1: string ID
     2: Author Author
     3: SiteInfo Site
     4: string Language
@@ -63,7 +65,7 @@ struct Article {
 }
 
 struct Author {
-	1: i64 ID
+	1: string ID
 	2: string Url
 	3: string AuthorName
 	4: string Image
@@ -77,11 +79,11 @@ struct CreateArticleRequest {
 
 
 struct CreateArticleResponse {
-    1: i64 ID
+    1: string ID
 }
 
 struct RejectArticleRequest {
-    1: i64 ArticleID
+    1: string ArticleID
 }
 
 
@@ -90,7 +92,7 @@ struct RejectArticleResponse {
 }
 
 struct SaveArticleSummaryRequest {
-    1: i64 ArticleID
+    1: string ArticleID
     2: string Title
     3: string Content // 原文内容
     4: string Summary // 摘要
@@ -100,7 +102,7 @@ struct SaveArticleSummaryRequest {
 }
 
 struct SaveArticleSummaryResponse {
-    1: i64 ID
+    1: string ID
 }
 
 struct ArticleSummaryListRequest {
@@ -109,7 +111,7 @@ struct ArticleSummaryListRequest {
 }
 
 struct ArticleSummary {
-    1: i64 ID
+    1: string ID
     2: Article Article
     3: string Title
     4: string Content // 原文内容

@@ -6,6 +6,7 @@ import (
 	"speedy/read/biz/app"
 	apiConvert "speedy/read/biz/conversion/api"
 	site "speedy/read/biz/domain/aggregates/site"
+	"speedy/read/biz/utils"
 	"speedy/read/kitex_gen/speedy_read"
 )
 
@@ -41,7 +42,7 @@ func (s *SiteHandler) GetSiteInfo(ctx context.Context, req *speedy_read.GetSiteR
 
 func (s *SiteHandler) CreateSiteInfo(ctx context.Context, req *speedy_read.CreateSiteRequest) (resp *speedy_read.CreateSiteResponse, err error) {
 	siteDO := &site.Site{
-		SourceID:    req.SourceID,
+		SourceID:    utils.StringToInt64(req.SourceID),
 		SourceType:  req.SourceType,
 		Url:         req.Url,
 		Description: req.Description,
@@ -52,6 +53,6 @@ func (s *SiteHandler) CreateSiteInfo(ctx context.Context, req *speedy_read.Creat
 		return nil, err
 	}
 	return &speedy_read.CreateSiteResponse{
-		ID: id,
+		ID: utils.Int64ToString(id),
 	}, nil
 }

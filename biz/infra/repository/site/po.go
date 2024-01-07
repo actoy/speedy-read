@@ -8,6 +8,7 @@ type Site struct {
 	SourceType  string
 	Url         string
 	Description string
+	Tag         string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

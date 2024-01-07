@@ -15,6 +15,7 @@ CREATE TABLE `sites` (
      `source_type` varchar(255) NOT NULL DEFAULT ''COMMENT '关联sourceType',
      `url` varchar(1024) NOT NULL DEFAULT '' COMMENT '地址',
      `description` varchar(1024) NOT NULL DEFAULT '' COMMENT '简介',
+     `tag` varchar(63) NOT NULL DEFAULT ''COMMENT '网站标识',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
      PRIMARY KEY (`id`),

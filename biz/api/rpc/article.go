@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/app"
 	"speedy/read/biz/conversion"
+	"speedy/read/biz/utils"
 	"speedy/read/kitex_gen/speedy_read"
 )
 
@@ -46,12 +47,12 @@ func (s *ArticleHandler) CreateArticle(ctx context.Context, req *speedy_read.Cre
 		return nil, err
 	}
 	return &speedy_read.CreateArticleResponse{
-		ID: id,
+		ID: utils.Int64ToString(id),
 	}, nil
 }
 
 func (s *ArticleHandler) RejectArticle(ctx context.Context, req *speedy_read.RejectArticleRequest) (resp *speedy_read.RejectArticleResponse, err error) {
-	err = s.articleSvc.RejectArticle(ctx, req.GetArticleID())
+	err = s.articleSvc.RejectArticle(ctx, utils.StringToInt64(req.GetArticleID()))
 	if err != nil {
 		klog.CtxErrorf(ctx, "create article error %v", err)
 		return &speedy_read.RejectArticleResponse{
