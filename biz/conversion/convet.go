@@ -23,7 +23,6 @@ func ArticleSummaryDOToThrift(do *article_summary.ArticleSummary) *speedy_read.A
 		ID:             utils.Int64ToString(do.ID),
 		Article:        ArticleDOToThrift(do.Article),
 		Title:          do.Title,
-		Content:        do.Content,
 		Summary:        do.Summary,
 		ContentSummary: do.ContentSummary,
 		Outline:        do.Outline,
