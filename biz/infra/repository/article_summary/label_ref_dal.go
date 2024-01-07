@@ -11,10 +11,15 @@ type LabelRefRepo struct {
 }
 
 func (r *LabelRefRepo) Save(ctx context.Context, labelRefPO *LabelRef) (int64, error) {
-	// todo: 重复插入
+	existLabelRefPO := &LabelRef{}
+	result := infra.DB.WithContext(ctx).Where("source_id = ? and source_type = ? and label_id = ?",
+		labelRefPO.SourceID, labelRefPO.SourceType, labelRefPO.LabelID).Find(&existLabelRefPO)
+	if result.Error == nil && existLabelRefPO.ID != 0 {
+		return existLabelRefPO.ID, nil
+	}
 	labelRefPO.CreatedAt = time.Now()
 	labelRefPO.UpdatedAt = time.Now()
-	result := infra.DB.WithContext(ctx).Create(labelRefPO)
+	result = infra.DB.WithContext(ctx).Create(labelRefPO)
 	if result.Error != nil {
 		return int64(0), result.Error
 	}
