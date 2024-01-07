@@ -63,7 +63,7 @@ func (dal *ArticleRepo) SetStatusReject(ctx context.Context, articleID int64) er
 func (dal *ArticleRepo) SetStatusPass(ctx context.Context, articleID int64, content string) error {
 	result := infra.DB.WithContext(ctx).Model(&Article{}).
 		Where("id = ?", articleID).
-		Update("status", article.StatusReject).
+		Update("status", article.StatusPass).
 		Update("content", content)
 	if result.Error == nil {
 		return nil
