@@ -131,8 +131,9 @@ struct SaveArticleSummaryRequest {
     4: string Summary // 摘要
     5: ArticleContentSummary ContentSummary // 一句话原文
     6: list<SummaryOutline> Outline
-    7: list<string> tags
-    8: i32 TradingProposal  // 买卖建议
+    7: list<string> OutlineString
+    8: list<string> tags
+    9: i32 TradingProposal  // 买卖建议
 }
 
 struct SaveArticleSummaryResponse {

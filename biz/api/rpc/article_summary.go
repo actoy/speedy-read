@@ -35,11 +35,12 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 		Article: &article.Article{
 			ID: utils.StringToInt64(req.ArticleID),
 		},
-		LabelList:       conversion.CovertLabelToDO(req.Tags),
-		Title:           req.Title,
-		ContentSummary:  conversion.CovertSummaryContentToDO(req.ContentSummary),
-		Summary:         req.Summary,
-		Outline:         conversion.CovertSummaryOutlineListToDO(req.Outline),
+		LabelList:      conversion.CovertLabelToDO(req.Tags),
+		Title:          req.Title,
+		ContentSummary: conversion.CovertSummaryContentToDO(req.ContentSummary),
+		Summary:        req.Summary,
+		//Outline:         conversion.CovertSummaryOutlineListToDO(req.Outline),
+		Outline:         conversion.ConvertSummaryOutlineStringToDO(req.GetOutlineString()),
 		TradingProposal: req.TradingProposal,
 	}, req.Content)
 	if err != nil {

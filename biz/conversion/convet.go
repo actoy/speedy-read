@@ -1,6 +1,7 @@
 package conversion
 
 import (
+	"encoding/json"
 	"speedy/read/biz/constants"
 	"speedy/read/biz/conversion/api"
 	"speedy/read/biz/conversion/api/generated"
@@ -81,6 +82,16 @@ func CovertSummaryOutlineListToThrift(outlineList []*article_summary.SummaryOutl
 			Title:   outline.Title,
 			Content: outline.Content,
 		})
+	}
+	return outlineDoList
+}
+
+func ConvertSummaryOutlineStringToDO(outlineStrings []string) []*article_summary.SummaryOutline {
+	outlineDoList := make([]*article_summary.SummaryOutline, 0)
+	for _, outline := range outlineStrings {
+		var outlineDO article_summary.SummaryOutline
+		_ = json.Unmarshal([]byte(outline), &outlineDO)
+		outlineDoList = append(outlineDoList, &outlineDO)
 	}
 	return outlineDoList
 }

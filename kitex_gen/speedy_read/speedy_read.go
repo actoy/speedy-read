@@ -5354,8 +5354,9 @@ type SaveArticleSummaryRequest struct {
 	Summary         string                 `thrift:"Summary,4" frugal:"4,default,string" json:"Summary"`
 	ContentSummary  *ArticleContentSummary `thrift:"ContentSummary,5" frugal:"5,default,ArticleContentSummary" json:"ContentSummary"`
 	Outline         []*SummaryOutline      `thrift:"Outline,6" frugal:"6,default,list<SummaryOutline>" json:"Outline"`
-	Tags            []string               `thrift:"tags,7" frugal:"7,default,list<string>" json:"tags"`
-	TradingProposal int32                  `thrift:"TradingProposal,8" frugal:"8,default,i32" json:"TradingProposal"`
+	OutlineString   []string               `thrift:"OutlineString,7" frugal:"7,default,list<string>" json:"OutlineString"`
+	Tags            []string               `thrift:"tags,8" frugal:"8,default,list<string>" json:"tags"`
+	TradingProposal int32                  `thrift:"TradingProposal,9" frugal:"9,default,i32" json:"TradingProposal"`
 }
 
 func NewSaveArticleSummaryRequest() *SaveArticleSummaryRequest {
@@ -5395,6 +5396,10 @@ func (p *SaveArticleSummaryRequest) GetOutline() (v []*SummaryOutline) {
 	return p.Outline
 }
 
+func (p *SaveArticleSummaryRequest) GetOutlineString() (v []string) {
+	return p.OutlineString
+}
+
 func (p *SaveArticleSummaryRequest) GetTags() (v []string) {
 	return p.Tags
 }
@@ -5420,6 +5425,9 @@ func (p *SaveArticleSummaryRequest) SetContentSummary(val *ArticleContentSummary
 func (p *SaveArticleSummaryRequest) SetOutline(val []*SummaryOutline) {
 	p.Outline = val
 }
+func (p *SaveArticleSummaryRequest) SetOutlineString(val []string) {
+	p.OutlineString = val
+}
 func (p *SaveArticleSummaryRequest) SetTags(val []string) {
 	p.Tags = val
 }
@@ -5434,8 +5442,9 @@ var fieldIDToName_SaveArticleSummaryRequest = map[int16]string{
 	4: "Summary",
 	5: "ContentSummary",
 	6: "Outline",
-	7: "tags",
-	8: "TradingProposal",
+	7: "OutlineString",
+	8: "tags",
+	9: "TradingProposal",
 }
 
 func (p *SaveArticleSummaryRequest) IsSetContentSummary() bool {
@@ -5518,8 +5527,16 @@ func (p *SaveArticleSummaryRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -5621,6 +5638,28 @@ func (p *SaveArticleSummaryRequest) ReadField7(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
+	p.OutlineString = make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		p.OutlineString = append(p.OutlineString, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *SaveArticleSummaryRequest) ReadField8(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
 	p.Tags = make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
@@ -5638,7 +5677,7 @@ func (p *SaveArticleSummaryRequest) ReadField7(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *SaveArticleSummaryRequest) ReadField8(iprot thrift.TProtocol) error {
+func (p *SaveArticleSummaryRequest) ReadField9(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -5684,6 +5723,10 @@ func (p *SaveArticleSummaryRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField8(oprot); err != nil {
 			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -5815,13 +5858,13 @@ WriteFieldEndError:
 }
 
 func (p *SaveArticleSummaryRequest) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 7); err != nil {
+	if err = oprot.WriteFieldBegin("OutlineString", thrift.LIST, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.OutlineString)); err != nil {
 		return err
 	}
-	for _, v := range p.Tags {
+	for _, v := range p.OutlineString {
 		if err := oprot.WriteString(v); err != nil {
 			return err
 		}
@@ -5840,10 +5883,18 @@ WriteFieldEndError:
 }
 
 func (p *SaveArticleSummaryRequest) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TradingProposal", thrift.I32, 8); err != nil {
+	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.TradingProposal); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
+		return err
+	}
+	for _, v := range p.Tags {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -5854,6 +5905,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *SaveArticleSummaryRequest) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TradingProposal", thrift.I32, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.TradingProposal); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
 func (p *SaveArticleSummaryRequest) String() string {
@@ -5888,10 +5956,13 @@ func (p *SaveArticleSummaryRequest) DeepEqual(ano *SaveArticleSummaryRequest) bo
 	if !p.Field6DeepEqual(ano.Outline) {
 		return false
 	}
-	if !p.Field7DeepEqual(ano.Tags) {
+	if !p.Field7DeepEqual(ano.OutlineString) {
 		return false
 	}
-	if !p.Field8DeepEqual(ano.TradingProposal) {
+	if !p.Field8DeepEqual(ano.Tags) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.TradingProposal) {
 		return false
 	}
 	return true
@@ -5947,6 +6018,19 @@ func (p *SaveArticleSummaryRequest) Field6DeepEqual(src []*SummaryOutline) bool 
 }
 func (p *SaveArticleSummaryRequest) Field7DeepEqual(src []string) bool {
 
+	if len(p.OutlineString) != len(src) {
+		return false
+	}
+	for i, v := range p.OutlineString {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
+	}
+	return true
+}
+func (p *SaveArticleSummaryRequest) Field8DeepEqual(src []string) bool {
+
 	if len(p.Tags) != len(src) {
 		return false
 	}
@@ -5958,7 +6042,7 @@ func (p *SaveArticleSummaryRequest) Field7DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *SaveArticleSummaryRequest) Field8DeepEqual(src int32) bool {
+func (p *SaveArticleSummaryRequest) Field9DeepEqual(src int32) bool {
 
 	if p.TradingProposal != src {
 		return false
