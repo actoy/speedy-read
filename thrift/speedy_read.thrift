@@ -2,8 +2,13 @@ namespace go speedy_read
 
 const string TypeArticle = "article"
 const string TypeNew     = "new"
-const i32 TradingBearish = 1 // 看空
-const i32 TradingBullish = 2 // 看多
+
+const i32 TradingKong = 0 // 无
+const i32 TradingStrongSell = 1 // 强烈卖出
+const i32 TradingSell = 2 // 卖出
+const i32 TradingMiddle = 3 // 中性
+const i32 TradingStrongBuy = 4 // 强烈买入
+const i32 TradingBuy = 5 // 买入
 
 struct Request {
   1: string message

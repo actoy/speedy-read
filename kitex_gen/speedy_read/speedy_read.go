@@ -14,9 +14,17 @@ const (
 
 	TypeNew = "new"
 
-	TradingBearish = 1
+	TradingKong = 0
 
-	TradingBullish = 2
+	TradingStrongSell = 1
+
+	TradingSell = 2
+
+	TradingMiddle = 3
+
+	TradingStrongBuy = 4
+
+	TradingBuy = 5
 )
 
 type Request struct {
