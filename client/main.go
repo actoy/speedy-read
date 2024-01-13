@@ -91,13 +91,11 @@ func testGetArticleList(client speedyread.Client) {
 
 func testSaveArticleSummary(client speedyread.Client) {
 	createParams := &speedy_read.SaveArticleSummaryRequest{
-		ArticleID:      "1",
-		Title:          "this is Title",
-		Content:        "this is content",
-		ContentSummary: "this is content summary",
-		Summary:        "this is Summary",
-		Outline:        "this is outline",
-		Tags:           []string{"tag1", "tag2"},
+		ArticleID: "1",
+		Title:     "this is Title",
+		Content:   "this is content",
+		Summary:   "this is Summary",
+		Tags:      []string{"tag1", "tag2"},
 	}
 	id, err := client.SaveArticleSummary(context.Background(), createParams)
 	if err != nil {

@@ -4497,6 +4497,20 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 8:
+			if fieldTypeId == thrift.I32 {
+				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -4658,6 +4672,20 @@ func (p *SaveArticleSummaryRequest) FastReadField7(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *SaveArticleSummaryRequest) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadI32(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.TradingProposal = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *SaveArticleSummaryRequest) FastWrite(buf []byte) int {
 	return 0
@@ -4667,6 +4695,7 @@ func (p *SaveArticleSummaryRequest) FastWriteNocopy(buf []byte, binaryWriter bth
 	offset := 0
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "SaveArticleSummaryRequest")
 	if p != nil {
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
@@ -4691,6 +4720,7 @@ func (p *SaveArticleSummaryRequest) BLength() int {
 		l += p.field5Length()
 		l += p.field6Length()
 		l += p.field7Length()
+		l += p.field8Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -4774,6 +4804,15 @@ func (p *SaveArticleSummaryRequest) fastWriteField7(buf []byte, binaryWriter bth
 	return offset
 }
 
+func (p *SaveArticleSummaryRequest) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "TradingProposal", thrift.I32, 8)
+	offset += bthrift.Binary.WriteI32(buf[offset:], p.TradingProposal)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *SaveArticleSummaryRequest) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("ArticleID", thrift.STRING, 1)
@@ -4839,6 +4878,15 @@ func (p *SaveArticleSummaryRequest) field7Length() int {
 
 	}
 	l += bthrift.Binary.ListEndLength()
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *SaveArticleSummaryRequest) field8Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("TradingProposal", thrift.I32, 8)
+	l += bthrift.Binary.I32Length(p.TradingProposal)
+
 	l += bthrift.Binary.FieldEndLength()
 	return l
 }

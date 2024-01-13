@@ -11,15 +11,9 @@ type LabelRefRepo struct {
 }
 
 func (r *LabelRefRepo) Save(ctx context.Context, labelRefPO *LabelRef) (int64, error) {
-	existLabelRefPO := &LabelRef{}
-	result := infra.DB.WithContext(ctx).Where("source_id = ? and source_type = ? and label_id = ?",
-		labelRefPO.SourceID, labelRefPO.SourceType, labelRefPO.LabelID).Find(&existLabelRefPO)
-	if result.Error == nil && existLabelRefPO.ID != 0 {
-		return existLabelRefPO.ID, nil
-	}
 	labelRefPO.CreatedAt = time.Now()
 	labelRefPO.UpdatedAt = time.Now()
-	result = infra.DB.WithContext(ctx).Create(labelRefPO)
+	result := infra.DB.WithContext(ctx).Create(labelRefPO)
 	if result.Error != nil {
 		return int64(0), result.Error
 	}
@@ -37,4 +31,8 @@ func (r *LabelRefRepo) GetLabelRefListBySourceIDs(ctx context.Context, sourceID 
 		return refs, nil
 	}
 	return refs, result.Error
+}
+
+func (r *LabelRefRepo) Delete(ctx context.Context, sourceID int64, sourceType string) {
+	infra.DB.WithContext(ctx).Where("source_id = ? and source_type = ?", sourceID, sourceType).Delete(&LabelRef{})
 }

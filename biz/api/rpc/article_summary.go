@@ -31,21 +31,16 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 		klog.CtxErrorf(ctx, "params error")
 		return nil, err
 	}
-	labels := make([]*article_summary.Label, 0)
-	for _, desc := range req.Tags {
-		labels = append(labels, &article_summary.Label{
-			Description: desc,
-		})
-	}
 	id, err := s.articleSummarySvc.CreateArticle(ctx, &article_summary.ArticleSummary{
 		Article: &article.Article{
 			ID: utils.StringToInt64(req.ArticleID),
 		},
-		LabelList:      labels,
-		Title:          req.Title,
-		ContentSummary: req.ContentSummary,
-		Summary:        req.Summary,
-		Outline:        req.Outline,
+		LabelList:       conversion.CovertLabelToDO(req.Tags),
+		Title:           req.Title,
+		ContentSummary:  conversion.CovertSummaryContentToDO(req.ContentSummary),
+		Summary:         req.Summary,
+		Outline:         conversion.CovertSummaryOutlineListToDO(req.Outline),
+		TradingProposal: req.TradingProposal,
 	}, req.Content)
 	if err != nil {
 		klog.CtxErrorf(ctx, "create article summary error %v", err)

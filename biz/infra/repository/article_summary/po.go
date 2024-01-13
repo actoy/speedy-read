@@ -3,14 +3,13 @@ package article_summary
 import "time"
 
 type ArticleSummary struct {
-	ID             int64
-	ArticleID      int64
-	Title          string
-	Summary        string
-	ContentSummary string
-	Outline        string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	ID              int64
+	ArticleID       int64
+	Title           string
+	Summary         string
+	TradingProposal int32
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }
 
 func (ArticleSummary) TableName() string {
@@ -31,4 +30,26 @@ type LabelRef struct {
 	LabelID    int64
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
+}
+
+type SummaryContent struct {
+	ID          int64
+	SummaryID   int64
+	Original    string
+	Translation string
+}
+
+func (SummaryContent) TableName() string {
+	return "summary_contents"
+}
+
+type SummaryOutline struct {
+	ID        int64
+	SummaryID int64
+	Title     string
+	Content   string
+}
+
+func (SummaryOutline) TableName() string {
+	return "summary_outlines"
 }

@@ -21,8 +21,6 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 	if result.Error == nil && existArticleSummaryPO.ID != 0 {
 		existArticleSummaryPO.Title = articleSummaryPO.Title
 		existArticleSummaryPO.Summary = articleSummaryPO.Summary
-		existArticleSummaryPO.ContentSummary = articleSummaryPO.ContentSummary
-		existArticleSummaryPO.Outline = articleSummaryPO.Outline
 		existArticleSummaryPO.UpdatedAt = time.Now()
 		infra.DB.Save(existArticleSummaryPO)
 		return existArticleSummaryPO.ID, nil

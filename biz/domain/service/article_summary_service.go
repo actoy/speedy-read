@@ -55,6 +55,7 @@ func (impl *ArticleSummaryService) GetArticleSummaryList(ctx context.Context, pa
 	if err != nil {
 		return resp, err
 	}
+	articleIds := make([]int64, 0)
 	for _, summary := range resp {
 		labelList, err := impl.labelRepo.GetLabelListBySource(ctx, summary.ID, article_summary.SourceTypeSummary)
 		if err != nil {
@@ -62,14 +63,23 @@ func (impl *ArticleSummaryService) GetArticleSummaryList(ctx context.Context, pa
 			continue
 		}
 		summary.LabelList = labelList
-		if summary.Article != nil {
-			article, err := impl.articleRepo.GetArticleByID(ctx, summary.Article.ID)
-			if err != nil {
-				klog.CtxErrorf(ctx, "get label list error %v", err)
-				continue
-			}
-			summary.Article = article
-		}
+		articleIds = append(articleIds, summary.Article.ID)
+	}
+	articleList, err := impl.articleRepo.GetArticleByID(ctx, articleIds)
+	if err != nil {
+		klog.CtxErrorf(ctx, "get label list error %v", err)
+	}
+	for _, summary := range resp {
+		summary.Article = impl.buildArticle(articleList, summary.Article.ID)
 	}
 	return resp, nil
+}
+
+func (impl *ArticleSummaryService) buildArticle(articleList []*article.Article, articleID int64) *article.Article {
+	for _, article := range articleList {
+		if article.ID == articleID {
+			return article
+		}
+	}
+	return nil
 }

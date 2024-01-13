@@ -66,32 +66,31 @@ func (r *Repository) ArticleList(ctx context.Context, params article.ArticleList
 	return articleList, nil
 }
 
-func (r *Repository) GetArticleByID(ctx context.Context, articleID int64) (*article.Article, error) {
-	articlePOList, err := r.articleRepo.GetArticleListByIDs(ctx, []int64{articleID})
+func (r *Repository) GetArticleByID(ctx context.Context, articleIds []int64) ([]*article.Article, error) {
+	articlePOList, err := r.articleRepo.GetArticleListByIDs(ctx, articleIds)
 	if err != nil {
 		return nil, err
 	}
-	if len(articlePOList) == 0 {
-		return nil, nil
+	articleList := make([]*article.Article, 0)
+	for _, po := range articlePOList {
+		authorPO, err := r.authorRepo.GetAuthorByID(ctx, po.AuthorID)
+		if err != nil {
+			klog.Error(ctx, "get author by id error: %v", err)
+			continue
+		}
+		siteDO, err := r.siteRepo.GetSiteByID(ctx, po.SourceSiteID)
+		if err != nil {
+			klog.Error(ctx, "get site by id error: %v", err)
+			continue
+		}
+		//metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
+		//if err != nil {
+		//	klog.Error(ctx, "get article meta by id error: %v", err)
+		//	continue
+		//}
+		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, siteDO, []*ArticleMeta{}))
 	}
-	articlePO := articlePOList[0]
-	authorPO, err := r.authorRepo.GetAuthorByID(ctx, articlePO.AuthorID)
-	if err != nil {
-		klog.Error(ctx, "get author by id error: %v", err)
-		return nil, err
-	}
-	siteDO, err := r.siteRepo.GetSiteByID(ctx, articlePO.SourceSiteID)
-	if err != nil {
-		klog.Error(ctx, "get site by id error: %v", err)
-		return nil, err
-	}
-	metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, articlePO.ID)
-	if err != nil {
-		klog.Error(ctx, "get article meta by id error: %v", err)
-		return nil, err
-	}
-
-	return ConvertArticlePOToDO(articlePO, authorPO, siteDO, metaPOList), nil
+	return articleList, nil
 }
 
 func (r *Repository) SetStatusReject(ctx context.Context, articleID int64) error {
