@@ -7704,7 +7704,9 @@ func (p *ArticleSummaryListResponse) Field1DeepEqual(src []*ArticleSummary) bool
 }
 
 type ArticleCountRequest struct {
-	Status int32 `thrift:"Status,1" frugal:"1,default,i32" json:"Status"`
+	Status      int32    `thrift:"Status,1" frugal:"1,default,i32" json:"Status"`
+	SiteIdList  []string `thrift:"SiteIdList,2" frugal:"2,default,list<string>" json:"SiteIdList"`
+	ArticleType string   `thrift:"ArticleType,3" frugal:"3,default,string" json:"ArticleType"`
 }
 
 func NewArticleCountRequest() *ArticleCountRequest {
@@ -7718,12 +7720,28 @@ func (p *ArticleCountRequest) InitDefault() {
 func (p *ArticleCountRequest) GetStatus() (v int32) {
 	return p.Status
 }
+
+func (p *ArticleCountRequest) GetSiteIdList() (v []string) {
+	return p.SiteIdList
+}
+
+func (p *ArticleCountRequest) GetArticleType() (v string) {
+	return p.ArticleType
+}
 func (p *ArticleCountRequest) SetStatus(val int32) {
 	p.Status = val
+}
+func (p *ArticleCountRequest) SetSiteIdList(val []string) {
+	p.SiteIdList = val
+}
+func (p *ArticleCountRequest) SetArticleType(val string) {
+	p.ArticleType = val
 }
 
 var fieldIDToName_ArticleCountRequest = map[int16]string{
 	1: "Status",
+	2: "SiteIdList",
+	3: "ArticleType",
 }
 
 func (p *ArticleCountRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -7748,6 +7766,22 @@ func (p *ArticleCountRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -7791,6 +7825,37 @@ func (p *ArticleCountRequest) ReadField1(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
+func (p *ArticleCountRequest) ReadField2(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.SiteIdList = make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		p.SiteIdList = append(p.SiteIdList, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *ArticleCountRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ArticleType = v
+	}
+	return nil
+}
 
 func (p *ArticleCountRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -7800,6 +7865,14 @@ func (p *ArticleCountRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -7837,6 +7910,48 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *ArticleCountRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SiteIdList", thrift.LIST, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.SiteIdList)); err != nil {
+		return err
+	}
+	for _, v := range p.SiteIdList {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ArticleCountRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ArticleType", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ArticleType); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *ArticleCountRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -7854,12 +7969,38 @@ func (p *ArticleCountRequest) DeepEqual(ano *ArticleCountRequest) bool {
 	if !p.Field1DeepEqual(ano.Status) {
 		return false
 	}
+	if !p.Field2DeepEqual(ano.SiteIdList) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.ArticleType) {
+		return false
+	}
 	return true
 }
 
 func (p *ArticleCountRequest) Field1DeepEqual(src int32) bool {
 
 	if p.Status != src {
+		return false
+	}
+	return true
+}
+func (p *ArticleCountRequest) Field2DeepEqual(src []string) bool {
+
+	if len(p.SiteIdList) != len(src) {
+		return false
+	}
+	for i, v := range p.SiteIdList {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
+	}
+	return true
+}
+func (p *ArticleCountRequest) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.ArticleType, src) != 0 {
 		return false
 	}
 	return true

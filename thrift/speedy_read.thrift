@@ -168,6 +168,8 @@ struct ArticleSummaryListResponse {
 
 struct ArticleCountRequest {
     1: i32 Status
+    2: list<string> SiteIdList
+    3: string ArticleType
 }
 
 struct ArticleCountResponse {

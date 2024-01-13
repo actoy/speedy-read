@@ -18,7 +18,7 @@ type ArticleApplicationI interface {
 	CreateArticle(ctx context.Context, articleDO *article.Article) (int64, error)
 	GetArticleList(ctx context.Context, params ArticleListParams) ([]*article.Article, error)
 	RejectArticle(ctx context.Context, articleID int64) error
-	ArticleCount(ctx context.Context, status int32) (int32, error)
+	ArticleCount(ctx context.Context, status int32, params ArticleListParams) (int32, error)
 }
 
 type ArticleApplication struct {
@@ -50,6 +50,9 @@ func (impl *ArticleApplication) RejectArticle(ctx context.Context, articleID int
 	return impl.articleRepo.SetStatusReject(ctx, articleID)
 }
 
-func (impl *ArticleApplication) ArticleCount(ctx context.Context, status int32) (int32, error) {
-	return impl.articleRepo.GetArticleCount(ctx, status)
+func (impl *ArticleApplication) ArticleCount(ctx context.Context, status int32, params ArticleListParams) (int32, error) {
+	return impl.articleRepo.GetArticleCount(ctx, status, article.ArticleListParams{
+		SiteIdList:  params.SiteIdList,
+		ArticleType: params.ArticleType,
+	})
 }

@@ -137,6 +137,6 @@ func (r *Repository) SetStatusPass(ctx context.Context, articleID int64, content
 	return r.articleRepo.SetStatusPass(ctx, articleID, content)
 }
 
-func (r *Repository) GetArticleCount(ctx context.Context, status int32) (int32, error) {
-	return r.articleRepo.GetArticleCount(ctx, status)
+func (r *Repository) GetArticleCount(ctx context.Context, status int32, params article.ArticleListParams) (int32, error) {
+	return r.articleRepo.GetArticleCount(ctx, status, params)
 }

@@ -78,10 +78,17 @@ func (dal *ArticleRepo) SetStatusPass(ctx context.Context, articleID int64, cont
 	return result.Error
 }
 
-func (dal *ArticleRepo) GetArticleCount(ctx context.Context, status int32) (int32, error) {
+func (dal *ArticleRepo) GetArticleCount(ctx context.Context, status int32, params article.ArticleListParams) (int32, error) {
 	var count int64
 	result := infra.DB.WithContext(ctx).Model(&Article{}).
-		Where("status = ?", status).Count(&count)
+		Where("status = ?", status)
+	if len(params.ArticleType) != 0 {
+		result = result.Where("type = ?", params.ArticleType)
+	}
+	if len(params.SiteIdList) > 0 {
+		result = result.Where("source_site_id in ?", params.SiteIdList)
+	}
+	result.Count(&count)
 	if result.Error != nil {
 		return int32(0), nil
 	}

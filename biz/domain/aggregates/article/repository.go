@@ -15,7 +15,7 @@ type ArticleRepo interface {
 	SetStatusReject(ctx context.Context, articleID int64) error
 	GetArticleByID(ctx context.Context, articleIds []int64) ([]*Article, error)
 	SetStatusPass(ctx context.Context, articleID int64, content string) error
-	GetArticleCount(ctx context.Context, status int32) (int32, error)
+	GetArticleCount(ctx context.Context, status int32, params ArticleListParams) (int32, error)
 }
 
 type AuthorRepo interface {
