@@ -18,6 +18,8 @@ func SiteDOToThrift(siteDO *site.Site) *speedy_read.SiteInfo {
 
 func SiteMetaDOToThrift(siteMetaDO *site.SiteMeta) *speedy_read.SiteMeta {
 	return &speedy_read.SiteMeta{
+		ID:        utils.Int64ToString(siteMetaDO.ID),
+		SiteID:    utils.Int64ToString(siteMetaDO.SiteID),
 		MetaType:  siteMetaDO.MetaType,
 		MetaValue: siteMetaDO.MetaValue,
 		MetaKey:   siteMetaDO.MetaKey,
