@@ -17,8 +17,8 @@ func main() {
 	//testCreateSite(client)
 	//testGetSiteList(client)
 	//testCreateArticle(client)
-	testGetArticleList(client)
-	//testSaveArticleSummary(client)
+	//testGetArticleList(client)
+	testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
 	//testEcho(client)
 	//testArticleCount(client)
@@ -91,11 +91,26 @@ func testGetArticleList(client speedyread.Client) {
 
 func testSaveArticleSummary(client speedyread.Client) {
 	createParams := &speedy_read.SaveArticleSummaryRequest{
-		ArticleID: "1",
+		ArticleID: "30",
 		Title:     "this is Title",
 		Content:   "this is content",
 		Summary:   "this is Summary",
-		Tags:      []string{"tag1", "tag2"},
+		ContentSummary: &speedy_read.ArticleContentSummary{
+			Original:    "original",
+			Translation: "translation",
+		},
+		Outline: []*speedy_read.SummaryOutline{
+			{
+				Title:   "title1",
+				Content: "content1",
+			},
+			{
+				Title:   "title2",
+				Content: "content2",
+			},
+		},
+		Tags:            []string{"tag1", "tag2"},
+		TradingProposal: 1,
 	}
 	id, err := client.SaveArticleSummary(context.Background(), createParams)
 	if err != nil {

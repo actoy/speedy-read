@@ -75,23 +75,23 @@ CREATE TABLE `article_summarys` (
      KEY `article_id` (`article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='article summary';
 
-CREATE TABLE `summary_outlines` (
+CREATE TABLE `summary_contents` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
      `summary_id` bigint(20) unsigned NOT NULL,
      `original` text NOT NULL COMMENT '原文总结',
      `translation` text NOT NULL COMMENT '翻译总结',
      PRIMARY KEY (`id`),
      KEY `article_id` (`summary_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='summary outlines';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='summary contents';
 
-CREATE TABLE `summary_contents` (
+CREATE TABLE `summary_outlines` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
      `summary_id` bigint(20) unsigned NOT NULL,
      `title` text NOT NULL COMMENT '标题',
      `content` text NOT NULL COMMENT '内容',
      PRIMARY KEY (`id`),
      KEY `article_id` (`summary_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='summary contents';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='summary outlines';
 
 CREATE TABLE `labels` (
      `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'UUID',
