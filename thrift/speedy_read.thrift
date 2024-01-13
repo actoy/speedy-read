@@ -1,5 +1,10 @@
 namespace go speedy_read
 
+const string TypeArticle = "article"
+const string TypeNew     = "new"
+const i32 TradingBearish = 1 // 看空
+const i32 TradingBullish = 2 // 看多
+
 struct Request {
   1: string message
 }
@@ -50,8 +55,10 @@ struct CreateSiteResponse {
 }
 
 struct GetArticleListRequest {
-    1: i32 Limit
-    2: i32 Offset
+    1: list<string> SiteIdList
+    2: string ArticleType
+    3: i32 Limit
+    4: i32 Offset
 }
 
 struct GetArticleListResponse {
@@ -65,10 +72,10 @@ struct Article {
     4: list<ArticleMeta> ArticleMetaList
     5: string Language
     6: string PublishAt
-    7: string Url
-    8: string Type
-    9: string Title
-    10: string Content
+    7: string Url      // 原文连接
+    8: string Type     // 原文类型
+    9: string Title    // 原文标题
+    10: string Content // 原文内容
     11: i32 Status
     12: i32 Score
     13: string CreatedAt
@@ -117,8 +124,8 @@ struct SaveArticleSummaryRequest {
     2: string Title
     3: string Content // 原文内容
     4: string Summary // 摘要
-    5: string ContentSummary // 一句话原文
-    6: string Outline
+    5: ArticleContentSummary ContentSummary // 一句话原文
+    6: list<SummaryOutline> Outline
     7: list<string> tags
 }
 
@@ -137,10 +144,21 @@ struct ArticleSummary {
     3: string Title
     4: string Content // 原文内容
     5: string Summary // 摘要
-    6: string ContentSummary // 一句话原文
-    7: string Outline
+    6: ArticleContentSummary ContentSummary // 一句话原文
+    7: list<SummaryOutline> Outline
     8: list<string> tags
     9: string CreatedAt
+    10: i32 TradingProposal  // 买卖建议
+}
+
+struct ArticleContentSummary {
+    1: string Original
+    2: string Translation
+}
+
+struct SummaryOutline {
+    1: string Title
+    2: string Content
 }
 
 struct ArticleSummaryListResponse {

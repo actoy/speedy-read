@@ -9,6 +9,16 @@ import (
 	"strings"
 )
 
+const (
+	TypeArticle = "article"
+
+	TypeNew = "new"
+
+	TradingBearish = 1
+
+	TradingBullish = 2
+)
+
 type Request struct {
 	Message string `thrift:"message,1" frugal:"1,default,string" json:"message"`
 }
@@ -2237,8 +2247,10 @@ func (p *CreateSiteResponse) Field1DeepEqual(src string) bool {
 }
 
 type GetArticleListRequest struct {
-	Limit  int32 `thrift:"Limit,1" frugal:"1,default,i32" json:"Limit"`
-	Offset int32 `thrift:"Offset,2" frugal:"2,default,i32" json:"Offset"`
+	SiteIdList  []string `thrift:"SiteIdList,1" frugal:"1,default,list<string>" json:"SiteIdList"`
+	ArticleType string   `thrift:"ArticleType,2" frugal:"2,default,string" json:"ArticleType"`
+	Limit       int32    `thrift:"Limit,3" frugal:"3,default,i32" json:"Limit"`
+	Offset      int32    `thrift:"Offset,4" frugal:"4,default,i32" json:"Offset"`
 }
 
 func NewGetArticleListRequest() *GetArticleListRequest {
@@ -2249,12 +2261,26 @@ func (p *GetArticleListRequest) InitDefault() {
 	*p = GetArticleListRequest{}
 }
 
+func (p *GetArticleListRequest) GetSiteIdList() (v []string) {
+	return p.SiteIdList
+}
+
+func (p *GetArticleListRequest) GetArticleType() (v string) {
+	return p.ArticleType
+}
+
 func (p *GetArticleListRequest) GetLimit() (v int32) {
 	return p.Limit
 }
 
 func (p *GetArticleListRequest) GetOffset() (v int32) {
 	return p.Offset
+}
+func (p *GetArticleListRequest) SetSiteIdList(val []string) {
+	p.SiteIdList = val
+}
+func (p *GetArticleListRequest) SetArticleType(val string) {
+	p.ArticleType = val
 }
 func (p *GetArticleListRequest) SetLimit(val int32) {
 	p.Limit = val
@@ -2264,8 +2290,10 @@ func (p *GetArticleListRequest) SetOffset(val int32) {
 }
 
 var fieldIDToName_GetArticleListRequest = map[int16]string{
-	1: "Limit",
-	2: "Offset",
+	1: "SiteIdList",
+	2: "ArticleType",
+	3: "Limit",
+	4: "Offset",
 }
 
 func (p *GetArticleListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -2288,7 +2316,7 @@ func (p *GetArticleListRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2296,8 +2324,24 @@ func (p *GetArticleListRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2333,6 +2377,37 @@ ReadStructEndError:
 }
 
 func (p *GetArticleListRequest) ReadField1(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.SiteIdList = make([]string, 0, size)
+	for i := 0; i < size; i++ {
+
+		var _elem string
+		if v, err := iprot.ReadString(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		p.SiteIdList = append(p.SiteIdList, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *GetArticleListRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ArticleType = v
+	}
+	return nil
+}
+func (p *GetArticleListRequest) ReadField3(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2341,7 +2416,7 @@ func (p *GetArticleListRequest) ReadField1(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *GetArticleListRequest) ReadField2(iprot thrift.TProtocol) error {
+func (p *GetArticleListRequest) ReadField4(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -2365,6 +2440,14 @@ func (p *GetArticleListRequest) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 2
 			goto WriteFieldError
 		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -2384,10 +2467,18 @@ WriteStructEndError:
 }
 
 func (p *GetArticleListRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Limit", thrift.I32, 1); err != nil {
+	if err = oprot.WriteFieldBegin("SiteIdList", thrift.LIST, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.Limit); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRING, len(p.SiteIdList)); err != nil {
+		return err
+	}
+	for _, v := range p.SiteIdList {
+		if err := oprot.WriteString(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2401,10 +2492,10 @@ WriteFieldEndError:
 }
 
 func (p *GetArticleListRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Offset", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("ArticleType", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.Offset); err != nil {
+	if err := oprot.WriteString(p.ArticleType); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2415,6 +2506,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *GetArticleListRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Limit", thrift.I32, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.Limit); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *GetArticleListRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Offset", thrift.I32, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.Offset); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *GetArticleListRequest) String() string {
@@ -2431,23 +2556,49 @@ func (p *GetArticleListRequest) DeepEqual(ano *GetArticleListRequest) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.Limit) {
+	if !p.Field1DeepEqual(ano.SiteIdList) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.Offset) {
+	if !p.Field2DeepEqual(ano.ArticleType) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.Limit) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Offset) {
 		return false
 	}
 	return true
 }
 
-func (p *GetArticleListRequest) Field1DeepEqual(src int32) bool {
+func (p *GetArticleListRequest) Field1DeepEqual(src []string) bool {
+
+	if len(p.SiteIdList) != len(src) {
+		return false
+	}
+	for i, v := range p.SiteIdList {
+		_src := src[i]
+		if strings.Compare(v, _src) != 0 {
+			return false
+		}
+	}
+	return true
+}
+func (p *GetArticleListRequest) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.ArticleType, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *GetArticleListRequest) Field3DeepEqual(src int32) bool {
 
 	if p.Limit != src {
 		return false
 	}
 	return true
 }
-func (p *GetArticleListRequest) Field2DeepEqual(src int32) bool {
+func (p *GetArticleListRequest) Field4DeepEqual(src int32) bool {
 
 	if p.Offset != src {
 		return false
@@ -5189,13 +5340,13 @@ func (p *RejectArticleResponse) Field1DeepEqual(src bool) bool {
 }
 
 type SaveArticleSummaryRequest struct {
-	ArticleID      string   `thrift:"ArticleID,1" frugal:"1,default,string" json:"ArticleID"`
-	Title          string   `thrift:"Title,2" frugal:"2,default,string" json:"Title"`
-	Content        string   `thrift:"Content,3" frugal:"3,default,string" json:"Content"`
-	Summary        string   `thrift:"Summary,4" frugal:"4,default,string" json:"Summary"`
-	ContentSummary string   `thrift:"ContentSummary,5" frugal:"5,default,string" json:"ContentSummary"`
-	Outline        string   `thrift:"Outline,6" frugal:"6,default,string" json:"Outline"`
-	Tags           []string `thrift:"tags,7" frugal:"7,default,list<string>" json:"tags"`
+	ArticleID      string                 `thrift:"ArticleID,1" frugal:"1,default,string" json:"ArticleID"`
+	Title          string                 `thrift:"Title,2" frugal:"2,default,string" json:"Title"`
+	Content        string                 `thrift:"Content,3" frugal:"3,default,string" json:"Content"`
+	Summary        string                 `thrift:"Summary,4" frugal:"4,default,string" json:"Summary"`
+	ContentSummary *ArticleContentSummary `thrift:"ContentSummary,5" frugal:"5,default,ArticleContentSummary" json:"ContentSummary"`
+	Outline        []*SummaryOutline      `thrift:"Outline,6" frugal:"6,default,list<SummaryOutline>" json:"Outline"`
+	Tags           []string               `thrift:"tags,7" frugal:"7,default,list<string>" json:"tags"`
 }
 
 func NewSaveArticleSummaryRequest() *SaveArticleSummaryRequest {
@@ -5222,11 +5373,16 @@ func (p *SaveArticleSummaryRequest) GetSummary() (v string) {
 	return p.Summary
 }
 
-func (p *SaveArticleSummaryRequest) GetContentSummary() (v string) {
+var SaveArticleSummaryRequest_ContentSummary_DEFAULT *ArticleContentSummary
+
+func (p *SaveArticleSummaryRequest) GetContentSummary() (v *ArticleContentSummary) {
+	if !p.IsSetContentSummary() {
+		return SaveArticleSummaryRequest_ContentSummary_DEFAULT
+	}
 	return p.ContentSummary
 }
 
-func (p *SaveArticleSummaryRequest) GetOutline() (v string) {
+func (p *SaveArticleSummaryRequest) GetOutline() (v []*SummaryOutline) {
 	return p.Outline
 }
 
@@ -5245,10 +5401,10 @@ func (p *SaveArticleSummaryRequest) SetContent(val string) {
 func (p *SaveArticleSummaryRequest) SetSummary(val string) {
 	p.Summary = val
 }
-func (p *SaveArticleSummaryRequest) SetContentSummary(val string) {
+func (p *SaveArticleSummaryRequest) SetContentSummary(val *ArticleContentSummary) {
 	p.ContentSummary = val
 }
-func (p *SaveArticleSummaryRequest) SetOutline(val string) {
+func (p *SaveArticleSummaryRequest) SetOutline(val []*SummaryOutline) {
 	p.Outline = val
 }
 func (p *SaveArticleSummaryRequest) SetTags(val []string) {
@@ -5263,6 +5419,10 @@ var fieldIDToName_SaveArticleSummaryRequest = map[int16]string{
 	5: "ContentSummary",
 	6: "Outline",
 	7: "tags",
+}
+
+func (p *SaveArticleSummaryRequest) IsSetContentSummary() bool {
+	return p.ContentSummary != nil
 }
 
 func (p *SaveArticleSummaryRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -5317,7 +5477,7 @@ func (p *SaveArticleSummaryRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 5:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -5325,7 +5485,7 @@ func (p *SaveArticleSummaryRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 6:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -5406,20 +5566,28 @@ func (p *SaveArticleSummaryRequest) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *SaveArticleSummaryRequest) ReadField5(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
+	p.ContentSummary = NewArticleContentSummary()
+	if err := p.ContentSummary.Read(iprot); err != nil {
 		return err
-	} else {
-		p.ContentSummary = v
 	}
 	return nil
 }
 func (p *SaveArticleSummaryRequest) ReadField6(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
 		return err
-	} else {
-		p.Outline = v
+	}
+	p.Outline = make([]*SummaryOutline, 0, size)
+	for i := 0; i < size; i++ {
+		_elem := NewSummaryOutline()
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		p.Outline = append(p.Outline, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -5567,10 +5735,10 @@ WriteFieldEndError:
 }
 
 func (p *SaveArticleSummaryRequest) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRUCT, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ContentSummary); err != nil {
+	if err := p.ContentSummary.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -5584,10 +5752,18 @@ WriteFieldEndError:
 }
 
 func (p *SaveArticleSummaryRequest) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Outline", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("Outline", thrift.LIST, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Outline); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Outline)); err != nil {
+		return err
+	}
+	for _, v := range p.Outline {
+		if err := v.Write(oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -5691,17 +5867,23 @@ func (p *SaveArticleSummaryRequest) Field4DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *SaveArticleSummaryRequest) Field5DeepEqual(src string) bool {
+func (p *SaveArticleSummaryRequest) Field5DeepEqual(src *ArticleContentSummary) bool {
 
-	if strings.Compare(p.ContentSummary, src) != 0 {
+	if !p.ContentSummary.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *SaveArticleSummaryRequest) Field6DeepEqual(src string) bool {
+func (p *SaveArticleSummaryRequest) Field6DeepEqual(src []*SummaryOutline) bool {
 
-	if strings.Compare(p.Outline, src) != 0 {
+	if len(p.Outline) != len(src) {
 		return false
+	}
+	for i, v := range p.Outline {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
 	}
 	return true
 }
@@ -6101,15 +6283,16 @@ func (p *ArticleSummaryListRequest) Field2DeepEqual(src int32) bool {
 }
 
 type ArticleSummary struct {
-	ID             string   `thrift:"ID,1" frugal:"1,default,string" json:"ID"`
-	Article        *Article `thrift:"Article,2" frugal:"2,default,Article" json:"Article"`
-	Title          string   `thrift:"Title,3" frugal:"3,default,string" json:"Title"`
-	Content        string   `thrift:"Content,4" frugal:"4,default,string" json:"Content"`
-	Summary        string   `thrift:"Summary,5" frugal:"5,default,string" json:"Summary"`
-	ContentSummary string   `thrift:"ContentSummary,6" frugal:"6,default,string" json:"ContentSummary"`
-	Outline        string   `thrift:"Outline,7" frugal:"7,default,string" json:"Outline"`
-	Tags           []string `thrift:"tags,8" frugal:"8,default,list<string>" json:"tags"`
-	CreatedAt      string   `thrift:"CreatedAt,9" frugal:"9,default,string" json:"CreatedAt"`
+	ID              string                 `thrift:"ID,1" frugal:"1,default,string" json:"ID"`
+	Article         *Article               `thrift:"Article,2" frugal:"2,default,Article" json:"Article"`
+	Title           string                 `thrift:"Title,3" frugal:"3,default,string" json:"Title"`
+	Content         string                 `thrift:"Content,4" frugal:"4,default,string" json:"Content"`
+	Summary         string                 `thrift:"Summary,5" frugal:"5,default,string" json:"Summary"`
+	ContentSummary  *ArticleContentSummary `thrift:"ContentSummary,6" frugal:"6,default,ArticleContentSummary" json:"ContentSummary"`
+	Outline         []*SummaryOutline      `thrift:"Outline,7" frugal:"7,default,list<SummaryOutline>" json:"Outline"`
+	Tags            []string               `thrift:"tags,8" frugal:"8,default,list<string>" json:"tags"`
+	CreatedAt       string                 `thrift:"CreatedAt,9" frugal:"9,default,string" json:"CreatedAt"`
+	TradingProposal int32                  `thrift:"TradingProposal,10" frugal:"10,default,i32" json:"TradingProposal"`
 }
 
 func NewArticleSummary() *ArticleSummary {
@@ -6145,11 +6328,16 @@ func (p *ArticleSummary) GetSummary() (v string) {
 	return p.Summary
 }
 
-func (p *ArticleSummary) GetContentSummary() (v string) {
+var ArticleSummary_ContentSummary_DEFAULT *ArticleContentSummary
+
+func (p *ArticleSummary) GetContentSummary() (v *ArticleContentSummary) {
+	if !p.IsSetContentSummary() {
+		return ArticleSummary_ContentSummary_DEFAULT
+	}
 	return p.ContentSummary
 }
 
-func (p *ArticleSummary) GetOutline() (v string) {
+func (p *ArticleSummary) GetOutline() (v []*SummaryOutline) {
 	return p.Outline
 }
 
@@ -6159,6 +6347,10 @@ func (p *ArticleSummary) GetTags() (v []string) {
 
 func (p *ArticleSummary) GetCreatedAt() (v string) {
 	return p.CreatedAt
+}
+
+func (p *ArticleSummary) GetTradingProposal() (v int32) {
+	return p.TradingProposal
 }
 func (p *ArticleSummary) SetID(val string) {
 	p.ID = val
@@ -6175,10 +6367,10 @@ func (p *ArticleSummary) SetContent(val string) {
 func (p *ArticleSummary) SetSummary(val string) {
 	p.Summary = val
 }
-func (p *ArticleSummary) SetContentSummary(val string) {
+func (p *ArticleSummary) SetContentSummary(val *ArticleContentSummary) {
 	p.ContentSummary = val
 }
-func (p *ArticleSummary) SetOutline(val string) {
+func (p *ArticleSummary) SetOutline(val []*SummaryOutline) {
 	p.Outline = val
 }
 func (p *ArticleSummary) SetTags(val []string) {
@@ -6187,21 +6379,29 @@ func (p *ArticleSummary) SetTags(val []string) {
 func (p *ArticleSummary) SetCreatedAt(val string) {
 	p.CreatedAt = val
 }
+func (p *ArticleSummary) SetTradingProposal(val int32) {
+	p.TradingProposal = val
+}
 
 var fieldIDToName_ArticleSummary = map[int16]string{
-	1: "ID",
-	2: "Article",
-	3: "Title",
-	4: "Content",
-	5: "Summary",
-	6: "ContentSummary",
-	7: "Outline",
-	8: "tags",
-	9: "CreatedAt",
+	1:  "ID",
+	2:  "Article",
+	3:  "Title",
+	4:  "Content",
+	5:  "Summary",
+	6:  "ContentSummary",
+	7:  "Outline",
+	8:  "tags",
+	9:  "CreatedAt",
+	10: "TradingProposal",
 }
 
 func (p *ArticleSummary) IsSetArticle() bool {
 	return p.Article != nil
+}
+
+func (p *ArticleSummary) IsSetContentSummary() bool {
+	return p.ContentSummary != nil
 }
 
 func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
@@ -6264,7 +6464,7 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 6:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -6272,7 +6472,7 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -6290,6 +6490,14 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 		case 9:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -6368,20 +6576,28 @@ func (p *ArticleSummary) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *ArticleSummary) ReadField6(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
+	p.ContentSummary = NewArticleContentSummary()
+	if err := p.ContentSummary.Read(iprot); err != nil {
 		return err
-	} else {
-		p.ContentSummary = v
 	}
 	return nil
 }
 func (p *ArticleSummary) ReadField7(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
 		return err
-	} else {
-		p.Outline = v
+	}
+	p.Outline = make([]*SummaryOutline, 0, size)
+	for i := 0; i < size; i++ {
+		_elem := NewSummaryOutline()
+		if err := _elem.Read(iprot); err != nil {
+			return err
+		}
+
+		p.Outline = append(p.Outline, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -6413,6 +6629,15 @@ func (p *ArticleSummary) ReadField9(iprot thrift.TProtocol) error {
 		return err
 	} else {
 		p.CreatedAt = v
+	}
+	return nil
+}
+func (p *ArticleSummary) ReadField10(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.TradingProposal = v
 	}
 	return nil
 }
@@ -6457,6 +6682,10 @@ func (p *ArticleSummary) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -6563,10 +6792,10 @@ WriteFieldEndError:
 }
 
 func (p *ArticleSummary) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRUCT, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ContentSummary); err != nil {
+	if err := p.ContentSummary.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6580,10 +6809,18 @@ WriteFieldEndError:
 }
 
 func (p *ArticleSummary) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Outline", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("Outline", thrift.LIST, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Outline); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Outline)); err != nil {
+		return err
+	}
+	for _, v := range p.Outline {
+		if err := v.Write(oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6638,6 +6875,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
+func (p *ArticleSummary) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TradingProposal", thrift.I32, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.TradingProposal); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *ArticleSummary) String() string {
 	if p == nil {
 		return "<nil>"
@@ -6679,6 +6933,9 @@ func (p *ArticleSummary) DeepEqual(ano *ArticleSummary) bool {
 	if !p.Field9DeepEqual(ano.CreatedAt) {
 		return false
 	}
+	if !p.Field10DeepEqual(ano.TradingProposal) {
+		return false
+	}
 	return true
 }
 
@@ -6717,17 +6974,23 @@ func (p *ArticleSummary) Field5DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *ArticleSummary) Field6DeepEqual(src string) bool {
+func (p *ArticleSummary) Field6DeepEqual(src *ArticleContentSummary) bool {
 
-	if strings.Compare(p.ContentSummary, src) != 0 {
+	if !p.ContentSummary.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ArticleSummary) Field7DeepEqual(src string) bool {
+func (p *ArticleSummary) Field7DeepEqual(src []*SummaryOutline) bool {
 
-	if strings.Compare(p.Outline, src) != 0 {
+	if len(p.Outline) != len(src) {
 		return false
+	}
+	for i, v := range p.Outline {
+		_src := src[i]
+		if !v.DeepEqual(_src) {
+			return false
+		}
 	}
 	return true
 }
@@ -6747,6 +7010,451 @@ func (p *ArticleSummary) Field8DeepEqual(src []string) bool {
 func (p *ArticleSummary) Field9DeepEqual(src string) bool {
 
 	if strings.Compare(p.CreatedAt, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *ArticleSummary) Field10DeepEqual(src int32) bool {
+
+	if p.TradingProposal != src {
+		return false
+	}
+	return true
+}
+
+type ArticleContentSummary struct {
+	Original    string `thrift:"Original,1" frugal:"1,default,string" json:"Original"`
+	Translation string `thrift:"Translation,2" frugal:"2,default,string" json:"Translation"`
+}
+
+func NewArticleContentSummary() *ArticleContentSummary {
+	return &ArticleContentSummary{}
+}
+
+func (p *ArticleContentSummary) InitDefault() {
+	*p = ArticleContentSummary{}
+}
+
+func (p *ArticleContentSummary) GetOriginal() (v string) {
+	return p.Original
+}
+
+func (p *ArticleContentSummary) GetTranslation() (v string) {
+	return p.Translation
+}
+func (p *ArticleContentSummary) SetOriginal(val string) {
+	p.Original = val
+}
+func (p *ArticleContentSummary) SetTranslation(val string) {
+	p.Translation = val
+}
+
+var fieldIDToName_ArticleContentSummary = map[int16]string{
+	1: "Original",
+	2: "Translation",
+}
+
+func (p *ArticleContentSummary) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ArticleContentSummary[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *ArticleContentSummary) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Original = v
+	}
+	return nil
+}
+func (p *ArticleContentSummary) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Translation = v
+	}
+	return nil
+}
+
+func (p *ArticleContentSummary) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ArticleContentSummary"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ArticleContentSummary) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Original", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Original); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ArticleContentSummary) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Translation", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Translation); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *ArticleContentSummary) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ArticleContentSummary(%+v)", *p)
+
+}
+
+func (p *ArticleContentSummary) DeepEqual(ano *ArticleContentSummary) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Original) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Translation) {
+		return false
+	}
+	return true
+}
+
+func (p *ArticleContentSummary) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.Original, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *ArticleContentSummary) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Translation, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type SummaryOutline struct {
+	Title   string `thrift:"Title,1" frugal:"1,default,string" json:"Title"`
+	Content string `thrift:"Content,2" frugal:"2,default,string" json:"Content"`
+}
+
+func NewSummaryOutline() *SummaryOutline {
+	return &SummaryOutline{}
+}
+
+func (p *SummaryOutline) InitDefault() {
+	*p = SummaryOutline{}
+}
+
+func (p *SummaryOutline) GetTitle() (v string) {
+	return p.Title
+}
+
+func (p *SummaryOutline) GetContent() (v string) {
+	return p.Content
+}
+func (p *SummaryOutline) SetTitle(val string) {
+	p.Title = val
+}
+func (p *SummaryOutline) SetContent(val string) {
+	p.Content = val
+}
+
+var fieldIDToName_SummaryOutline = map[int16]string{
+	1: "Title",
+	2: "Content",
+}
+
+func (p *SummaryOutline) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SummaryOutline[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SummaryOutline) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Title = v
+	}
+	return nil
+}
+func (p *SummaryOutline) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Content = v
+	}
+	return nil
+}
+
+func (p *SummaryOutline) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("SummaryOutline"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SummaryOutline) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Title", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Title); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SummaryOutline) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Content", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Content); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *SummaryOutline) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SummaryOutline(%+v)", *p)
+
+}
+
+func (p *SummaryOutline) DeepEqual(ano *SummaryOutline) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Title) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Content) {
+		return false
+	}
+	return true
+}
+
+func (p *SummaryOutline) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.Title, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *SummaryOutline) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.Content, src) != 0 {
 		return false
 	}
 	return true

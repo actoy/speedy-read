@@ -21,12 +21,17 @@ func (dal *ArticleRepo) Save(ctx context.Context, articlePO *Article) (int64, er
 	return articlePO.ID, nil
 }
 
-func (dal *ArticleRepo) GetArticleList(ctx context.Context, limit, offSet int32) ([]*Article, error) {
+func (dal *ArticleRepo) GetArticleList(ctx context.Context, params article.ArticleListParams) ([]*Article, error) {
 	articleList := make([]*Article, 0)
-	result := infra.DB.WithContext(ctx).
-		Where("status =?", article.StatusInit).
-		Limit(int(limit)).
-		Offset(int(offSet * limit)).
+	result := infra.DB.WithContext(ctx).Where("status = ?", article.StatusInit)
+	if len(params.ArticleType) != 0 {
+		result = result.Where("type = ?", params.ArticleType)
+	}
+	if len(params.SiteIdList) > 0 {
+		result = result.Where("source_site_id in ?", params.SiteIdList)
+	}
+	result = result.Limit(int(params.Limit)).
+		Offset(int(params.OffSet * params.Limit)).
 		Order("created_at").
 		Find(&articleList)
 	if result.Error == nil {

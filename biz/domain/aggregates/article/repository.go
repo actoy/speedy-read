@@ -2,9 +2,16 @@ package article
 
 import "context"
 
+type ArticleListParams struct {
+	SiteIdList  []int64
+	ArticleType string
+	Limit       int32
+	OffSet      int32
+}
+
 type ArticleRepo interface {
 	Create(ctx context.Context, articleDO *Article) (int64, error)
-	ArticleList(ctx context.Context, limit, offSet int32) ([]*Article, error)
+	ArticleList(ctx context.Context, params ArticleListParams) ([]*Article, error)
 	SetStatusReject(ctx context.Context, articleID int64) error
 	GetArticleByID(ctx context.Context, articleID int64) (*Article, error)
 	SetStatusPass(ctx context.Context, articleID int64, content string) error

@@ -27,7 +27,17 @@ func NewArticleHandler() *ArticleHandler {
 }
 
 func (s *ArticleHandler) GetArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (resp *speedy_read.GetArticleListResponse, err error) {
-	articleInfoList, err := s.articleSvc.GetArticleList(ctx, req.GetLimit(), req.GetOffset())
+	if req.ArticleType != speedy_read.TypeArticle && req.ArticleType != speedy_read.TypeNew {
+		return &speedy_read.GetArticleListResponse{
+			ArticleList: []*speedy_read.Article{},
+		}, nil
+	}
+	articleInfoList, err := s.articleSvc.GetArticleList(ctx, app.ArticleListParams{
+		SiteIdList:  utils.StringToInt64List(req.GetSiteIdList()),
+		ArticleType: req.GetArticleType(),
+		Limit:       req.GetLimit(),
+		OffSet:      req.GetOffset(),
+	})
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article list error %v", err)
 		return nil, err

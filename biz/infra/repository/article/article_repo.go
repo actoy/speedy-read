@@ -39,8 +39,8 @@ func (r *Repository) Create(ctx context.Context, articleDO *article.Article) (in
 	return r.articleRepo.Save(ctx, ConvertArticleDOToPO(articleDO))
 }
 
-func (r *Repository) ArticleList(ctx context.Context, limit, offSet int32) ([]*article.Article, error) {
-	articlePOList, err := r.articleRepo.GetArticleList(ctx, limit, offSet)
+func (r *Repository) ArticleList(ctx context.Context, params article.ArticleListParams) ([]*article.Article, error) {
+	articlePOList, err := r.articleRepo.GetArticleList(ctx, params)
 	if err != nil {
 		return nil, err
 	}

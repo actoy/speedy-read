@@ -78,8 +78,10 @@ func testCreateArticle(client speedyread.Client) {
 
 func testGetArticleList(client speedyread.Client) {
 	articleList, err := client.ArticleList(context.Background(), &speedy_read.GetArticleListRequest{
-		Offset: 0,
-		Limit:  10,
+		ArticleType: speedy_read.TypeNew,
+		SiteIdList:  []string{"3"},
+		Offset:      0,
+		Limit:       10,
 	})
 	if err != nil {
 		klog.Error(err)
