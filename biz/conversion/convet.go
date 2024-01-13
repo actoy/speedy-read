@@ -65,7 +65,7 @@ func ConvertContentSummaryToThrift(contentSummary *article_summary.SummaryConten
 
 func CovertSummaryOutlineListToDO(outlineList []*speedy_read.SummaryOutline) []*article_summary.SummaryOutline {
 	outlineDoList := make([]*article_summary.SummaryOutline, 0)
-	for _, outline := range outlineDoList {
+	for _, outline := range outlineList {
 		outlineDoList = append(outlineDoList, &article_summary.SummaryOutline{
 			Title:   outline.Title,
 			Content: outline.Content,
@@ -76,7 +76,7 @@ func CovertSummaryOutlineListToDO(outlineList []*speedy_read.SummaryOutline) []*
 
 func CovertSummaryOutlineListToThrift(outlineList []*article_summary.SummaryOutline) []*speedy_read.SummaryOutline {
 	outlineDoList := make([]*speedy_read.SummaryOutline, 0)
-	for _, outline := range outlineDoList {
+	for _, outline := range outlineList {
 		outlineDoList = append(outlineDoList, &speedy_read.SummaryOutline{
 			Title:   outline.Title,
 			Content: outline.Content,
