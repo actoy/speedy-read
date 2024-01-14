@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	logInit()
+	//logInit()
 	// init infra
 	infra.Init()
 	addr, _ := net.ResolveTCPAddr("tcp", "127.0.0.1:3000")

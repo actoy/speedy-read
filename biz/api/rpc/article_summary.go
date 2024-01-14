@@ -31,6 +31,7 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 		klog.CtxErrorf(ctx, "params error")
 		return nil, err
 	}
+	klog.CtxInfof(ctx, "req %v", req)
 	id, err := s.articleSummarySvc.CreateArticle(ctx, &article_summary.ArticleSummary{
 		Article: &article.Article{
 			ID: utils.StringToInt64(req.ArticleID),
