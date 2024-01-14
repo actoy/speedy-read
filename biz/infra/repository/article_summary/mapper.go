@@ -86,15 +86,19 @@ func convertArticleSummaryDOToPO(do *article_summary.ArticleSummary) *ArticleSum
 		return nil
 	}
 	return &ArticleSummary{
+		ID:              do.ID,
 		ArticleID:       do.Article.ID,
 		Title:           do.Title,
 		Summary:         do.Summary,
 		TradingProposal: do.TradingProposal,
+		CreatedAt:       do.CreatedAt,
+		UpdatedAt:       do.UpdatedAt,
 	}
 }
 
 func convertContentSummaryDoToPo(do *article_summary.SummaryContent, summaryID int64) *SummaryContent {
 	return &SummaryContent{
+		ID:          do.ID,
 		SummaryID:   summaryID,
 		Original:    do.Original,
 		Translation: do.Translation,
@@ -105,6 +109,7 @@ func convertSummaryOutlineDoToPo(doList []*article_summary.SummaryOutline, summa
 	result := make([]*SummaryOutline, 0)
 	for _, do := range doList {
 		result = append(result, &SummaryOutline{
+			ID:        do.ID,
 			SummaryID: summaryID,
 			Title:     do.Title,
 			Content:   do.Content,

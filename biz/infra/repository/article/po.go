@@ -1,13 +1,12 @@
 package article
 
 import (
-	"speedy/read/biz/infra"
 	"speedy/read/biz/infra/repository/site"
 	"time"
 )
 
 type Article struct {
-	infra.Model
+	ID           int64
 	AuthorID     int64
 	Author       *Author
 	SourceSiteID int64
@@ -20,21 +19,27 @@ type Article struct {
 	Content      string
 	Status       int32
 	Score        int32
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type Author struct {
-	infra.Model
+	ID         int64
 	Url        string
 	AuthorName string
 	Image      string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
 type ArticleMeta struct {
-	infra.Model
+	ID        int64
 	ArticleID int64
 	MetaType  string
 	MetaKey   string
 	MetaValue string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (ArticleMeta) TableName() string {

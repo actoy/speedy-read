@@ -1,22 +1,26 @@
 package site
 
 import (
-	"speedy/read/biz/infra"
+	"time"
 )
 
 type Site struct {
-	infra.Model
+	ID          int64
 	Url         string
 	Description string
 	Tag         string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type SiteMeta struct {
-	infra.Model
+	ID        int64
 	SiteID    int64
 	MetaType  string
 	MetaKey   string
 	MetaValue string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (SiteMeta) TableName() string {

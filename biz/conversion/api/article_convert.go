@@ -24,6 +24,7 @@ func TimeToString(t time.Time) string {
 }
 
 func StringToTime(t string) time.Time {
+	// todo:ldy
 	return time.Now()
 }
 
