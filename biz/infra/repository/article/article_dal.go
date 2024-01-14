@@ -11,7 +11,22 @@ import (
 type ArticleRepo struct {
 }
 
+func (dal *ArticleRepo) GetArticleByUrl(ctx context.Context, url string) (*Article, error) {
+	article := &Article{}
+	result := infra.DB.WithContext(ctx).Where("url = ?", url).First(&article)
+	if result.Error == nil {
+		return article, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}
+
 func (dal *ArticleRepo) Save(ctx context.Context, articlePO *Article) (int64, error) {
+	existArticle, _ := dal.GetArticleByUrl(ctx, articlePO.Url)
+	if existArticle != nil {
+		return existArticle.ID, nil
+	}
 	articlePO.ID = infra.IdGenerate()
 	articlePO.CreatedAt = time.Now()
 	articlePO.UpdatedAt = time.Now()
