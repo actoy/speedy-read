@@ -6,11 +6,11 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"os"
-	"time"
 )
 
 var (
-	DB *gorm.DB
+	DB   *gorm.DB
+	node *snowflake.Node
 )
 
 func Init() {
@@ -26,19 +26,14 @@ func initMysql() {
 	if openDBErr != nil {
 		panic("mysql connect error")
 	}
-}
-
-type Model struct {
-	ID        int64 `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-func IdGenerate() int64 {
-	node, err := snowflake.NewNode(1)
+	var err error
+	node, err = snowflake.NewNode(1)
 	if err != nil {
 		println(err.Error())
 		os.Exit(1)
 	}
+}
+
+func IdGenerate() int64 {
 	return node.Generate().Int64()
 }
