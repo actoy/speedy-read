@@ -12,6 +12,7 @@ type ArticleRepo struct {
 }
 
 func (dal *ArticleRepo) Save(ctx context.Context, articlePO *Article) (int64, error) {
+	articlePO.ID = infra.IdGenerate()
 	articlePO.CreatedAt = time.Now()
 	articlePO.UpdatedAt = time.Now()
 	result := infra.DB.WithContext(ctx).Create(articlePO)
@@ -56,7 +57,8 @@ func (dal *ArticleRepo) GetArticleListByIDs(ctx context.Context, articleIDs []in
 func (dal *ArticleRepo) SetStatusReject(ctx context.Context, articleID int64) error {
 	result := infra.DB.WithContext(ctx).Model(&Article{}).
 		Where("id = ?", articleID).
-		Update("status", article.StatusReject)
+		Update("status", article.StatusReject).
+		Update("updated_at", time.Now())
 	if result.Error == nil {
 		return nil
 	} else if result.Error == gorm.ErrRecordNotFound {
@@ -69,7 +71,8 @@ func (dal *ArticleRepo) SetStatusPass(ctx context.Context, articleID int64, cont
 	result := infra.DB.WithContext(ctx).Model(&Article{}).
 		Where("id = ?", articleID).
 		Update("status", article.StatusPass).
-		Update("content", content)
+		Update("content", content).
+		Update("updated_at", time.Now())
 	if result.Error == nil {
 		return nil
 	} else if result.Error == gorm.ErrRecordNotFound {

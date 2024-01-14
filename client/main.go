@@ -14,11 +14,11 @@ func main() {
 	if err != nil {
 		klog.Error(err)
 	}
-	//testCreateSite(client)
+	testCreateSite(client)
 	//testGetSiteList(client)
 	//testCreateArticle(client)
 	//testGetArticleList(client)
-	testSaveArticleSummary(client)
+	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
 	//testEcho(client)
 	//testArticleCount(client)

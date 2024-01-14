@@ -11,7 +11,6 @@ func ConvertArticleDOToPO(articleDO *article.Article) *Article {
 		return nil
 	}
 	return &Article{
-		ID:         articleDO.ID,
 		Author:     ConvertAuthorDOToPO(articleDO.Author),
 		SourceSite: site.CovertPO(articleDO.SourceSite),
 		Language:   articleDO.Language,
@@ -21,8 +20,6 @@ func ConvertArticleDOToPO(articleDO *article.Article) *Article {
 		Title:      articleDO.Title,
 		Content:    articleDO.Content,
 		Status:     articleDO.Status,
-		CreatedAt:  articleDO.CreatedAt,
-		UpdatedAt:  articleDO.UpdatedAt,
 	}
 }
 
@@ -52,12 +49,9 @@ func ConvertAuthorDOToPO(authorDO *article.Author) *Author {
 		return nil
 	}
 	return &Author{
-		ID:         authorDO.ID,
 		Url:        authorDO.Url,
 		AuthorName: authorDO.AuthorName,
 		Image:      authorDO.Image,
-		CreatedAt:  authorDO.CreatedAt,
-		UpdatedAt:  authorDO.UpdatedAt,
 	}
 }
 
@@ -80,13 +74,10 @@ func ConvertArticleMetaDOToPO(metaDO *article.ArticleMeta) *ArticleMeta {
 		return nil
 	}
 	return &ArticleMeta{
-		ID:        metaDO.ID,
 		ArticleID: metaDO.ArticleID,
 		MetaType:  metaDO.MetaType,
 		MetaKey:   metaDO.MetaKey,
 		MetaValue: metaDO.MetaValue,
-		CreatedAt: metaDO.CreatedAt,
-		UpdatedAt: metaDO.UpdatedAt,
 	}
 }
 

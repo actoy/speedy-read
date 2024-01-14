@@ -9,12 +9,9 @@ func CovertPO(siteDO *site.Site) *Site {
 		return nil
 	}
 	return &Site{
-		ID:          siteDO.ID,
 		Url:         siteDO.Url,
 		Description: siteDO.Description,
 		Tag:         siteDO.Tag,
-		CreatedAt:   siteDO.CreatedAt,
-		UpdatedAt:   siteDO.UpdatedAt,
 	}
 }
 
@@ -23,7 +20,6 @@ func ConvertMetaDOToPO(metaDO *site.SiteMeta) *SiteMeta {
 		return nil
 	}
 	return &SiteMeta{
-		ID:        metaDO.ID,
 		SiteID:    metaDO.SiteID,
 		MetaType:  metaDO.MetaType,
 		MetaKey:   metaDO.MetaKey,

@@ -4,12 +4,16 @@ import (
 	"context"
 	"gorm.io/gorm"
 	"speedy/read/biz/infra"
+	"time"
 )
 
 type SummaryContentRepo struct {
 }
 
 func (r *SummaryContentRepo) Save(ctx context.Context, summaryContent *SummaryContent) error {
+	summaryContent.ID = infra.IdGenerate()
+	summaryContent.CreatedAt = time.Now()
+	summaryContent.UpdatedAt = time.Now()
 	infra.DB.Where("summary_id = ?", summaryContent.SummaryID).Delete(&SummaryContent{})
 	result := infra.DB.Create(summaryContent)
 	if result.Error != nil {

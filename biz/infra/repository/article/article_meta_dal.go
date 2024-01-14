@@ -19,6 +19,7 @@ func (dal *ArticleMetaRepo) Save(ctx context.Context, articleMetaPO *ArticleMeta
 	if result.Error == nil && metaPO.ID != 0 {
 		return metaPO.ID, nil
 	}
+	articleMetaPO.ID = infra.IdGenerate()
 	articleMetaPO.CreatedAt = time.Now()
 	articleMetaPO.UpdatedAt = time.Now()
 	result = infra.DB.WithContext(ctx).Create(articleMetaPO)

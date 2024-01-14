@@ -4,6 +4,7 @@ import (
 	"context"
 	"gorm.io/gorm"
 	"speedy/read/biz/infra"
+	"time"
 )
 
 type SummaryOutlineRepo struct {
@@ -14,6 +15,11 @@ func (r *SummaryOutlineRepo) Save(ctx context.Context, outlineList []*SummaryOut
 		return nil
 	}
 	infra.DB.Where("summary_id = ?", outlineList[0].SummaryID).Delete(&SummaryOutline{})
+	for _, outline := range outlineList {
+		outline.ID = infra.IdGenerate()
+		outline.CreatedAt = time.Now()
+		outline.UpdatedAt = time.Now()
+	}
 	result := infra.DB.Create(outlineList)
 	if result.Error != nil {
 		return result.Error

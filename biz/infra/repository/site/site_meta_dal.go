@@ -12,6 +12,7 @@ type SiteMetaRepo struct {
 }
 
 func (dal *SiteMetaRepo) Save(ctx context.Context, siteMetaPO *SiteMeta) {
+	siteMetaPO.ID = infra.IdGenerate()
 	metaPO := &SiteMeta{}
 	result := infra.DB.WithContext(ctx).
 		Where("site_id = ? and meta_key = ? and meta_value = ?",

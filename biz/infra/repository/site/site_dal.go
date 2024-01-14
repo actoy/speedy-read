@@ -11,6 +11,7 @@ type SiteRepo struct {
 }
 
 func (dal *SiteRepo) Save(ctx context.Context, sitePO *Site) (int64, error) {
+	sitePO.ID = infra.IdGenerate()
 	sitePO.CreatedAt = time.Now()
 	sitePO.UpdatedAt = time.Now()
 	result := infra.DB.WithContext(ctx).Create(sitePO)

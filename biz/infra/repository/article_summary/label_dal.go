@@ -16,6 +16,7 @@ func (r *LabelRepo) Save(ctx context.Context, labelPO *Label) (int64, error) {
 	if result.Error == nil && existLabelPO.ID != 0 {
 		return existLabelPO.ID, nil
 	}
+	labelPO.ID = infra.IdGenerate()
 	labelPO.CreatedAt = time.Now()
 	labelPO.UpdatedAt = time.Now()
 	result = infra.DB.Create(labelPO)

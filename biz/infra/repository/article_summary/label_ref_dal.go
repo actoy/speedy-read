@@ -11,6 +11,7 @@ type LabelRefRepo struct {
 }
 
 func (r *LabelRefRepo) Save(ctx context.Context, labelRefPO *LabelRef) (int64, error) {
+	labelRefPO.ID = infra.IdGenerate()
 	labelRefPO.CreatedAt = time.Now()
 	labelRefPO.UpdatedAt = time.Now()
 	result := infra.DB.WithContext(ctx).Create(labelRefPO)

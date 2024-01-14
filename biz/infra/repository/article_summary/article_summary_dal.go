@@ -25,6 +25,7 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 		infra.DB.Save(existArticleSummaryPO)
 		return existArticleSummaryPO.ID, nil
 	}
+	articleSummaryPO.ID = infra.IdGenerate()
 	articleSummaryPO.CreatedAt = time.Now()
 	articleSummaryPO.UpdatedAt = time.Now()
 	result = infra.DB.Create(articleSummaryPO)

@@ -33,6 +33,7 @@ func (dal *AuthorRepo) GetAuthorByAuthorName(ctx context.Context, AuthorName str
 }
 
 func (dal *AuthorRepo) Save(ctx context.Context, authorPO *Author) (int64, error) {
+	authorPO.ID = infra.IdGenerate()
 	authorPO.CreatedAt = time.Now()
 	authorPO.UpdatedAt = time.Now()
 	result := infra.DB.WithContext(ctx).Create(authorPO)

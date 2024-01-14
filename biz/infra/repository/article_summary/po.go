@@ -1,15 +1,15 @@
 package article_summary
 
-import "time"
+import (
+	"speedy/read/biz/infra"
+)
 
 type ArticleSummary struct {
-	ID              int64
+	infra.Model
 	ArticleID       int64
 	Title           string
 	Summary         string
 	TradingProposal int32
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
 }
 
 func (ArticleSummary) TableName() string {
@@ -17,23 +17,19 @@ func (ArticleSummary) TableName() string {
 }
 
 type Label struct {
-	ID          int64
+	infra.Model
 	Description string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
 }
 
 type LabelRef struct {
-	ID         int64
+	infra.Model
 	SourceID   int64
 	SourceType string
 	LabelID    int64
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
 }
 
 type SummaryContent struct {
-	ID          int64
+	infra.Model
 	SummaryID   int64
 	Original    string
 	Translation string
@@ -44,7 +40,7 @@ func (SummaryContent) TableName() string {
 }
 
 type SummaryOutline struct {
-	ID        int64
+	infra.Model
 	SummaryID int64
 	Title     string
 	Content   string

@@ -1,9 +1,12 @@
 package infra
 
 import (
+	"github.com/bwmarrin/snowflake"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"os"
+	"time"
 )
 
 var (
@@ -23,4 +26,19 @@ func initMysql() {
 	if openDBErr != nil {
 		panic("mysql connect error")
 	}
+}
+
+type Model struct {
+	ID        int64 `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func IdGenerate() int64 {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
+	}
+	return node.Generate().Int64()
 }
