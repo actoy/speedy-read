@@ -18,7 +18,6 @@ import (
 
 type DataCrawServiceI interface {
 	CrawArticle(ctx context.Context) error
-	CrawFromApi(ctx context.Context)
 }
 
 type DataCrawService struct {
@@ -37,32 +36,44 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 		klog.CtxErrorf(ctx, "get site list err: %v", err)
 		return err
 	}
-	var (
-		resp = &http.Response{}
-	)
 	for _, siteDO := range siteList {
-		if siteDO == nil {
-			continue
-		}
-		resp, err = http.Get(siteDO.Url)
-		if err != nil {
-			klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, err)
-			continue
-		}
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
-			continue
-		}
-		switch siteDO.Tag {
-		case site.SeekingAlphaTag:
-			return impl.dealSeekingAlpha(ctx, body, siteDO)
+		switch siteDO.Type {
+		case site.SiteTypeRss:
+			return impl.dealArticle4Rss(ctx, siteDO)
+		case site.SiteTypeCraw:
+			return impl.dealArticle4Craw(ctx, siteDO)
 		default:
 			return nil
 		}
 	}
-	defer resp.Body.Close()
 	return nil
+}
+
+func (impl *DataCrawService) dealArticle4Rss(ctx context.Context, siteDO *site.Site) error {
+	var (
+		resp = &http.Response{}
+		err  error
+	)
+	if siteDO == nil {
+		return nil
+	}
+	resp, err = http.Get(siteDO.Url)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, err)
+		return err
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
+		return err
+	}
+	defer resp.Body.Close()
+	switch siteDO.Tag {
+	case site.SeekingAlphaTag:
+		return impl.dealSeekingAlpha(ctx, body, siteDO)
+	default:
+		return nil
+	}
 }
 
 func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, siteDO *site.Site) error {
@@ -96,8 +107,10 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 				Url:         siteDO.Url,
 				Tag:         site.SeekingAlphaTag,
 				Description: site.SeekingAlphaTag,
+				Type:        siteDO.Type,
+				TypeKey:     siteDO.TypeKey,
 			},
-			ArticleMetaList: dearSeekingAlphaMeta(item.Stock),
+			ArticleMetaList: dealSeekingAlphaMeta(item.Stock),
 			Status:          article.StatusInit,
 			Url:             articleUrl,
 			Title:           item.Title,
@@ -113,10 +126,54 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 	return nil
 }
 
-func (impl *DataCrawService) CrawFromApi(ctx context.Context) {
+func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.Site) error {
+	if siteDO == nil {
+		return nil
+	}
+	// 获取未处理的导出数据
+	exportedDataList, err := craw_data.GetNotExportedData(ctx, siteDO.TypeKey)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Error get not exported data %s: %v", siteDO.TypeKey, err)
+		return err
+	}
+
+	// 创建article
+	articleSvc := NewArticleService()
+	for _, item := range exportedDataList {
+		id, err := articleSvc.CreateArticle(ctx, &article.Article{
+			Author: &article.Author{
+				AuthorName: item.AuthorName,
+				Url:        item.AuthorUrl,
+			},
+			SourceSite: &site.Site{
+				Url:         siteDO.Url,
+				Tag:         siteDO.Tag,
+				Description: siteDO.Description,
+				Type:        siteDO.Type,
+				TypeKey:     siteDO.TypeKey,
+			},
+			Status:    article.StatusInit,
+			Url:       item.ArticleUrl,
+			Title:     item.ArticleTitle,
+			PublishAt: dealCrawPublishAt(item.PublishAt, siteDO.Tag),
+			Content:   item.ArticleContent,
+		})
+		if err != nil {
+			klog.CtxErrorf(ctx, "create article error is %v", err)
+			continue
+		}
+		klog.CtxInfof(ctx, "create article success, id is %d", id)
+	}
+
+	// 标记数据为已处理
+	marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+	if !marked {
+		klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+	}
+	return nil
 }
 
-func dearSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.ArticleMeta {
+func dealSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.ArticleMeta {
 	result := make([]*article.ArticleMeta, 0)
 	if len(stockList) == 0 {
 		result = append(result, &article.ArticleMeta{
@@ -133,4 +190,18 @@ func dearSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.Article
 		})
 	}
 	return result
+}
+
+func dealCrawPublishAt(publishAt string, tag string) time.Time {
+	switch tag {
+	case site.FoolTag:
+		// todo:ldy
+		publishTime, err := time.Parse(time.RFC1123Z, publishAt)
+		if err != nil {
+			klog.Errorf("time parse error %v", err)
+			return time.Time{}
+		}
+		return publishTime
+	}
+	return time.Time{}
 }

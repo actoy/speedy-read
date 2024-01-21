@@ -4,6 +4,7 @@ import "time"
 
 const (
 	SeekingAlphaTag = "SeekingAlpha"
+	FoolTag         = "Fool"
 
 	SiteTypeRss  = "rss"
 	SiteTypeCraw = "craw"
