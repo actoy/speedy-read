@@ -45,6 +45,8 @@ func (s *SiteHandler) CreateSiteInfo(ctx context.Context, req *speedy_read.Creat
 		Url:         req.Url,
 		Description: req.Description,
 		Tag:         req.Tag,
+		Type:        req.Type,
+		TypeKey:     req.TypeKey,
 	}
 	if req.MetaType != nil {
 		siteDO.SiteMeta = &site.SiteMeta{
