@@ -14,13 +14,13 @@ func main() {
 	if err != nil {
 		klog.Error(err)
 	}
-	//testCreateSite(client)
+	testCreateSite(client)
 	//testGetSiteList(client)
 	//testCreateArticle(client)
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	testEcho(client)
+	//testEcho(client)
 	//testArticleCount(client)
 }
 
@@ -39,6 +39,7 @@ func testCreateSite(client speedyread.Client) {
 		MetaType:    stringPtr("stock"),
 		MetaValue:   stringPtr("TSLA"),
 		MetaKey:     stringPtr("Tesla, Inc."),
+		Type:        speedy_read.SiteTypeRss,
 	}
 	id, err := client.CreateSiteInfo(context.Background(), createParams)
 	if err != nil {
