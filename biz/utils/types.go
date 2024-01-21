@@ -18,3 +18,10 @@ func StringToInt64List(sList []string) []int64 {
 	}
 	return result
 }
+
+func StringPtr(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
+}

@@ -23,7 +23,9 @@ func (r *Repository) Create(ctx context.Context, siteDO *site.Site) (int64, erro
 		return int64(0), err
 	}
 	siteDO.SiteMeta.SiteID = siteID
-	r.SiteMetaRepo.Save(ctx, ConvertMetaDOToPO(siteDO.SiteMeta))
+	if siteDO.SiteMeta != nil {
+		r.SiteMetaRepo.Save(ctx, ConvertMetaDOToPO(siteDO.SiteMeta))
+	}
 	return siteID, nil
 }
 

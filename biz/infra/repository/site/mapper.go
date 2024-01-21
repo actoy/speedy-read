@@ -13,6 +13,8 @@ func CovertPO(siteDO *site.Site) *Site {
 		Url:         siteDO.Url,
 		Description: siteDO.Description,
 		Tag:         siteDO.Tag,
+		Type:        siteDO.Type,
+		TypeKey:     siteDO.TypeKey,
 		CreatedAt:   siteDO.CreatedAt,
 		UpdatedAt:   siteDO.UpdatedAt,
 	}
@@ -43,6 +45,8 @@ func CovertDO(sitePO *Site, metaPO *SiteMeta) *site.Site {
 		Url:         sitePO.Url,
 		Description: sitePO.Description,
 		Tag:         sitePO.Tag,
+		Type:        sitePO.Type,
+		TypeKey:     sitePO.TypeKey,
 		CreatedAt:   sitePO.CreatedAt,
 		UpdatedAt:   sitePO.UpdatedAt,
 	}

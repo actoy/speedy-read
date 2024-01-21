@@ -366,6 +366,7 @@ func (p *GetSiteResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetSiteList bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -389,6 +390,7 @@ func (p *GetSiteResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSiteList = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -416,6 +418,10 @@ func (p *GetSiteResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetSiteList {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -429,6 +435,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetSiteResponse[fieldId]))
 }
 
 func (p *GetSiteResponse) FastReadField1(buf []byte) (int, error) {
@@ -519,6 +527,12 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetUrl bool = false
+	var issetDescription bool = false
+	var issetTag bool = false
+	var issetCreatedAt bool = false
+	var issetUpdatedAt bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -542,6 +556,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -570,6 +585,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUrl = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -584,6 +600,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetDescription = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -598,6 +615,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTag = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -612,6 +630,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -626,6 +645,7 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUpdatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -653,6 +673,35 @@ func (p *SiteInfo) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUrl {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetDescription {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTag {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -666,6 +715,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SiteInfo[fieldId]))
 }
 
 func (p *SiteInfo) FastReadField1(buf []byte) (int, error) {
@@ -815,9 +866,11 @@ func (p *SiteInfo) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter
 
 func (p *SiteInfo) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteMeta", thrift.STRUCT, 2)
-	offset += p.SiteMeta.FastWriteNocopy(buf[offset:], binaryWriter)
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	if p.IsSetSiteMeta() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteMeta", thrift.STRUCT, 2)
+		offset += p.SiteMeta.FastWriteNocopy(buf[offset:], binaryWriter)
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
@@ -877,9 +930,11 @@ func (p *SiteInfo) field1Length() int {
 
 func (p *SiteInfo) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("SiteMeta", thrift.STRUCT, 2)
-	l += p.SiteMeta.BLength()
-	l += bthrift.Binary.FieldEndLength()
+	if p.IsSetSiteMeta() {
+		l += bthrift.Binary.FieldBeginLength("SiteMeta", thrift.STRUCT, 2)
+		l += p.SiteMeta.BLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
@@ -934,6 +989,13 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetSiteID bool = false
+	var issetMetaType bool = false
+	var issetMetaKey bool = false
+	var issetMetaValue bool = false
+	var issetCreatedAt bool = false
+	var issetUpdatedAt bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -957,6 +1019,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -971,6 +1034,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSiteID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -985,6 +1049,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaType = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -999,6 +1064,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaKey = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1013,6 +1079,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaValue = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1027,6 +1094,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1041,6 +1109,7 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUpdatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1068,6 +1137,40 @@ func (p *SiteMeta) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetSiteID {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaType {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaKey {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaValue {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1081,6 +1184,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SiteMeta[fieldId]))
 }
 
 func (p *SiteMeta) FastReadField1(buf []byte) (int, error) {
@@ -1352,6 +1457,11 @@ func (p *CreateSiteRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetUrl bool = false
+	var issetDescription bool = false
+	var issetTag bool = false
+	var issetType bool = false
+	var issetTypeKey bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1417,6 +1527,7 @@ func (p *CreateSiteRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUrl = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1431,6 +1542,7 @@ func (p *CreateSiteRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetDescription = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1445,6 +1557,37 @@ func (p *CreateSiteRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTag = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetType = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetTypeKey = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1472,6 +1615,30 @@ func (p *CreateSiteRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetUrl {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetDescription {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTag {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetType {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTypeKey {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1485,6 +1652,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CreateSiteRequest[fieldId]))
 }
 
 func (p *CreateSiteRequest) FastReadField1(buf []byte) (int, error) {
@@ -1494,8 +1663,7 @@ func (p *CreateSiteRequest) FastReadField1(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-
-		p.MetaType = v
+		p.MetaType = &v
 
 	}
 	return offset, nil
@@ -1508,8 +1676,7 @@ func (p *CreateSiteRequest) FastReadField2(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-
-		p.MetaKey = v
+		p.MetaKey = &v
 
 	}
 	return offset, nil
@@ -1522,8 +1689,7 @@ func (p *CreateSiteRequest) FastReadField3(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-
-		p.MetaValue = v
+		p.MetaValue = &v
 
 	}
 	return offset, nil
@@ -1571,6 +1737,34 @@ func (p *CreateSiteRequest) FastReadField6(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *CreateSiteRequest) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.Type = v
+
+	}
+	return offset, nil
+}
+
+func (p *CreateSiteRequest) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.TypeKey = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *CreateSiteRequest) FastWrite(buf []byte) int {
 	return 0
@@ -1586,6 +1780,8 @@ func (p *CreateSiteRequest) FastWriteNocopy(buf []byte, binaryWriter bthrift.Bin
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 		offset += p.fastWriteField5(buf[offset:], binaryWriter)
 		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -1602,6 +1798,8 @@ func (p *CreateSiteRequest) BLength() int {
 		l += p.field4Length()
 		l += p.field5Length()
 		l += p.field6Length()
+		l += p.field7Length()
+		l += p.field8Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -1610,28 +1808,34 @@ func (p *CreateSiteRequest) BLength() int {
 
 func (p *CreateSiteRequest) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaType", thrift.STRING, 1)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.MetaType)
+	if p.IsSetMetaType() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaType", thrift.STRING, 1)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.MetaType)
 
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
 func (p *CreateSiteRequest) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaKey", thrift.STRING, 2)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.MetaKey)
+	if p.IsSetMetaKey() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaKey", thrift.STRING, 2)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.MetaKey)
 
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
 func (p *CreateSiteRequest) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaValue", thrift.STRING, 3)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.MetaValue)
+	if p.IsSetMetaValue() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "MetaValue", thrift.STRING, 3)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.MetaValue)
 
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
@@ -1662,30 +1866,54 @@ func (p *CreateSiteRequest) fastWriteField6(buf []byte, binaryWriter bthrift.Bin
 	return offset
 }
 
+func (p *CreateSiteRequest) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Type", thrift.STRING, 7)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Type)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *CreateSiteRequest) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "TypeKey", thrift.STRING, 8)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.TypeKey)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *CreateSiteRequest) field1Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("MetaType", thrift.STRING, 1)
-	l += bthrift.Binary.StringLengthNocopy(p.MetaType)
+	if p.IsSetMetaType() {
+		l += bthrift.Binary.FieldBeginLength("MetaType", thrift.STRING, 1)
+		l += bthrift.Binary.StringLengthNocopy(*p.MetaType)
 
-	l += bthrift.Binary.FieldEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
 func (p *CreateSiteRequest) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("MetaKey", thrift.STRING, 2)
-	l += bthrift.Binary.StringLengthNocopy(p.MetaKey)
+	if p.IsSetMetaKey() {
+		l += bthrift.Binary.FieldBeginLength("MetaKey", thrift.STRING, 2)
+		l += bthrift.Binary.StringLengthNocopy(*p.MetaKey)
 
-	l += bthrift.Binary.FieldEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
 func (p *CreateSiteRequest) field3Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("MetaValue", thrift.STRING, 3)
-	l += bthrift.Binary.StringLengthNocopy(p.MetaValue)
+	if p.IsSetMetaValue() {
+		l += bthrift.Binary.FieldBeginLength("MetaValue", thrift.STRING, 3)
+		l += bthrift.Binary.StringLengthNocopy(*p.MetaValue)
 
-	l += bthrift.Binary.FieldEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
@@ -1716,12 +1944,31 @@ func (p *CreateSiteRequest) field6Length() int {
 	return l
 }
 
+func (p *CreateSiteRequest) field7Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("Type", thrift.STRING, 7)
+	l += bthrift.Binary.StringLengthNocopy(p.Type)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *CreateSiteRequest) field8Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("TypeKey", thrift.STRING, 8)
+	l += bthrift.Binary.StringLengthNocopy(p.TypeKey)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
 func (p *CreateSiteResponse) FastRead(buf []byte) (int, error) {
 	var err error
 	var offset int
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1745,6 +1992,7 @@ func (p *CreateSiteResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1772,6 +2020,10 @@ func (p *CreateSiteResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1785,6 +2037,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CreateSiteResponse[fieldId]))
 }
 
 func (p *CreateSiteResponse) FastReadField1(buf []byte) (int, error) {
@@ -1852,6 +2106,8 @@ func (p *GetArticleListRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetLimit bool = false
+	var issetOffset bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -1903,6 +2159,7 @@ func (p *GetArticleListRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetLimit = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1917,6 +2174,7 @@ func (p *GetArticleListRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOffset = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -1944,6 +2202,15 @@ func (p *GetArticleListRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetLimit {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOffset {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1957,6 +2224,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetArticleListRequest[fieldId]))
 }
 
 func (p *GetArticleListRequest) FastReadField1(buf []byte) (int, error) {
@@ -1996,8 +2265,7 @@ func (p *GetArticleListRequest) FastReadField2(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-
-		p.ArticleType = v
+		p.ArticleType = &v
 
 	}
 	return offset, nil
@@ -2066,27 +2334,31 @@ func (p *GetArticleListRequest) BLength() int {
 
 func (p *GetArticleListRequest) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 1)
-	listBeginOffset := offset
-	offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
-	var length int
-	for _, v := range p.SiteIdList {
-		length++
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+	if p.IsSetSiteIdList() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 1)
+		listBeginOffset := offset
+		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+		var length int
+		for _, v := range p.SiteIdList {
+			length++
+			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
 
+		}
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+		offset += bthrift.Binary.WriteListEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
-	bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
-	offset += bthrift.Binary.WriteListEnd(buf[offset:])
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
 func (p *GetArticleListRequest) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleType", thrift.STRING, 2)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.ArticleType)
+	if p.IsSetArticleType() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleType", thrift.STRING, 2)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ArticleType)
 
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
@@ -2110,23 +2382,27 @@ func (p *GetArticleListRequest) fastWriteField4(buf []byte, binaryWriter bthrift
 
 func (p *GetArticleListRequest) field1Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 1)
-	l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
-	for _, v := range p.SiteIdList {
-		l += bthrift.Binary.StringLengthNocopy(v)
+	if p.IsSetSiteIdList() {
+		l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 1)
+		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
+		for _, v := range p.SiteIdList {
+			l += bthrift.Binary.StringLengthNocopy(v)
 
+		}
+		l += bthrift.Binary.ListEndLength()
+		l += bthrift.Binary.FieldEndLength()
 	}
-	l += bthrift.Binary.ListEndLength()
-	l += bthrift.Binary.FieldEndLength()
 	return l
 }
 
 func (p *GetArticleListRequest) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("ArticleType", thrift.STRING, 2)
-	l += bthrift.Binary.StringLengthNocopy(p.ArticleType)
+	if p.IsSetArticleType() {
+		l += bthrift.Binary.FieldBeginLength("ArticleType", thrift.STRING, 2)
+		l += bthrift.Binary.StringLengthNocopy(*p.ArticleType)
 
-	l += bthrift.Binary.FieldEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
@@ -2154,6 +2430,7 @@ func (p *GetArticleListResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetArticleList bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -2177,6 +2454,7 @@ func (p *GetArticleListResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticleList = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2204,6 +2482,10 @@ func (p *GetArticleListResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetArticleList {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -2217,6 +2499,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetArticleListResponse[fieldId]))
 }
 
 func (p *GetArticleListResponse) FastReadField1(buf []byte) (int, error) {
@@ -2307,6 +2591,19 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetAuthor bool = false
+	var issetSite bool = false
+	var issetLanguage bool = false
+	var issetPublishAt bool = false
+	var issetUrl bool = false
+	var issetType bool = false
+	var issetTitle bool = false
+	var issetContent bool = false
+	var issetStatus bool = false
+	var issetScore bool = false
+	var issetCreatedAt bool = false
+	var issetUpdatedAt bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -2330,6 +2627,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2344,6 +2642,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetAuthor = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2358,6 +2657,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSite = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2386,6 +2686,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetLanguage = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2400,6 +2701,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetPublishAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2414,6 +2716,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUrl = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2428,6 +2731,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetType = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2442,6 +2746,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTitle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2456,6 +2761,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContent = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2470,6 +2776,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetStatus = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2484,6 +2791,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetScore = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2498,6 +2806,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2512,6 +2821,7 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUpdatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -2539,6 +2849,70 @@ func (p *Article) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetAuthor {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetSite {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLanguage {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetPublishAt {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUrl {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetType {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTitle {
+		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContent {
+		fieldId = 10
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetStatus {
+		fieldId = 11
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetScore {
+		fieldId = 12
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 13
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 14
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -2552,6 +2926,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_Article[fieldId]))
 }
 
 func (p *Article) FastReadField1(buf []byte) (int, error) {
@@ -2841,17 +3217,19 @@ func (p *Article) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter)
 
 func (p *Article) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleMetaList", thrift.LIST, 4)
-	listBeginOffset := offset
-	offset += bthrift.Binary.ListBeginLength(thrift.STRUCT, 0)
-	var length int
-	for _, v := range p.ArticleMetaList {
-		length++
-		offset += v.FastWriteNocopy(buf[offset:], binaryWriter)
+	if p.IsSetArticleMetaList() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleMetaList", thrift.LIST, 4)
+		listBeginOffset := offset
+		offset += bthrift.Binary.ListBeginLength(thrift.STRUCT, 0)
+		var length int
+		for _, v := range p.ArticleMetaList {
+			length++
+			offset += v.FastWriteNocopy(buf[offset:], binaryWriter)
+		}
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRUCT, length)
+		offset += bthrift.Binary.WriteListEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
-	bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRUCT, length)
-	offset += bthrift.Binary.WriteListEnd(buf[offset:])
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
@@ -2972,13 +3350,15 @@ func (p *Article) field3Length() int {
 
 func (p *Article) field4Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("ArticleMetaList", thrift.LIST, 4)
-	l += bthrift.Binary.ListBeginLength(thrift.STRUCT, len(p.ArticleMetaList))
-	for _, v := range p.ArticleMetaList {
-		l += v.BLength()
+	if p.IsSetArticleMetaList() {
+		l += bthrift.Binary.FieldBeginLength("ArticleMetaList", thrift.LIST, 4)
+		l += bthrift.Binary.ListBeginLength(thrift.STRUCT, len(p.ArticleMetaList))
+		for _, v := range p.ArticleMetaList {
+			l += v.BLength()
+		}
+		l += bthrift.Binary.ListEndLength()
+		l += bthrift.Binary.FieldEndLength()
 	}
-	l += bthrift.Binary.ListEndLength()
-	l += bthrift.Binary.FieldEndLength()
 	return l
 }
 
@@ -3078,6 +3458,12 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetUrl bool = false
+	var issetAuthorName bool = false
+	var issetImage bool = false
+	var issetCreatedAt bool = false
+	var issetUpdatedAt bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -3101,6 +3487,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3115,6 +3502,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUrl = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3129,6 +3517,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetAuthorName = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3143,6 +3532,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetImage = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3157,6 +3547,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3171,6 +3562,7 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUpdatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3198,6 +3590,35 @@ func (p *Author) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUrl {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetAuthorName {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetImage {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -3211,6 +3632,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_Author[fieldId]))
 }
 
 func (p *Author) FastReadField1(buf []byte) (int, error) {
@@ -3448,6 +3871,13 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetArticleID bool = false
+	var issetMetaType bool = false
+	var issetMetaKey bool = false
+	var issetMetaValue bool = false
+	var issetCreatedAt bool = false
+	var issetUpdatedAt bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -3471,6 +3901,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3485,6 +3916,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticleID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3499,6 +3931,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaType = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3513,6 +3946,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaKey = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3527,6 +3961,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetMetaValue = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3541,6 +3976,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3555,6 +3991,7 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetUpdatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3582,6 +4019,40 @@ func (p *ArticleMeta) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetArticleID {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaType {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaKey {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetMetaValue {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -3595,6 +4066,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleMeta[fieldId]))
 }
 
 func (p *ArticleMeta) FastReadField1(buf []byte) (int, error) {
@@ -3866,6 +4339,7 @@ func (p *CreateArticleRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetArticle bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -3889,6 +4363,7 @@ func (p *CreateArticleRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -3916,6 +4391,10 @@ func (p *CreateArticleRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetArticle {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -3929,6 +4408,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CreateArticleRequest[fieldId]))
 }
 
 func (p *CreateArticleRequest) FastReadField1(buf []byte) (int, error) {
@@ -3993,6 +4474,7 @@ func (p *CreateArticleResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -4016,6 +4498,7 @@ func (p *CreateArticleResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4043,6 +4526,10 @@ func (p *CreateArticleResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -4056,6 +4543,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CreateArticleResponse[fieldId]))
 }
 
 func (p *CreateArticleResponse) FastReadField1(buf []byte) (int, error) {
@@ -4123,6 +4612,7 @@ func (p *RejectArticleRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetArticleID bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -4146,6 +4636,7 @@ func (p *RejectArticleRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticleID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4173,6 +4664,10 @@ func (p *RejectArticleRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetArticleID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -4186,6 +4681,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_RejectArticleRequest[fieldId]))
 }
 
 func (p *RejectArticleRequest) FastReadField1(buf []byte) (int, error) {
@@ -4253,6 +4750,7 @@ func (p *RejectArticleResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetSuccess bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -4276,6 +4774,7 @@ func (p *RejectArticleResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSuccess = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4303,6 +4802,10 @@ func (p *RejectArticleResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetSuccess {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -4316,6 +4819,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_RejectArticleResponse[fieldId]))
 }
 
 func (p *RejectArticleResponse) FastReadField1(buf []byte) (int, error) {
@@ -4383,6 +4888,15 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetArticleID bool = false
+	var issetTitle bool = false
+	var issetContent bool = false
+	var issetSummary bool = false
+	var issetContentSummary bool = false
+	var issetOutline bool = false
+	var issetOutlineString bool = false
+	var issetTags bool = false
+	var issetTradingProposal bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -4406,6 +4920,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticleID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4420,6 +4935,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTitle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4434,6 +4950,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContent = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4448,6 +4965,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSummary = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4462,6 +4980,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContentSummary = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4476,6 +4995,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOutline = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4490,6 +5010,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOutlineString = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4504,6 +5025,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTags = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4518,6 +5040,7 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTradingProposal = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -4545,6 +5068,50 @@ func (p *SaveArticleSummaryRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetArticleID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTitle {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContent {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetSummary {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContentSummary {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOutline {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOutlineString {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTradingProposal {
+		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -4558,6 +5125,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SaveArticleSummaryRequest[fieldId]))
 }
 
 func (p *SaveArticleSummaryRequest) FastReadField1(buf []byte) (int, error) {
@@ -4973,6 +5542,7 @@ func (p *SaveArticleSummaryResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -4996,6 +5566,7 @@ func (p *SaveArticleSummaryResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5023,6 +5594,10 @@ func (p *SaveArticleSummaryResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -5036,6 +5611,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SaveArticleSummaryResponse[fieldId]))
 }
 
 func (p *SaveArticleSummaryResponse) FastReadField1(buf []byte) (int, error) {
@@ -5103,6 +5680,8 @@ func (p *ArticleSummaryListRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetLimit bool = false
+	var issetOffset bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -5126,6 +5705,7 @@ func (p *ArticleSummaryListRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetLimit = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5140,6 +5720,7 @@ func (p *ArticleSummaryListRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOffset = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5167,6 +5748,15 @@ func (p *ArticleSummaryListRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetLimit {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOffset {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -5180,6 +5770,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummaryListRequest[fieldId]))
 }
 
 func (p *ArticleSummaryListRequest) FastReadField1(buf []byte) (int, error) {
@@ -5281,6 +5873,16 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetID bool = false
+	var issetArticle bool = false
+	var issetTitle bool = false
+	var issetContent bool = false
+	var issetSummary bool = false
+	var issetContentSummary bool = false
+	var issetOutline bool = false
+	var issetTags bool = false
+	var issetCreatedAt bool = false
+	var issetTradingProposal bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -5304,6 +5906,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetID = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5318,6 +5921,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5332,6 +5936,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTitle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5346,6 +5951,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContent = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5360,6 +5966,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetSummary = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5374,6 +5981,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContentSummary = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5388,6 +5996,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOutline = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5402,6 +6011,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTags = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5416,6 +6026,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCreatedAt = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5430,6 +6041,7 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTradingProposal = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5457,6 +6069,55 @@ func (p *ArticleSummary) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetArticle {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTitle {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContent {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetSummary {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContentSummary {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetOutline {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTags {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCreatedAt {
+		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTradingProposal {
+		fieldId = 10
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -5470,6 +6131,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummary[fieldId]))
 }
 
 func (p *ArticleSummary) FastReadField1(buf []byte) (int, error) {
@@ -5888,6 +6551,8 @@ func (p *ArticleContentSummary) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetOriginal bool = false
+	var issetTranslation bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -5911,6 +6576,7 @@ func (p *ArticleContentSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetOriginal = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5925,6 +6591,7 @@ func (p *ArticleContentSummary) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTranslation = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -5952,6 +6619,15 @@ func (p *ArticleContentSummary) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetOriginal {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTranslation {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -5965,6 +6641,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleContentSummary[fieldId]))
 }
 
 func (p *ArticleContentSummary) FastReadField1(buf []byte) (int, error) {
@@ -6066,6 +6744,8 @@ func (p *SummaryOutline) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetTitle bool = false
+	var issetContent bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -6089,6 +6769,7 @@ func (p *SummaryOutline) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetTitle = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6103,6 +6784,7 @@ func (p *SummaryOutline) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetContent = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6130,6 +6812,15 @@ func (p *SummaryOutline) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetTitle {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetContent {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -6143,6 +6834,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_SummaryOutline[fieldId]))
 }
 
 func (p *SummaryOutline) FastReadField1(buf []byte) (int, error) {
@@ -6244,6 +6937,7 @@ func (p *ArticleSummaryListResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetArticleSummaryList bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -6267,6 +6961,7 @@ func (p *ArticleSummaryListResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetArticleSummaryList = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6294,6 +6989,10 @@ func (p *ArticleSummaryListResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetArticleSummaryList {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -6307,6 +7006,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummaryListResponse[fieldId]))
 }
 
 func (p *ArticleSummaryListResponse) FastReadField1(buf []byte) (int, error) {
@@ -6397,6 +7098,7 @@ func (p *ArticleCountRequest) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetStatus bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -6420,6 +7122,7 @@ func (p *ArticleCountRequest) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetStatus = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6475,6 +7178,10 @@ func (p *ArticleCountRequest) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetStatus {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -6488,6 +7195,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleCountRequest[fieldId]))
 }
 
 func (p *ArticleCountRequest) FastReadField1(buf []byte) (int, error) {
@@ -6541,8 +7250,7 @@ func (p *ArticleCountRequest) FastReadField3(buf []byte) (int, error) {
 		return offset, err
 	} else {
 		offset += l
-
-		p.ArticleType = v
+		p.ArticleType = &v
 
 	}
 	return offset, nil
@@ -6590,27 +7298,31 @@ func (p *ArticleCountRequest) fastWriteField1(buf []byte, binaryWriter bthrift.B
 
 func (p *ArticleCountRequest) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 2)
-	listBeginOffset := offset
-	offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
-	var length int
-	for _, v := range p.SiteIdList {
-		length++
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
+	if p.IsSetSiteIdList() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 2)
+		listBeginOffset := offset
+		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
+		var length int
+		for _, v := range p.SiteIdList {
+			length++
+			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
 
+		}
+		bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
+		offset += bthrift.Binary.WriteListEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	}
-	bthrift.Binary.WriteListBegin(buf[listBeginOffset:], thrift.STRING, length)
-	offset += bthrift.Binary.WriteListEnd(buf[offset:])
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
 	return offset
 }
 
 func (p *ArticleCountRequest) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleType", thrift.STRING, 3)
-	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.ArticleType)
+	if p.IsSetArticleType() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleType", thrift.STRING, 3)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ArticleType)
 
-	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
 	return offset
 }
 
@@ -6625,23 +7337,27 @@ func (p *ArticleCountRequest) field1Length() int {
 
 func (p *ArticleCountRequest) field2Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 2)
-	l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
-	for _, v := range p.SiteIdList {
-		l += bthrift.Binary.StringLengthNocopy(v)
+	if p.IsSetSiteIdList() {
+		l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 2)
+		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
+		for _, v := range p.SiteIdList {
+			l += bthrift.Binary.StringLengthNocopy(v)
 
+		}
+		l += bthrift.Binary.ListEndLength()
+		l += bthrift.Binary.FieldEndLength()
 	}
-	l += bthrift.Binary.ListEndLength()
-	l += bthrift.Binary.FieldEndLength()
 	return l
 }
 
 func (p *ArticleCountRequest) field3Length() int {
 	l := 0
-	l += bthrift.Binary.FieldBeginLength("ArticleType", thrift.STRING, 3)
-	l += bthrift.Binary.StringLengthNocopy(p.ArticleType)
+	if p.IsSetArticleType() {
+		l += bthrift.Binary.FieldBeginLength("ArticleType", thrift.STRING, 3)
+		l += bthrift.Binary.StringLengthNocopy(*p.ArticleType)
 
-	l += bthrift.Binary.FieldEndLength()
+		l += bthrift.Binary.FieldEndLength()
+	}
 	return l
 }
 
@@ -6651,6 +7367,7 @@ func (p *ArticleCountResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetCount bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -6674,6 +7391,7 @@ func (p *ArticleCountResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCount = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6701,6 +7419,10 @@ func (p *ArticleCountResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetCount {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -6714,6 +7436,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleCountResponse[fieldId]))
 }
 
 func (p *ArticleCountResponse) FastReadField1(buf []byte) (int, error) {
@@ -6858,6 +7582,7 @@ func (p *ArticleSummaryCountResponse) FastRead(buf []byte) (int, error) {
 	var l int
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetCount bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -6881,6 +7606,7 @@ func (p *ArticleSummaryCountResponse) FastRead(buf []byte) (int, error) {
 				if err != nil {
 					goto ReadFieldError
 				}
+				issetCount = true
 			} else {
 				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 				offset += l
@@ -6908,6 +7634,10 @@ func (p *ArticleSummaryCountResponse) FastRead(buf []byte) (int, error) {
 		goto ReadStructEndError
 	}
 
+	if !issetCount {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return offset, nil
 ReadStructBeginError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -6921,6 +7651,8 @@ ReadFieldEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return offset, thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return offset, thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummaryCountResponse[fieldId]))
 }
 
 func (p *ArticleSummaryCountResponse) FastReadField1(buf []byte) (int, error) {

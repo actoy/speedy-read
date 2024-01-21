@@ -4,19 +4,21 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"io"
 	"net/http"
+	"strings"
+	"time"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/domain/aggregates/article"
 	"speedy/read/biz/domain/aggregates/site"
 	"speedy/read/biz/domain/service/craw_data"
 	siteInfra "speedy/read/biz/infra/repository/site"
-	"strings"
-	"time"
 )
 
 type DataCrawServiceI interface {
 	CrawArticle(ctx context.Context) error
+	CrawFromApi(ctx context.Context)
 }
 
 type DataCrawService struct {
@@ -109,6 +111,9 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 		klog.CtxInfof(ctx, "create article success, id is %d", id)
 	}
 	return nil
+}
+
+func (impl *DataCrawService) CrawFromApi(ctx context.Context) {
 }
 
 func dearSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.ArticleMeta {

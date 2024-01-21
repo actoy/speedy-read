@@ -11,6 +11,15 @@ type SiteRepo struct {
 }
 
 func (dal *SiteRepo) Save(ctx context.Context, sitePO *Site) (int64, error) {
+	exitSite, err := dal.GetSiteByUrl(ctx, sitePO.Url)
+	if err == nil && exitSite != nil {
+		exitSite.Tag = sitePO.Tag
+		exitSite.Description = sitePO.Description
+		exitSite.Type = sitePO.Type
+		exitSite.TypeKey = sitePO.TypeKey
+		infra.DB.WithContext(ctx).Save(exitSite)
+		return exitSite.ID, nil
+	}
 	sitePO.ID = infra.IdGenerate()
 	sitePO.CreatedAt = time.Now()
 	sitePO.UpdatedAt = time.Now()

@@ -16,6 +16,8 @@ CREATE TABLE `sites` (
      `url` varchar(1024) NOT NULL DEFAULT '' COMMENT '地址',
      `description` varchar(1024) NOT NULL DEFAULT '' COMMENT '简介',
      `tag` varchar(63) NOT NULL DEFAULT ''COMMENT '网站标识',
+     `type` varchar(20) NOT NULL DEFAULT '' COMMENT '网站类型',
+     `type_key` varchar(128) NOT NULL DEFAULT '' COMMENT '不同类型网站对应的key，如八抓鱼的taskID',
      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
      PRIMARY KEY (`id`)
@@ -115,3 +117,6 @@ CREATE TABLE `label_refs` (
      PRIMARY KEY (`id`),
      KEY `source` (`source_id`, `source_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='labels 标签关联表';
+
+alter table sites add column `type` varchar(20) NOT NULL DEFAULT '' COMMENT '网站类型' after `tag`;
+alter table sites add column `type_key` varchar(128) NOT NULL DEFAULT '' COMMENT '不同类型网站对应的key，如八抓鱼的taskID' after `type`;

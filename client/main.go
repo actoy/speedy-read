@@ -24,14 +24,21 @@ func main() {
 	//testArticleCount(client)
 }
 
+func stringPtr(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
+}
+
 func testCreateSite(client speedyread.Client) {
 	createParams := &speedy_read.CreateSiteRequest{
 		Url:         "https://seekingalpha.com/api/sa/combined/TSLA.xml",
 		Description: "seeking alpha Tesla",
 		Tag:         "SeekingAlpha",
-		MetaType:    "stock",
-		MetaValue:   "TSLA",
-		MetaKey:     "Tesla, Inc.",
+		MetaType:    stringPtr("stock"),
+		MetaValue:   stringPtr("TSLA"),
+		MetaKey:     stringPtr("Tesla, Inc."),
 	}
 	id, err := client.CreateSiteInfo(context.Background(), createParams)
 	if err != nil {
@@ -78,7 +85,7 @@ func testCreateArticle(client speedyread.Client) {
 
 func testGetArticleList(client speedyread.Client) {
 	articleList, err := client.ArticleList(context.Background(), &speedy_read.GetArticleListRequest{
-		ArticleType: speedy_read.TypeNew,
+		ArticleType: stringPtr(speedy_read.TypeNew),
 		SiteIdList:  []string{"3"},
 		Offset:      0,
 		Limit:       10,

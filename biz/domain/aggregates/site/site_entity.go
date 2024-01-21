@@ -4,6 +4,9 @@ import "time"
 
 const (
 	SeekingAlphaTag = "SeekingAlpha"
+
+	SiteTypeRss  = "rss"
+	SiteTypeCraw = "craw"
 )
 
 type Site struct {
@@ -12,6 +15,8 @@ type Site struct {
 	Url         string
 	Description string
 	Tag         string
+	Type        string
+	TypeKey     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

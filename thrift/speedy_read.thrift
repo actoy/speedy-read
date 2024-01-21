@@ -3,6 +3,9 @@ namespace go speedy_read
 const string TypeArticle = "article"
 const string TypeNew     = "new"
 
+const string SiteTypeRss = "rss"
+const string siteTypeCraw = "craw"
+
 const i32 TradingKong = 0 // 无
 const i32 TradingStrongSell = 1 // 强烈卖出
 const i32 TradingSell = 2 // 卖出
@@ -22,164 +25,165 @@ struct GetSiteRequest {
 }
 
 struct GetSiteResponse {
-  1: list<SiteInfo> SiteList
+  1: required list<SiteInfo> SiteList
 }
 
 struct SiteInfo {
-  1: string ID
-  2: SiteMeta SiteMeta
-  3: string Url
-  4: string Description
-  5: string Tag
-  6: string CreatedAt
-  7: string UpdatedAt
+  1: required string ID
+  2: optional SiteMeta SiteMeta
+  3: required string Url
+  4: required string Description
+  5: required string Tag
+  6: required string CreatedAt
+  7: required string UpdatedAt
 }
 
 struct SiteMeta {
-  1: string ID
-  2: string SiteID
-  3: string MetaType
-  4: string MetaKey
-  5: string MetaValue
-  6: string CreatedAt
-  7: string UpdatedAt
+  1: required string ID
+  2: required string SiteID
+  3: required string MetaType
+  4: required string MetaKey
+  5: required string MetaValue
+  6: required string CreatedAt
+  7: required string UpdatedAt
 }
 
 struct CreateSiteRequest {
-  1: string MetaType
-  2: string MetaKey
-  3: string MetaValue
-  4: string Url
-  5: string Description
-  6: string Tag
+  1: optional string MetaType
+  2: optional string MetaKey
+  3: optional string MetaValue
+  4: required string Url
+  5: required string Description
+  6: required string Tag
+  7: required string Type
+  8: required string TypeKey
 }
 
-
 struct CreateSiteResponse {
-    1: string ID
+    1: required string ID
 }
 
 struct GetArticleListRequest {
-    1: list<string> SiteIdList
-    2: string ArticleType
-    3: i32 Limit
-    4: i32 Offset
+    1: optional list<string> SiteIdList
+    2: optional string ArticleType
+    3: required i32 Limit
+    4: required i32 Offset
 }
 
 struct GetArticleListResponse {
-  1: list<Article> ArticleList
+  1: required list<Article> ArticleList
 }
 
 struct Article {
-    1: string ID
-    2: Author Author
-    3: SiteInfo Site
-    4: list<ArticleMeta> ArticleMetaList
-    5: string Language
-    6: string PublishAt
-    7: string Url      // 原文连接
-    8: string Type     // 原文类型
-    9: string Title    // 原文标题
-    10: string Content // 原文内容
-    11: i32 Status
-    12: i32 Score
-    13: string CreatedAt
-    14: string UpdatedAt
+    1: required string ID
+    2: required Author Author
+    3: required SiteInfo Site
+    4: optional list<ArticleMeta> ArticleMetaList
+    5: required string Language
+    6: required string PublishAt
+    7: required string Url      // 原文连接
+    8: required string Type     // 原文类型
+    9: required string Title    // 原文标题
+    10: required string Content // 原文内容
+    11: required i32 Status
+    12: required i32 Score
+    13: required string CreatedAt
+    14: required string UpdatedAt
 }
 
 struct Author {
-	1: string ID
-	2: string Url
-	3: string AuthorName
-	4: string Image
-    5: string CreatedAt
-    6: string UpdatedAt
+	1: required string ID
+	2: required string Url
+	3: required string AuthorName
+	4: required string Image
+    5: required string CreatedAt
+    6: required string UpdatedAt
 }
 
 struct ArticleMeta {
-  1: string ID
-  2: string ArticleID
-  3: string MetaType
-  4: string MetaKey
-  5: string MetaValue
-  6: string CreatedAt
-  7: string UpdatedAt
+  1: required string ID
+  2: required string ArticleID
+  3: required string MetaType
+  4: required string MetaKey
+  5: required string MetaValue
+  6: required string CreatedAt
+  7: required string UpdatedAt
 }
 
 struct CreateArticleRequest {
-    1: Article Article
+    1: required Article Article
 }
 
 
 struct CreateArticleResponse {
-    1: string ID
+    1: required string ID
 }
 
 struct RejectArticleRequest {
-    1: string ArticleID
+    1: required string ArticleID
 }
 
 
 struct RejectArticleResponse {
-    1: bool Success
+    1: required bool Success
 }
 
 struct SaveArticleSummaryRequest {
-    1: string ArticleID
-    2: string Title
-    3: string Content // 原文内容
-    4: string Summary // 摘要
-    5: ArticleContentSummary ContentSummary // 一句话原文
-    6: list<SummaryOutline> Outline
-    7: list<string> OutlineString
-    8: list<string> tags
-    9: i32 TradingProposal  // 买卖建议
+    1: required string ArticleID
+    2: required string Title
+    3: required string Content // 原文内容
+    4: required string Summary // 摘要
+    5: required ArticleContentSummary ContentSummary // 一句话原文
+    6: required list<SummaryOutline> Outline
+    7: required list<string> OutlineString
+    8: required list<string> tags
+    9: required i32 TradingProposal  // 买卖建议
 }
 
 struct SaveArticleSummaryResponse {
-    1: string ID
+    1: required string ID
 }
 
 struct ArticleSummaryListRequest {
-    1: i32 Limit
-    2: i32 Offset
+    1: required i32 Limit
+    2: required i32 Offset
 }
 
 struct ArticleSummary {
-    1: string ID
-    2: Article Article
-    3: string Title
-    4: string Content // 原文内容
-    5: string Summary // 摘要
-    6: ArticleContentSummary ContentSummary // 一句话原文
-    7: list<SummaryOutline> Outline
-    8: list<string> tags
-    9: string CreatedAt
-    10: i32 TradingProposal  // 买卖建议
+    1: required string ID
+    2: required Article Article
+    3: required string Title
+    4: required string Content // 原文内容
+    5: required string Summary // 摘要
+    6: required ArticleContentSummary ContentSummary // 一句话原文
+    7: required list<SummaryOutline> Outline
+    8: required list<string> tags
+    9: required string CreatedAt
+    10: required i32 TradingProposal  // 买卖建议
 }
 
 struct ArticleContentSummary {
-    1: string Original
-    2: string Translation
+    1: required string Original
+    2: required string Translation
 }
 
 struct SummaryOutline {
-    1: string Title
-    2: string Content
+    1: required string Title
+    2: required string Content
 }
 
 struct ArticleSummaryListResponse {
-    1: list<ArticleSummary> ArticleSummaryList
+    1: required list<ArticleSummary> ArticleSummaryList
 }
 
 struct ArticleCountRequest {
-    1: i32 Status
-    2: list<string> SiteIdList
-    3: string ArticleType
+    1: required i32 Status
+    2: optional list<string> SiteIdList
+    3: optional string ArticleType
 }
 
 struct ArticleCountResponse {
-    1: i32 Count
+    1: required i32 Count
 }
 
 struct ArticleSummaryCountRequest {
@@ -187,7 +191,7 @@ struct ArticleSummaryCountRequest {
 }
 
 struct ArticleSummaryCountResponse {
-    1: i32 Count
+    1: required i32 Count
 }
 
 service SpeedyRead {
