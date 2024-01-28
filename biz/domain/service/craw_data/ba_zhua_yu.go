@@ -9,7 +9,6 @@ import (
 	"github.com/patrickmn/go-cache"
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -80,6 +79,8 @@ type markExport struct {
 	RequestID string       `json:"requestId"`
 }
 
+// GetNotExportedData
+// https://www.cnblogs.com/Xinenhui/p/17496684.html
 func GetNotExportedData(ctx context.Context, taskID string) ([]ExportData, error) {
 	request, err := http.NewRequest("GET", notExportedUrl, nil)
 	if err != nil {
@@ -106,12 +107,15 @@ func GetNotExportedData(ctx context.Context, taskID string) ([]ExportData, error
 }
 
 func MarkExported(ctx context.Context, taskID string) bool {
-	//请求body
-	urlMap := url.Values{}
-	urlMap.Add("taskId", taskID)
+	//发送json格式的参数
+	data := map[string]interface{}{
+		"taskId": taskID,
+	}
+	// 序列化
+	bytesData, _ := json.Marshal(data)
 
 	//新建请求
-	request, err := http.NewRequest("POST", markExportedUrl, strings.NewReader(urlMap.Encode()))
+	request, err := http.NewRequest("POST", markExportedUrl, strings.NewReader(string(bytesData)))
 	if err != nil {
 		klog.CtxErrorf(ctx, "http mark exported nre request error is %v", err)
 		return false
