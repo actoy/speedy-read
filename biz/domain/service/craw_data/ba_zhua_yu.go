@@ -149,7 +149,7 @@ func getApiToken(ctx context.Context) tokenData {
 	}
 	// 参数
 	data := make(map[string]interface{})
-	data["username"] = "hs0cy1p6"
+	data["username"] = "x04mlqa0"
 	data["password"] = "@Free4me"
 	data["grant_type"] = "password"
 	// 序列化

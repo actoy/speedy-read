@@ -25,6 +25,14 @@ func (dal *ArticleRepo) GetArticleByUrl(ctx context.Context, url string) (*Artic
 func (dal *ArticleRepo) Save(ctx context.Context, articlePO *Article) (int64, error) {
 	existArticle, _ := dal.GetArticleByUrl(ctx, articlePO.Url)
 	if existArticle != nil {
+		existArticle.PublishAt = articlePO.PublishAt
+		if articlePO.Content != "" {
+			existArticle.Content = articlePO.Content
+		}
+		existArticle.Type = articlePO.Type
+		existArticle.Url = articlePO.Url
+		existArticle.Title = articlePO.Title
+		infra.DB.WithContext(ctx).Save(existArticle)
 		return existArticle.ID, nil
 	}
 	articlePO.ID = infra.IdGenerate()

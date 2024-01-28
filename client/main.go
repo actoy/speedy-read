@@ -33,13 +33,11 @@ func stringPtr(s string) *string {
 
 func testCreateSite(client speedyread.Client) {
 	createParams := &speedy_read.CreateSiteRequest{
-		Url:         "https://seekingalpha.com/api/sa/combined/TSLA.xml",
-		Description: "seeking alpha Tesla",
-		Tag:         "SeekingAlpha",
-		MetaType:    stringPtr("stock"),
-		MetaValue:   stringPtr("TSLA"),
-		MetaKey:     stringPtr("Tesla, Inc."),
-		Type:        speedy_read.SiteTypeRss,
+		Url:         "https://www.fool.com/the-ascent/articles/",
+		Description: "fool.com",
+		Tag:         "Fool",
+		Type:        speedy_read.SiteTypeCraw,
+		TypeKey:     "fe6c546b-1534-dda7-696c-0dc3c7955282",
 	}
 	id, err := client.CreateSiteInfo(context.Background(), createParams)
 	if err != nil {

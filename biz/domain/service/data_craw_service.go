@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -36,15 +37,26 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 		klog.CtxErrorf(ctx, "get site list err: %v", err)
 		return err
 	}
+	var (
+		rssErr  error
+		crawErr error
+	)
 	for _, siteDO := range siteList {
 		switch siteDO.Type {
 		case site.SiteTypeRss:
-			return impl.dealArticle4Rss(ctx, siteDO)
+			continue
+			rssErr = impl.dealArticle4Rss(ctx, siteDO)
 		case site.SiteTypeCraw:
-			return impl.dealArticle4Craw(ctx, siteDO)
+			crawErr = impl.dealArticle4Craw(ctx, siteDO)
 		default:
 			return nil
 		}
+	}
+	if rssErr != nil {
+		return rssErr
+	}
+	if crawErr != nil {
+		return crawErr
 	}
 	return nil
 }
@@ -155,8 +167,9 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 			Status:    article.StatusInit,
 			Url:       item.ArticleUrl,
 			Title:     item.ArticleTitle,
+			Type:      article.TypeArticle,
 			PublishAt: dealCrawPublishAt(item.PublishAt, siteDO.Tag),
-			Content:   item.ArticleContent,
+			Content:   dealCrawContent(item.ArticleContent, siteDO.Tag),
 		})
 		if err != nil {
 			klog.CtxErrorf(ctx, "create article error is %v", err)
@@ -166,10 +179,10 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 	}
 
 	// 标记数据为已处理
-	marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
-	if !marked {
-		klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
-	}
+	//marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+	//if !marked {
+	//	klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+	//}
 	return nil
 }
 
@@ -195,8 +208,9 @@ func dealSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.Article
 func dealCrawPublishAt(publishAt string, tag string) time.Time {
 	switch tag {
 	case site.FoolTag:
-		// todo:ldy
-		publishTime, err := time.Parse(time.RFC1123Z, publishAt)
+		tmpTime := strings.ReplaceAll(strings.Split(publishAt, "|")[0], " ", "")
+		layout := "Jan.02,2006"
+		publishTime, err := time.Parse(layout, tmpTime)
 		if err != nil {
 			klog.Errorf("time parse error %v", err)
 			return time.Time{}
@@ -204,4 +218,14 @@ func dealCrawPublishAt(publishAt string, tag string) time.Time {
 		return publishTime
 	}
 	return time.Time{}
+}
+
+func dealCrawContent(content string, tag string) string {
+	switch tag {
+	case site.FoolTag:
+		reg := regexp.MustCompile(`( )+|(\n)+`)
+		crawContent := reg.ReplaceAllString(content, "$1$2")
+		return strings.TrimSpace(crawContent)
+	}
+	return ""
 }
