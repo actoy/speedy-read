@@ -18,6 +18,12 @@ import (
 var (
 	once           sync.Once
 	localCacheUtil *cache.Cache
+
+	TaskStatusUnExecuted = "Unexecuted" // 未执行
+	TaskStatusWaiting    = "Waiting"    // 等待分配
+	TaskStatusExtracting = "Extracting" // 采集中
+	TaskStatusStopped    = "Stopped"    // 已停止
+	TaskStatusFinished   = "Finished"   // 已完成
 )
 
 func init() {
@@ -33,6 +39,7 @@ const (
 	getActionsUrl   = "https://openapi.bazhuayu.com/task/getActions"
 	updateItems     = "https://openapi.bazhuayu.com/task/updateLoopItems"
 	startUrl        = "https://openapi.bazhuayu.com/cloudextraction/start"
+	statusUrl       = "https://openapi.bazhuayu.com/cloudextraction/statuses"
 
 	tokenCacheKey = "access_token_key"
 )
@@ -83,6 +90,7 @@ type markExport struct {
 	RequestID string       `json:"requestId"`
 }
 
+// Action 任务信息
 type Action struct {
 	Data      []ActionData `json:"data"`
 	RequestID string       `json:"requestId"`
@@ -99,6 +107,17 @@ type LoopAction struct {
 	ActionID   string   `json:"actionId"`
 	LoopType   string   `json:"loopType"`
 	LoopItems  []string `json:"loopItems"`
+}
+
+type StatusResp struct {
+	Data      []StatusData `json:"data"`
+	RequestID string       `json:"requestId"`
+}
+
+type StatusData struct {
+	TaskID   string `json:"taskId"`
+	TaskName string `json:"taskName"`
+	Status   string `json:"status"`
 }
 
 type CommonResp struct {
@@ -171,7 +190,7 @@ func MarkExported(ctx context.Context, taskID string) bool {
 	return true
 }
 
-func UpdateItems(ctx context.Context, taskID string, item []string) error {
+func UpdateTaskItems(ctx context.Context, taskID string, items []string) error {
 	actionID := getActionsId(ctx, taskID)
 	if actionID == "" {
 		return nil
@@ -181,7 +200,7 @@ func UpdateItems(ctx context.Context, taskID string, item []string) error {
 		"taskId":    taskID,
 		"actionId":  actionID,
 		"loopType":  "UrlList",
-		"loopItems": item,
+		"loopItems": items,
 		"isAppend":  false,
 	}
 	// 序列化
@@ -217,7 +236,7 @@ func UpdateItems(ctx context.Context, taskID string, item []string) error {
 	return nil
 }
 
-func Start(ctx context.Context, taskID string) error {
+func StartTask(ctx context.Context, taskID string) error {
 	//发送json格式的参数
 	data := map[string]interface{}{
 		"taskId": taskID,
@@ -253,6 +272,41 @@ func Start(ctx context.Context, taskID string) error {
 		return errors.New("biz error, code is %s " + resBody.Error.Code)
 	}
 	return nil
+}
+
+func GetTaskStatusList(ctx context.Context, taskIDs []string) []StatusData {
+	//发送json格式的参数
+	data := map[string]interface{}{
+		"taskIds": taskIDs,
+	}
+	// 序列化
+	bytesData, _ := json.Marshal(data)
+
+	//新建请求
+	request, err := http.NewRequest("POST", statusUrl, strings.NewReader(string(bytesData)))
+	if err != nil {
+		klog.CtxErrorf(ctx, "http status url request error is %v", err)
+		return nil
+	}
+	token := getApiToken(ctx)
+	//请求头部信息
+	request.Header.Add("Authorization", token.TokenType+" "+token.AccessToken) //token
+	//post formData表单请求
+	request.Header.Add("Content-Type", "application/json")
+
+	//实例化一个客户端
+	client := &http.Client{}
+	//发送请求到服务端
+	resp, err := client.Do(request)
+	if err != nil {
+		klog.CtxErrorf(ctx, "http status url do error is %v", err)
+		return nil
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	resBody := StatusResp{}
+	_ = json.Unmarshal(body, &resBody)
+	return resBody.Data
 }
 
 func getActionsId(ctx context.Context, taskID string) string {
