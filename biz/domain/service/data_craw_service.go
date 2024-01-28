@@ -179,10 +179,10 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 	}
 
 	// 标记数据为已处理
-	//marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
-	//if !marked {
-	//	klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
-	//}
+	marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+	if !marked {
+		klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+	}
 	return nil
 }
 
