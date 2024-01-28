@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/patrickmn/go-cache"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 	"strings"
@@ -29,6 +30,9 @@ const (
 	tokenUrl        = "https://openapi.bazhuayu.com/token"
 	notExportedUrl  = "https://openapi.bazhuayu.com/data/notexported"
 	markExportedUrl = "https://openapi.bazhuayu.com/data/markexported"
+	getActionsUrl   = "https://openapi.bazhuayu.com/task/getActions"
+	updateItems     = "https://openapi.bazhuayu.com/task/updateLoopItems"
+	startUrl        = "https://openapi.bazhuayu.com/cloudextraction/start"
 
 	tokenCacheKey = "access_token_key"
 )
@@ -79,6 +83,29 @@ type markExport struct {
 	RequestID string       `json:"requestId"`
 }
 
+type Action struct {
+	Data      []ActionData `json:"data"`
+	RequestID string       `json:"requestId"`
+}
+
+type ActionData struct {
+	TaskID     string       `json:"taskId"`
+	LoopAction []LoopAction `json:"actions"`
+}
+
+type LoopAction struct {
+	ActionType string   `json:"actionType"`
+	Name       string   `json:"name"`
+	ActionID   string   `json:"actionId"`
+	LoopType   string   `json:"loopType"`
+	LoopItems  []string `json:"loopItems"`
+}
+
+type CommonResp struct {
+	Error     *errorMsg `json:"error,omitempty"`
+	RequestID string    `json:"requestId"`
+}
+
 // GetNotExportedData
 // https://www.cnblogs.com/Xinenhui/p/17496684.html
 func GetNotExportedData(ctx context.Context, taskID string) ([]ExportData, error) {
@@ -117,7 +144,7 @@ func MarkExported(ctx context.Context, taskID string) bool {
 	//新建请求
 	request, err := http.NewRequest("POST", markExportedUrl, strings.NewReader(string(bytesData)))
 	if err != nil {
-		klog.CtxErrorf(ctx, "http mark exported nre request error is %v", err)
+		klog.CtxErrorf(ctx, "http mark exported request error is %v", err)
 		return false
 	}
 	token := getApiToken(ctx)
@@ -131,7 +158,7 @@ func MarkExported(ctx context.Context, taskID string) bool {
 	//发送请求到服务端
 	resp, err := client.Do(request)
 	if err != nil {
-		fmt.Println(err)
+		klog.CtxErrorf(ctx, "http mark exported url do error is %v", err)
 		return false
 	}
 	defer resp.Body.Close()
@@ -142,6 +169,129 @@ func MarkExported(ctx context.Context, taskID string) bool {
 		return false
 	}
 	return true
+}
+
+func UpdateItems(ctx context.Context, taskID string, item []string) error {
+	actionID := getActionsId(ctx, taskID)
+	if actionID == "" {
+		return nil
+	}
+	//发送json格式的参数
+	data := map[string]interface{}{
+		"taskId":    taskID,
+		"actionId":  actionID,
+		"loopType":  "UrlList",
+		"loopItems": item,
+		"isAppend":  false,
+	}
+	// 序列化
+	bytesData, _ := json.Marshal(data)
+
+	//新建请求
+	request, err := http.NewRequest("POST", updateItems, strings.NewReader(string(bytesData)))
+	if err != nil {
+		klog.CtxErrorf(ctx, "http update item url request error is %v", err)
+		return nil
+	}
+	token := getApiToken(ctx)
+	//请求头部信息
+	request.Header.Add("Authorization", token.TokenType+" "+token.AccessToken) //token
+	//post formData表单请求
+	request.Header.Add("Content-Type", "application/json")
+
+	//实例化一个客户端
+	client := &http.Client{}
+	//发送请求到服务端
+	resp, err := client.Do(request)
+	if err != nil {
+		klog.CtxErrorf(ctx, "http update item url do error is %v", err)
+		return nil
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	resBody := CommonResp{}
+	_ = json.Unmarshal(body, &resBody)
+	if resBody.Error != nil {
+		return errors.New("biz error, code is %s " + resBody.Error.Code)
+	}
+	return nil
+}
+
+func Start(ctx context.Context, taskID string) error {
+	//发送json格式的参数
+	data := map[string]interface{}{
+		"taskId": taskID,
+	}
+	// 序列化
+	bytesData, _ := json.Marshal(data)
+
+	//新建请求
+	request, err := http.NewRequest("POST", startUrl, strings.NewReader(string(bytesData)))
+	if err != nil {
+		klog.CtxErrorf(ctx, "http start url request error is %v", err)
+		return nil
+	}
+	token := getApiToken(ctx)
+	//请求头部信息
+	request.Header.Add("Authorization", token.TokenType+" "+token.AccessToken) //token
+	//post formData表单请求
+	request.Header.Add("Content-Type", "application/json")
+
+	//实例化一个客户端
+	client := &http.Client{}
+	//发送请求到服务端
+	resp, err := client.Do(request)
+	if err != nil {
+		klog.CtxErrorf(ctx, "http start url do error is %v", err)
+		return nil
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	resBody := CommonResp{}
+	_ = json.Unmarshal(body, &resBody)
+	if resBody.Error != nil {
+		return errors.New("biz error, code is %s " + resBody.Error.Code)
+	}
+	return nil
+}
+
+func getActionsId(ctx context.Context, taskID string) string {
+	//发送json格式的参数
+	data := map[string]interface{}{
+		"taskIds":     []string{taskID},
+		"actionTypes": []string{"LoopAction"},
+	}
+	// 序列化
+	bytesData, _ := json.Marshal(data)
+
+	//新建请求
+	request, err := http.NewRequest("POST", getActionsUrl, strings.NewReader(string(bytesData)))
+	if err != nil {
+		klog.CtxErrorf(ctx, "http get action url request error is %v", err)
+		return ""
+	}
+	token := getApiToken(ctx)
+	//请求头部信息
+	request.Header.Add("Authorization", token.TokenType+" "+token.AccessToken) //token
+	//post formData表单请求
+	request.Header.Add("Content-Type", "application/json")
+
+	//实例化一个客户端
+	client := &http.Client{}
+	//发送请求到服务端
+	resp, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	resBody := Action{}
+	_ = json.Unmarshal(body, &resBody)
+	if len(resBody.Data[0].LoopAction) == 0 {
+		return ""
+	}
+	return resBody.Data[0].LoopAction[0].ActionID
 }
 
 func getApiToken(ctx context.Context) tokenData {
