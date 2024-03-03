@@ -142,46 +142,52 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 	if siteDO == nil {
 		return nil
 	}
-	// 获取未处理的导出数据
-	exportedDataList, err := craw_data.GetNotExportedData(ctx, siteDO.TypeKey)
-	if err != nil {
-		klog.CtxErrorf(ctx, "Error get not exported data %s: %v", siteDO.TypeKey, err)
-		return err
-	}
-
-	// 创建article
-	articleSvc := NewArticleService()
-	for _, item := range exportedDataList {
-		id, err := articleSvc.CreateArticle(ctx, &article.Article{
-			Author: &article.Author{
-				AuthorName: item.AuthorName,
-				Url:        item.AuthorUrl,
-			},
-			SourceSite: &site.Site{
-				Url:         siteDO.Url,
-				Tag:         siteDO.Tag,
-				Description: siteDO.Description,
-				Type:        siteDO.Type,
-				TypeKey:     siteDO.TypeKey,
-			},
-			Status:    article.StatusInit,
-			Url:       item.ArticleUrl,
-			Title:     item.ArticleTitle,
-			Type:      article.TypeArticle,
-			PublishAt: dealCrawPublishAt(item.PublishAt, siteDO.Tag),
-			Content:   dealCrawContent(item.ArticleContent, siteDO.Tag),
-		})
+	typeKeyList := siteDO.GetTypeKeyList(ctx)
+	for _, typeKey := range typeKeyList {
+		// 获取未处理的导出数据
+		exportedDataList, err := craw_data.GetNotExportedData(ctx, typeKey.TaskID)
 		if err != nil {
-			klog.CtxErrorf(ctx, "create article error is %v", err)
-			continue
+			klog.CtxErrorf(ctx, "Error get not exported data %s: %v", siteDO.TypeKey, err)
+			return err
 		}
-		klog.CtxInfof(ctx, "create article success, id is %d", id)
-	}
 
-	// 标记数据为已处理
-	marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
-	if !marked {
-		klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+		// 创建article
+		articleSvc := NewArticleService()
+		for _, item := range exportedDataList {
+			if filterArticleUrl(item.ArticleUrl, siteDO.Tag) {
+				continue
+			}
+			id, err := articleSvc.CreateArticle(ctx, &article.Article{
+				Author: &article.Author{
+					AuthorName: item.AuthorName,
+					Url:        item.AuthorUrl,
+				},
+				SourceSite: &site.Site{
+					Url:         siteDO.Url,
+					Tag:         siteDO.Tag,
+					Description: siteDO.Description,
+					Type:        siteDO.Type,
+					TypeKey:     siteDO.TypeKey,
+				},
+				Status:    article.StatusInit,
+				Url:       item.ArticleUrl,
+				Title:     item.ArticleTitle,
+				Type:      article.TypeArticle,
+				PublishAt: dealCrawPublishAt(item.PublishAt, siteDO.Tag),
+				Content:   dealCrawContent(item.ArticleContent, siteDO.Tag),
+			})
+			if err != nil {
+				klog.CtxErrorf(ctx, "create article error is %v", err)
+				continue
+			}
+			klog.CtxInfof(ctx, "create article success, id is %d", id)
+		}
+
+		//// 标记数据为已处理
+		//marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+		//if !marked {
+		//	klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+		//}
 	}
 	return nil
 }
@@ -208,9 +214,12 @@ func dealSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.Article
 func dealCrawPublishAt(publishAt string, tag string) time.Time {
 	switch tag {
 	case site.FoolTag:
-		tmpTime := strings.ReplaceAll(strings.Split(publishAt, "|")[0], " ", "")
-		layout := "Jan.02,2006"
+		tmpTime := strings.Trim(strings.Split(publishAt, "by")[0], "\n")
+		layout := "Jan 2, 2006"
 		publishTime, err := time.Parse(layout, tmpTime)
+		//tmpTime := strings.ReplaceAll(strings.Split(publishAt, "|")[0], " ", "")
+		//layout := "Jan.02,2006"
+		//publishTime, err := time.Parse(layout, tmpTime)
 		if err != nil {
 			klog.Errorf("time parse error %v", err)
 			return time.Time{}
@@ -228,4 +237,15 @@ func dealCrawContent(content string, tag string) string {
 		return strings.TrimSpace(crawContent)
 	}
 	return ""
+}
+
+func filterArticleUrl(url string, tag string) bool {
+	switch tag {
+	case site.FoolTag:
+		if len(url) == 0 {
+			return true
+		}
+		return strings.Contains(url, "the-ascent")
+	}
+	return false
 }

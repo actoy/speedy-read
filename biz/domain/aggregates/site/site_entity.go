@@ -1,13 +1,24 @@
 package site
 
-import "time"
+import (
+	"context"
+	"encoding/json"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"time"
+)
 
 const (
 	SeekingAlphaTag = "SeekingAlpha"
 	FoolTag         = "Fool"
+	MarketBeatTag   = "MarketBeat"
 
-	SiteTypeRss  = "rss"
-	SiteTypeCraw = "craw"
+	SiteTypeRss        = "rss"
+	SiteTypeCraw       = "craw"
+	SiteTypeCrawDetail = "craw_detail"
+
+	SiteTaskTypeList   = "list"
+	SiteTaskTypeDetail = "detail"
+	SiteTaskTypeAll    = "all" // list & detail
 )
 
 type Site struct {
@@ -20,6 +31,24 @@ type Site struct {
 	TypeKey     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+}
+
+type SiteTypeKey struct {
+	TaskID   string
+	TaskType string
+}
+
+func (site *Site) GetTypeKeyList(ctx context.Context) []SiteTypeKey {
+	result := make([]SiteTypeKey, 0)
+	if len(site.TypeKey) == 0 {
+		return result
+	}
+	err := json.Unmarshal([]byte(site.TypeKey), &result)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Error get site type key err %v", err)
+		return []SiteTypeKey{}
+	}
+	return result
 }
 
 const (

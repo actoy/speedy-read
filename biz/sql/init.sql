@@ -93,9 +93,7 @@ CREATE TABLE `summary_outlines` (
      `summary_id` bigint(20) unsigned NOT NULL,
      `title` text NOT NULL COMMENT '标题',
      `content` text NOT NULL COMMENT '内容',
-     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
-     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
-     PRIMARY KEY (`id`),
+     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time', `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time', PRIMARY KEY (`id`),
      KEY `article_id` (`summary_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='summary outlines';
 
@@ -120,3 +118,4 @@ CREATE TABLE `label_refs` (
 
 alter table sites add column `type` varchar(20) NOT NULL DEFAULT '' COMMENT '网站类型' after `tag`;
 alter table sites add column `type_key` varchar(128) NOT NULL DEFAULT '' COMMENT '不同类型网站对应的key，如八抓鱼的taskID' after `type`;
+alter table sites modify column `type_key` varchar(1024) NOT NULL DEFAULT '';
