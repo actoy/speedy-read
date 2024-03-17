@@ -8,10 +8,10 @@ import (
 )
 
 type ArticleListParams struct {
-	SiteIdList  []int64
-	ArticleType string
-	Limit       int32
-	OffSet      int32
+	SymbolIdList []int64
+	ArticleType  string
+	Limit        int32
+	OffSet       int32
 }
 
 type ArticleApplicationI interface {
@@ -39,10 +39,10 @@ func (impl *ArticleApplication) CreateArticle(ctx context.Context, articleDO *ar
 
 func (impl *ArticleApplication) GetArticleList(ctx context.Context, params ArticleListParams) ([]*article.Article, error) {
 	return impl.articleRepo.ArticleList(ctx, article.ArticleListParams{
-		SiteIdList:  params.SiteIdList,
-		ArticleType: params.ArticleType,
-		Limit:       params.Limit,
-		OffSet:      params.OffSet,
+		SymbolIdList: params.SymbolIdList,
+		ArticleType:  params.ArticleType,
+		Limit:        params.Limit,
+		OffSet:       params.OffSet,
 	})
 }
 
@@ -52,7 +52,7 @@ func (impl *ArticleApplication) RejectArticle(ctx context.Context, articleID int
 
 func (impl *ArticleApplication) ArticleCount(ctx context.Context, status int32, params ArticleListParams) (int32, error) {
 	return impl.articleRepo.GetArticleCount(ctx, status, article.ArticleListParams{
-		SiteIdList:  params.SiteIdList,
-		ArticleType: params.ArticleType,
+		SymbolIdList: params.SymbolIdList,
+		ArticleType:  params.ArticleType,
 	})
 }

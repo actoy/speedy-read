@@ -81,6 +81,8 @@ type ExportData struct {
 	ArticleUrl     string `json:"article_url"`
 	ArticleTitle   string `json:"article_title"`
 	ArticleContent string `json:"article_content"`
+	Stock          string `json:"stock"`
+	StockUrl       string `json:"stock_url"`
 }
 
 // markExport 标记为已导出响应

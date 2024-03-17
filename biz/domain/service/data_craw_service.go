@@ -7,6 +7,9 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"speedy/read/biz/domain/aggregates/symbol"
+	symbolInfra "speedy/read/biz/infra/repository/symbol"
+	"speedy/read/biz/utils"
 	"strings"
 	"time"
 
@@ -22,12 +25,14 @@ type DataCrawServiceI interface {
 }
 
 type DataCrawService struct {
-	siteRepo site.SiteRepo
+	siteRepo   site.SiteRepo
+	symbolRepo symbol.SymbolRepo
 }
 
 func NewDataCrawService() DataCrawServiceI {
 	return &DataCrawService{
-		siteRepo: siteInfra.NewSiteRepository(),
+		siteRepo:   siteInfra.NewSiteRepository(),
+		symbolRepo: symbolInfra.NewSymbolRepository(),
 	}
 }
 
@@ -44,7 +49,6 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 	for _, siteDO := range siteList {
 		switch siteDO.Type {
 		case site.SiteTypeRss:
-			continue
 			rssErr = impl.dealArticle4Rss(ctx, siteDO)
 		case site.SiteTypeCraw:
 			crawErr = impl.dealArticle4Craw(ctx, siteDO)
@@ -122,7 +126,7 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, 
 				Type:        siteDO.Type,
 				TypeKey:     siteDO.TypeKey,
 			},
-			ArticleMetaList: dealSeekingAlphaMeta(item.Stock),
+			ArticleMetaList: impl.dealSeekingAlphaMeta(ctx, item.Stock),
 			Status:          article.StatusInit,
 			Url:             articleUrl,
 			Title:           item.Title,
@@ -157,7 +161,7 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 			if filterArticleUrl(item.ArticleUrl, siteDO.Tag) {
 				continue
 			}
-			id, err := articleSvc.CreateArticle(ctx, &article.Article{
+			articleDO := &article.Article{
 				Author: &article.Author{
 					AuthorName: item.AuthorName,
 					Url:        item.AuthorUrl,
@@ -175,7 +179,15 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 				Type:      article.TypeArticle,
 				PublishAt: dealCrawPublishAt(item.PublishAt, siteDO.Tag),
 				Content:   dealCrawContent(item.ArticleContent, siteDO.Tag),
-			})
+			}
+			var articleMetaList []*article.ArticleMeta
+			if len(item.Stock) > 0 {
+				articleMetaList = impl.dealCrawArticleMeta(ctx, item.Stock, siteDO.Tag)
+			}
+			if len(articleMetaList) > 0 {
+				articleDO.ArticleMetaList = articleMetaList
+			}
+			id, err := articleSvc.CreateArticle(ctx, articleDO)
 			if err != nil {
 				klog.CtxErrorf(ctx, "create article error is %v", err)
 				continue
@@ -183,29 +195,33 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 			klog.CtxInfof(ctx, "create article success, id is %d", id)
 		}
 
-		//// 标记数据为已处理
-		marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
-		if !marked {
-			klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
-		}
+		// 标记数据为已处理
+		//marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+		//if !marked {
+		//	klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+		//}
 	}
 	return nil
 }
 
-func dealSeekingAlphaMeta(stockList []craw_data.SeekingStock) []*article.ArticleMeta {
+func (impl *DataCrawService) dealSeekingAlphaMeta(ctx context.Context, stockList []craw_data.SeekingStock) []*article.ArticleMeta {
 	result := make([]*article.ArticleMeta, 0)
 	if len(stockList) == 0 {
-		result = append(result, &article.ArticleMeta{
-			MetaType: article.StockMeteType,
-			//MetaKey:   siteDO.SourceID,
-			//MetaValue: siteDO.SourceID,
-		})
+		return result
 	}
 	for _, stock := range stockList {
+		symbolDO, err := impl.symbolRepo.GetBySymbol(ctx, stock.Symbol)
+		if err != nil {
+			klog.Errorf("get symbol error %v", err)
+			return result
+		}
+		if symbolDO == nil {
+			return result
+		}
 		result = append(result, &article.ArticleMeta{
 			MetaType:  article.StockMeteType,
-			MetaKey:   stock.Symbol,
-			MetaValue: stock.Company,
+			MetaKey:   symbolDO.Symbol,
+			MetaValue: utils.Int64ToString(symbolDO.ID),
 		})
 	}
 	return result
@@ -248,4 +264,26 @@ func filterArticleUrl(url string, tag string) bool {
 		return !strings.Contains(url, "investing")
 	}
 	return false
+}
+
+func (impl *DataCrawService) dealCrawArticleMeta(ctx context.Context, stock string, tag string) []*article.ArticleMeta {
+	result := make([]*article.ArticleMeta, 0)
+	switch tag {
+	case site.FoolTag:
+		list := strings.Split(strings.Replace(stock, " ", "", -1), ":")
+		symbolDO, err := impl.symbolRepo.GetBySymbol(ctx, list[1])
+		if err != nil {
+			klog.Errorf("get symbol error %v", err)
+			return result
+		}
+		if symbolDO == nil {
+			return result
+		}
+		result = append(result, &article.ArticleMeta{
+			MetaType:  article.StockMeteType,
+			MetaKey:   symbolDO.Symbol,
+			MetaValue: utils.Int64ToString(symbolDO.ID),
+		})
+	}
+	return result
 }

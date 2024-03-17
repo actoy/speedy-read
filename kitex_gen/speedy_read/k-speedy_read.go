@@ -2236,7 +2236,7 @@ func (p *GetArticleListRequest) FastReadField1(buf []byte) (int, error) {
 	if err != nil {
 		return offset, err
 	}
-	p.SiteIdList = make([]string, 0, size)
+	p.SymbolIdList = make([]string, 0, size)
 	for i := 0; i < size; i++ {
 		var _elem string
 		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
@@ -2248,7 +2248,7 @@ func (p *GetArticleListRequest) FastReadField1(buf []byte) (int, error) {
 
 		}
 
-		p.SiteIdList = append(p.SiteIdList, _elem)
+		p.SymbolIdList = append(p.SymbolIdList, _elem)
 	}
 	if l, err := bthrift.Binary.ReadListEnd(buf[offset:]); err != nil {
 		return offset, err
@@ -2334,12 +2334,12 @@ func (p *GetArticleListRequest) BLength() int {
 
 func (p *GetArticleListRequest) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetSiteIdList() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 1)
+	if p.IsSetSymbolIdList() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SymbolIdList", thrift.LIST, 1)
 		listBeginOffset := offset
 		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
 		var length int
-		for _, v := range p.SiteIdList {
+		for _, v := range p.SymbolIdList {
 			length++
 			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
 
@@ -2382,10 +2382,10 @@ func (p *GetArticleListRequest) fastWriteField4(buf []byte, binaryWriter bthrift
 
 func (p *GetArticleListRequest) field1Length() int {
 	l := 0
-	if p.IsSetSiteIdList() {
-		l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 1)
-		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
-		for _, v := range p.SiteIdList {
+	if p.IsSetSymbolIdList() {
+		l += bthrift.Binary.FieldBeginLength("SymbolIdList", thrift.LIST, 1)
+		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SymbolIdList))
+		for _, v := range p.SymbolIdList {
 			l += bthrift.Binary.StringLengthNocopy(v)
 
 		}
@@ -7221,7 +7221,7 @@ func (p *ArticleCountRequest) FastReadField2(buf []byte) (int, error) {
 	if err != nil {
 		return offset, err
 	}
-	p.SiteIdList = make([]string, 0, size)
+	p.SymbolIdList = make([]string, 0, size)
 	for i := 0; i < size; i++ {
 		var _elem string
 		if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
@@ -7233,7 +7233,7 @@ func (p *ArticleCountRequest) FastReadField2(buf []byte) (int, error) {
 
 		}
 
-		p.SiteIdList = append(p.SiteIdList, _elem)
+		p.SymbolIdList = append(p.SymbolIdList, _elem)
 	}
 	if l, err := bthrift.Binary.ReadListEnd(buf[offset:]); err != nil {
 		return offset, err
@@ -7298,12 +7298,12 @@ func (p *ArticleCountRequest) fastWriteField1(buf []byte, binaryWriter bthrift.B
 
 func (p *ArticleCountRequest) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
 	offset := 0
-	if p.IsSetSiteIdList() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SiteIdList", thrift.LIST, 2)
+	if p.IsSetSymbolIdList() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "SymbolIdList", thrift.LIST, 2)
 		listBeginOffset := offset
 		offset += bthrift.Binary.ListBeginLength(thrift.STRING, 0)
 		var length int
-		for _, v := range p.SiteIdList {
+		for _, v := range p.SymbolIdList {
 			length++
 			offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, v)
 
@@ -7337,10 +7337,10 @@ func (p *ArticleCountRequest) field1Length() int {
 
 func (p *ArticleCountRequest) field2Length() int {
 	l := 0
-	if p.IsSetSiteIdList() {
-		l += bthrift.Binary.FieldBeginLength("SiteIdList", thrift.LIST, 2)
-		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SiteIdList))
-		for _, v := range p.SiteIdList {
+	if p.IsSetSymbolIdList() {
+		l += bthrift.Binary.FieldBeginLength("SymbolIdList", thrift.LIST, 2)
+		l += bthrift.Binary.ListBeginLength(thrift.STRING, len(p.SymbolIdList))
+		for _, v := range p.SymbolIdList {
 			l += bthrift.Binary.StringLengthNocopy(v)
 
 		}

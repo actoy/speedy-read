@@ -2568,10 +2568,10 @@ func (p *CreateSiteResponse) Field1DeepEqual(src string) bool {
 }
 
 type GetArticleListRequest struct {
-	SiteIdList  []string `thrift:"SiteIdList,1,optional" frugal:"1,optional,list<string>" json:"SiteIdList,omitempty"`
-	ArticleType *string  `thrift:"ArticleType,2,optional" frugal:"2,optional,string" json:"ArticleType,omitempty"`
-	Limit       int32    `thrift:"Limit,3,required" frugal:"3,required,i32" json:"Limit"`
-	Offset      int32    `thrift:"Offset,4,required" frugal:"4,required,i32" json:"Offset"`
+	SymbolIdList []string `thrift:"SymbolIdList,1,optional" frugal:"1,optional,list<string>" json:"SymbolIdList,omitempty"`
+	ArticleType  *string  `thrift:"ArticleType,2,optional" frugal:"2,optional,string" json:"ArticleType,omitempty"`
+	Limit        int32    `thrift:"Limit,3,required" frugal:"3,required,i32" json:"Limit"`
+	Offset       int32    `thrift:"Offset,4,required" frugal:"4,required,i32" json:"Offset"`
 }
 
 func NewGetArticleListRequest() *GetArticleListRequest {
@@ -2582,13 +2582,13 @@ func (p *GetArticleListRequest) InitDefault() {
 	*p = GetArticleListRequest{}
 }
 
-var GetArticleListRequest_SiteIdList_DEFAULT []string
+var GetArticleListRequest_SymbolIdList_DEFAULT []string
 
-func (p *GetArticleListRequest) GetSiteIdList() (v []string) {
-	if !p.IsSetSiteIdList() {
-		return GetArticleListRequest_SiteIdList_DEFAULT
+func (p *GetArticleListRequest) GetSymbolIdList() (v []string) {
+	if !p.IsSetSymbolIdList() {
+		return GetArticleListRequest_SymbolIdList_DEFAULT
 	}
-	return p.SiteIdList
+	return p.SymbolIdList
 }
 
 var GetArticleListRequest_ArticleType_DEFAULT string
@@ -2607,8 +2607,8 @@ func (p *GetArticleListRequest) GetLimit() (v int32) {
 func (p *GetArticleListRequest) GetOffset() (v int32) {
 	return p.Offset
 }
-func (p *GetArticleListRequest) SetSiteIdList(val []string) {
-	p.SiteIdList = val
+func (p *GetArticleListRequest) SetSymbolIdList(val []string) {
+	p.SymbolIdList = val
 }
 func (p *GetArticleListRequest) SetArticleType(val *string) {
 	p.ArticleType = val
@@ -2621,14 +2621,14 @@ func (p *GetArticleListRequest) SetOffset(val int32) {
 }
 
 var fieldIDToName_GetArticleListRequest = map[int16]string{
-	1: "SiteIdList",
+	1: "SymbolIdList",
 	2: "ArticleType",
 	3: "Limit",
 	4: "Offset",
 }
 
-func (p *GetArticleListRequest) IsSetSiteIdList() bool {
-	return p.SiteIdList != nil
+func (p *GetArticleListRequest) IsSetSymbolIdList() bool {
+	return p.SymbolIdList != nil
 }
 
 func (p *GetArticleListRequest) IsSetArticleType() bool {
@@ -2735,7 +2735,7 @@ func (p *GetArticleListRequest) ReadField1(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	p.SiteIdList = make([]string, 0, size)
+	p.SymbolIdList = make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
 		var _elem string
@@ -2745,7 +2745,7 @@ func (p *GetArticleListRequest) ReadField1(iprot thrift.TProtocol) error {
 			_elem = v
 		}
 
-		p.SiteIdList = append(p.SiteIdList, _elem)
+		p.SymbolIdList = append(p.SymbolIdList, _elem)
 	}
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
@@ -2821,14 +2821,14 @@ WriteStructEndError:
 }
 
 func (p *GetArticleListRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSiteIdList() {
-		if err = oprot.WriteFieldBegin("SiteIdList", thrift.LIST, 1); err != nil {
+	if p.IsSetSymbolIdList() {
+		if err = oprot.WriteFieldBegin("SymbolIdList", thrift.LIST, 1); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.STRING, len(p.SiteIdList)); err != nil {
+		if err := oprot.WriteListBegin(thrift.STRING, len(p.SymbolIdList)); err != nil {
 			return err
 		}
-		for _, v := range p.SiteIdList {
+		for _, v := range p.SymbolIdList {
 			if err := oprot.WriteString(v); err != nil {
 				return err
 			}
@@ -2914,7 +2914,7 @@ func (p *GetArticleListRequest) DeepEqual(ano *GetArticleListRequest) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.SiteIdList) {
+	if !p.Field1DeepEqual(ano.SymbolIdList) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.ArticleType) {
@@ -2931,10 +2931,10 @@ func (p *GetArticleListRequest) DeepEqual(ano *GetArticleListRequest) bool {
 
 func (p *GetArticleListRequest) Field1DeepEqual(src []string) bool {
 
-	if len(p.SiteIdList) != len(src) {
+	if len(p.SymbolIdList) != len(src) {
 		return false
 	}
-	for i, v := range p.SiteIdList {
+	for i, v := range p.SymbolIdList {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false
@@ -8583,9 +8583,9 @@ func (p *ArticleSummaryListResponse) Field1DeepEqual(src []*ArticleSummary) bool
 }
 
 type ArticleCountRequest struct {
-	Status      int32    `thrift:"Status,1,required" frugal:"1,required,i32" json:"Status"`
-	SiteIdList  []string `thrift:"SiteIdList,2,optional" frugal:"2,optional,list<string>" json:"SiteIdList,omitempty"`
-	ArticleType *string  `thrift:"ArticleType,3,optional" frugal:"3,optional,string" json:"ArticleType,omitempty"`
+	Status       int32    `thrift:"Status,1,required" frugal:"1,required,i32" json:"Status"`
+	SymbolIdList []string `thrift:"SymbolIdList,2,optional" frugal:"2,optional,list<string>" json:"SymbolIdList,omitempty"`
+	ArticleType  *string  `thrift:"ArticleType,3,optional" frugal:"3,optional,string" json:"ArticleType,omitempty"`
 }
 
 func NewArticleCountRequest() *ArticleCountRequest {
@@ -8600,13 +8600,13 @@ func (p *ArticleCountRequest) GetStatus() (v int32) {
 	return p.Status
 }
 
-var ArticleCountRequest_SiteIdList_DEFAULT []string
+var ArticleCountRequest_SymbolIdList_DEFAULT []string
 
-func (p *ArticleCountRequest) GetSiteIdList() (v []string) {
-	if !p.IsSetSiteIdList() {
-		return ArticleCountRequest_SiteIdList_DEFAULT
+func (p *ArticleCountRequest) GetSymbolIdList() (v []string) {
+	if !p.IsSetSymbolIdList() {
+		return ArticleCountRequest_SymbolIdList_DEFAULT
 	}
-	return p.SiteIdList
+	return p.SymbolIdList
 }
 
 var ArticleCountRequest_ArticleType_DEFAULT string
@@ -8620,8 +8620,8 @@ func (p *ArticleCountRequest) GetArticleType() (v string) {
 func (p *ArticleCountRequest) SetStatus(val int32) {
 	p.Status = val
 }
-func (p *ArticleCountRequest) SetSiteIdList(val []string) {
-	p.SiteIdList = val
+func (p *ArticleCountRequest) SetSymbolIdList(val []string) {
+	p.SymbolIdList = val
 }
 func (p *ArticleCountRequest) SetArticleType(val *string) {
 	p.ArticleType = val
@@ -8629,12 +8629,12 @@ func (p *ArticleCountRequest) SetArticleType(val *string) {
 
 var fieldIDToName_ArticleCountRequest = map[int16]string{
 	1: "Status",
-	2: "SiteIdList",
+	2: "SymbolIdList",
 	3: "ArticleType",
 }
 
-func (p *ArticleCountRequest) IsSetSiteIdList() bool {
-	return p.SiteIdList != nil
+func (p *ArticleCountRequest) IsSetSymbolIdList() bool {
+	return p.SymbolIdList != nil
 }
 
 func (p *ArticleCountRequest) IsSetArticleType() bool {
@@ -8735,7 +8735,7 @@ func (p *ArticleCountRequest) ReadField2(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	p.SiteIdList = make([]string, 0, size)
+	p.SymbolIdList = make([]string, 0, size)
 	for i := 0; i < size; i++ {
 
 		var _elem string
@@ -8745,7 +8745,7 @@ func (p *ArticleCountRequest) ReadField2(iprot thrift.TProtocol) error {
 			_elem = v
 		}
 
-		p.SiteIdList = append(p.SiteIdList, _elem)
+		p.SymbolIdList = append(p.SymbolIdList, _elem)
 	}
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
@@ -8816,14 +8816,14 @@ WriteFieldEndError:
 }
 
 func (p *ArticleCountRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSiteIdList() {
-		if err = oprot.WriteFieldBegin("SiteIdList", thrift.LIST, 2); err != nil {
+	if p.IsSetSymbolIdList() {
+		if err = oprot.WriteFieldBegin("SymbolIdList", thrift.LIST, 2); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteListBegin(thrift.STRING, len(p.SiteIdList)); err != nil {
+		if err := oprot.WriteListBegin(thrift.STRING, len(p.SymbolIdList)); err != nil {
 			return err
 		}
-		for _, v := range p.SiteIdList {
+		for _, v := range p.SymbolIdList {
 			if err := oprot.WriteString(v); err != nil {
 				return err
 			}
@@ -8878,7 +8878,7 @@ func (p *ArticleCountRequest) DeepEqual(ano *ArticleCountRequest) bool {
 	if !p.Field1DeepEqual(ano.Status) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.SiteIdList) {
+	if !p.Field2DeepEqual(ano.SymbolIdList) {
 		return false
 	}
 	if !p.Field3DeepEqual(ano.ArticleType) {
@@ -8896,10 +8896,10 @@ func (p *ArticleCountRequest) Field1DeepEqual(src int32) bool {
 }
 func (p *ArticleCountRequest) Field2DeepEqual(src []string) bool {
 
-	if len(p.SiteIdList) != len(src) {
+	if len(p.SymbolIdList) != len(src) {
 		return false
 	}
-	for i, v := range p.SiteIdList {
+	for i, v := range p.SymbolIdList {
 		_src := src[i]
 		if strings.Compare(v, _src) != 0 {
 			return false

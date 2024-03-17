@@ -28,10 +28,10 @@ func NewArticleHandler() *ArticleHandler {
 
 func (s *ArticleHandler) GetArticleList(ctx context.Context, req *speedy_read.GetArticleListRequest) (resp *speedy_read.GetArticleListResponse, err error) {
 	articleInfoList, err := s.articleSvc.GetArticleList(ctx, app.ArticleListParams{
-		SiteIdList:  utils.StringToInt64List(req.GetSiteIdList()),
-		ArticleType: req.GetArticleType(),
-		Limit:       req.GetLimit(),
-		OffSet:      req.GetOffset(),
+		SymbolIdList: utils.StringToInt64List(req.GetSymbolIdList()),
+		ArticleType:  req.GetArticleType(),
+		Limit:        req.GetLimit(),
+		OffSet:       req.GetOffset(),
 	})
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article list error %v", err)
@@ -72,8 +72,8 @@ func (s *ArticleHandler) RejectArticle(ctx context.Context, req *speedy_read.Rej
 
 func (s *ArticleHandler) ArticleCount(ctx context.Context, req *speedy_read.ArticleCountRequest) (resp *speedy_read.ArticleCountResponse, err error) {
 	count, err := s.articleSvc.ArticleCount(ctx, req.GetStatus(), app.ArticleListParams{
-		SiteIdList:  utils.StringToInt64List(req.GetSiteIdList()),
-		ArticleType: req.GetArticleType(),
+		SymbolIdList: utils.StringToInt64List(req.GetSymbolIdList()),
+		ArticleType:  req.GetArticleType(),
 	})
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article count error %v", err)

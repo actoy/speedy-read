@@ -22,8 +22,8 @@ func main() {
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
 	//testEcho(client)
-	//testArticleCount(client)
-	testImport(client)
+	testArticleCount(client)
+	//testImport(client)
 }
 
 func stringPtr(s string) *string {
@@ -102,10 +102,10 @@ func testCreateArticle(client speedyread.Client) {
 
 func testGetArticleList(client speedyread.Client) {
 	articleList, err := client.ArticleList(context.Background(), &speedy_read.GetArticleListRequest{
-		ArticleType: stringPtr(speedy_read.TypeNew),
-		SiteIdList:  []string{"3"},
-		Offset:      0,
-		Limit:       10,
+		//ArticleType: stringPtr(speedy_read.TypeNew),
+		SymbolIdList: []string{"1769215432683687936", "1769215428673933312"},
+		Offset:       0,
+		Limit:        10,
 	})
 	if err != nil {
 		klog.Error(err)
@@ -167,7 +167,8 @@ func testEcho(client speedyread.Client) {
 
 func testArticleCount(client speedyread.Client) {
 	req := &speedy_read.ArticleCountRequest{
-		Status: 1,
+		Status:       1,
+		SymbolIdList: []string{"1769215432683687936", "1769215428673933312"},
 	}
 	resp, err := client.ArticleCount(context.Background(), req)
 	if err != nil {

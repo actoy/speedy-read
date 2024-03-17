@@ -64,7 +64,7 @@ struct CreateSiteResponse {
 }
 
 struct GetArticleListRequest {
-    1: optional list<string> SiteIdList
+    1: optional list<string> SymbolIdList
     2: optional string ArticleType
     3: required i32 Limit
     4: required i32 Offset
@@ -178,7 +178,7 @@ struct ArticleSummaryListResponse {
 
 struct ArticleCountRequest {
     1: required i32 Status
-    2: optional list<string> SiteIdList
+    2: optional list<string> SymbolIdList
     3: optional string ArticleType
 }
 

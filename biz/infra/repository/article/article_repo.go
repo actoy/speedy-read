@@ -56,12 +56,12 @@ func (r *Repository) ArticleList(ctx context.Context, params article.ArticleList
 			klog.Error(ctx, "get site by id error: %v", err)
 			continue
 		}
-		//metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
-		//if err != nil {
-		//	klog.Error(ctx, "get article meta by id error: %v", err)
-		//	continue
-		//}
-		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, siteDO, []*ArticleMeta{}))
+		metaPOList, err := r.articleMetaRepo.GetArticleMetaListByArticleID(ctx, po.ID)
+		if err != nil {
+			klog.Error(ctx, "get article meta by id error: %v", err)
+			continue
+		}
+		articleList = append(articleList, ConvertArticlePOToDO(po, authorPO, siteDO, metaPOList))
 	}
 	return articleList, nil
 }
