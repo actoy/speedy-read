@@ -4,6 +4,7 @@ import "context"
 
 type ArticleListParams struct {
 	SymbolIdList []int64
+	SiteIdList   []int64
 	ArticleType  string
 	Limit        int32
 	OffSet       int32

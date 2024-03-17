@@ -12,6 +12,7 @@ import (
 
 type SymbolApplicationI interface {
 	Import(ctx context.Context) error
+	GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error)
 }
 
 type SymbolApplication struct {
@@ -80,4 +81,8 @@ func (impl *SymbolApplication) Import(ctx context.Context) error {
 		impl.ImportCSVData(ctx, source, filePath)
 	}
 	return nil
+}
+
+func (impl *SymbolApplication) GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error) {
+	return impl.symbolRepo.GetList(ctx)
 }

@@ -6,6 +6,7 @@ import (
 	"speedy/read/biz/conversion/api"
 	"speedy/read/biz/conversion/api/generated"
 	"speedy/read/biz/domain/aggregates/article_summary"
+	"speedy/read/biz/domain/aggregates/symbol"
 	"speedy/read/biz/utils"
 	"speedy/read/kitex_gen/speedy_read"
 )
@@ -94,4 +95,13 @@ func ConvertSummaryOutlineStringToDO(outlineStrings []string) []*article_summary
 		outlineDoList = append(outlineDoList, &outlineDO)
 	}
 	return outlineDoList
+}
+
+func SymbolDOToThrift(symbolDO *symbol.Symbol) *speedy_read.Symbol {
+	return &speedy_read.Symbol{
+		ID:      utils.Int64ToString(symbolDO.ID),
+		Symbol:  symbolDO.Symbol,
+		Company: symbolDO.Company,
+		Source:  symbolDO.Source,
+	}
 }

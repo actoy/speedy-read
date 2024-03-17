@@ -56,6 +56,9 @@ func (dal *ArticleRepo) GetArticleList(ctx context.Context, params article.Artic
 	if len(params.ArticleType) != 0 {
 		db = db.Where("articles.type = ?", params.ArticleType)
 	}
+	if len(params.SiteIdList) > 0 {
+		db = db.Where("source_site_id in ?", params.SiteIdList)
+	}
 	db = db.Limit(int(params.Limit)).
 		Offset(int(params.OffSet * params.Limit)).
 		Order("articles.created_at").
@@ -117,7 +120,9 @@ func (dal *ArticleRepo) GetArticleCount(ctx context.Context, status int32, param
 	if len(params.ArticleType) != 0 {
 		db = db.Where("articles.type = ?", params.ArticleType)
 	}
-
+	if len(params.SiteIdList) > 0 {
+		db = db.Where("source_site_id in ?", params.SiteIdList)
+	}
 	db.Count(&count)
 	if db.Error != nil {
 		return int32(0), nil

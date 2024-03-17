@@ -30,6 +30,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"GetArticleSummaryList": kitex.NewMethodInfo(getArticleSummaryListHandler, newSpeedyReadGetArticleSummaryListArgs, newSpeedyReadGetArticleSummaryListResult, false),
 		"ArticleSummaryCount":   kitex.NewMethodInfo(articleSummaryCountHandler, newSpeedyReadArticleSummaryCountArgs, newSpeedyReadArticleSummaryCountResult, false),
 		"importSymbol":          kitex.NewMethodInfo(importSymbolHandler, newSpeedyReadImportSymbolArgs, newSpeedyReadImportSymbolResult, false),
+		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -244,6 +245,24 @@ func newSpeedyReadImportSymbolResult() interface{} {
 	return speedy_read.NewSpeedyReadImportSymbolResult()
 }
 
+func getSymbolListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadGetSymbolListArgs)
+	realResult := result.(*speedy_read.SpeedyReadGetSymbolListResult)
+	success, err := handler.(speedy_read.SpeedyRead).GetSymbolList(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadGetSymbolListArgs() interface{} {
+	return speedy_read.NewSpeedyReadGetSymbolListArgs()
+}
+
+func newSpeedyReadGetSymbolListResult() interface{} {
+	return speedy_read.NewSpeedyReadGetSymbolListResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -359,6 +378,16 @@ func (p *kClient) ImportSymbol(ctx context.Context, req *speedy_read.Request) (r
 	_args.Req = req
 	var _result speedy_read.SpeedyReadImportSymbolResult
 	if err = p.c.Call(ctx, "importSymbol", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (r *speedy_read.SymbolListResponse, err error) {
+	var _args speedy_read.SpeedyReadGetSymbolListArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadGetSymbolListResult
+	if err = p.c.Call(ctx, "GetSymbolList", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

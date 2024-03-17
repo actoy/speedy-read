@@ -63,3 +63,8 @@ func (s *SpeedyReadImpl) ArticleSummaryCount(ctx context.Context, req *speedy_re
 func (s *SpeedyReadImpl) ImportSymbol(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
 	return rpc.NewSymbolHandler().Import(ctx, req)
 }
+
+// GetSymbolList implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SymbolListResponse, err error) {
+	return rpc.NewSymbolHandler().GetSymbolList(ctx, req)
+}

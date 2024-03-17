@@ -66,8 +66,9 @@ struct CreateSiteResponse {
 struct GetArticleListRequest {
     1: optional list<string> SymbolIdList
     2: optional string ArticleType
-    3: required i32 Limit
-    4: required i32 Offset
+    3: optional list<string> SiteIdList
+    4: required i32 Limit
+    5: required i32 Offset
 }
 
 struct GetArticleListResponse {
@@ -180,6 +181,7 @@ struct ArticleCountRequest {
     1: required i32 Status
     2: optional list<string> SymbolIdList
     3: optional string ArticleType
+    4: optional list<string> SiteIdList
 }
 
 struct ArticleCountResponse {
@@ -192,6 +194,20 @@ struct ArticleSummaryCountRequest {
 
 struct ArticleSummaryCountResponse {
     1: required i32 Count
+}
+
+struct SymbolListRequest {
+}
+
+struct SymbolListResponse {
+  1: required list<Symbol> Symbol
+}
+
+struct Symbol {
+    1: required string ID
+    2: required string Symbol
+    3: required string Company
+    4: required string Source
 }
 
 service SpeedyRead {
@@ -210,4 +226,5 @@ service SpeedyRead {
     ArticleSummaryCountResponse ArticleSummaryCount(1: ArticleSummaryCountRequest req) //
     // import symbol
     Response importSymbol(1: Request req)
+    SymbolListResponse GetSymbolList(1: SymbolListRequest req)
 }
