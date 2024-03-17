@@ -58,3 +58,8 @@ func (s *SpeedyReadImpl) ArticleCount(ctx context.Context, req *speedy_read.Arti
 func (s *SpeedyReadImpl) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (resp *speedy_read.ArticleSummaryCountResponse, err error) {
 	return rpc.NewArticleSummaryHandler().ArticleSummaryCount(ctx, req)
 }
+
+// ImportSymbol implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) ImportSymbol(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
+	return rpc.NewSymbolHandler().Import(ctx, req)
+}

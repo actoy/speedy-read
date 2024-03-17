@@ -245,7 +245,7 @@ func filterArticleUrl(url string, tag string) bool {
 		if len(url) == 0 {
 			return true
 		}
-		return strings.Contains(url, "the-ascent")
+		return !strings.Contains(url, "investing")
 	}
 	return false
 }

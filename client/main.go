@@ -21,8 +21,9 @@ func main() {
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	testEcho(client)
+	//testEcho(client)
 	//testArticleCount(client)
+	testImport(client)
 }
 
 func stringPtr(s string) *string {
@@ -169,6 +170,17 @@ func testArticleCount(client speedyread.Client) {
 		Status: 1,
 	}
 	resp, err := client.ArticleCount(context.Background(), req)
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(resp)
+}
+
+func testImport(client speedyread.Client) {
+	req := &speedy_read.Request{
+		Message: "message",
+	}
+	resp, err := client.ImportSymbol(context.Background(), req)
 	if err != nil {
 		klog.Error(err)
 	}

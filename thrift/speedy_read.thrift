@@ -208,4 +208,6 @@ service SpeedyRead {
     SaveArticleSummaryResponse SaveArticleSummary(1:SaveArticleSummaryRequest req) // 文章总结生成后更新
     ArticleSummaryListResponse GetArticleSummaryList(1: ArticleSummaryListRequest req)
     ArticleSummaryCountResponse ArticleSummaryCount(1: ArticleSummaryCountRequest req) //
+    // import symbol
+    Response importSymbol(1: Request req)
 }

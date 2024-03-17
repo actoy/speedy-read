@@ -119,3 +119,13 @@ CREATE TABLE `label_refs` (
 alter table sites add column `type` varchar(20) NOT NULL DEFAULT '' COMMENT '网站类型' after `tag`;
 alter table sites add column `type_key` varchar(128) NOT NULL DEFAULT '' COMMENT '不同类型网站对应的key，如八抓鱼的taskID' after `type`;
 alter table sites modify column `type_key` varchar(1024) NOT NULL DEFAULT '';
+
+CREATE TABLE `symbols` (
+     `id` bigint(20) unsigned NOT NULL COMMENT 'UUID',
+     `symbol` varchar(127) NOT NULL DEFAULT '' COMMENT '股票代码标识',
+     `company` varchar(512) NOT NULL DEFAULT '' COMMENT '公司名称',
+     `source` varchar(63) NOT NULL DEFAULT '' COMMENT '股票代码来源',
+     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'create time',
+     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='symbols 股票代码';

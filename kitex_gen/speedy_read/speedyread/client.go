@@ -21,6 +21,7 @@ type Client interface {
 	SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest, callOptions ...callopt.Option) (r *speedy_read.SaveArticleSummaryResponse, err error)
 	GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryListResponse, err error)
 	ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryCountResponse, err error)
+	ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -100,4 +101,9 @@ func (p *kSpeedyReadClient) GetArticleSummaryList(ctx context.Context, req *spee
 func (p *kSpeedyReadClient) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryCountResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ArticleSummaryCount(ctx, req)
+}
+
+func (p *kSpeedyReadClient) ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ImportSymbol(ctx, req)
 }
