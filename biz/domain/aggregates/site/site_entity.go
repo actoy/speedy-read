@@ -10,7 +10,7 @@ import (
 const (
 	SeekingAlphaTag = "SeekingAlpha"
 	FoolTag         = "Fool"
-	MarketBeatTag   = "MarketBeat"
+	TheStreetTag    = "TheStreet"
 
 	SiteTypeRss        = "rss"
 	SiteTypeCraw       = "craw"

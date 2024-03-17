@@ -158,7 +158,7 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 		// 创建article
 		articleSvc := NewArticleService()
 		for _, item := range exportedDataList {
-			if filterArticleUrl(item.ArticleUrl, siteDO.Tag) {
+			if filterArticle(item, siteDO.Tag) {
 				continue
 			}
 			articleDO := &article.Article{
@@ -241,6 +241,18 @@ func dealCrawPublishAt(publishAt string, tag string) time.Time {
 			return time.Time{}
 		}
 		return publishTime
+	case site.TheStreetTag:
+		// 定义时间字符串和格式
+		timeStr := "Mar 2, 2024 4:04 PM EST"
+		layout := "Jan 2, 2006 3:04 PM MST" // 使用Go语言的基准时间
+
+		// 将时间字符串解析为time.Time类型
+		parsedTime, err := time.Parse(layout, timeStr)
+		if err != nil {
+			klog.Errorf("time parse error %v", err)
+			return time.Time{}
+		}
+		return parsedTime
 	}
 	return time.Time{}
 }
@@ -251,17 +263,24 @@ func dealCrawContent(content string, tag string) string {
 		reg := regexp.MustCompile(`( )+|(\n)+`)
 		crawContent := reg.ReplaceAllString(content, "$1$2")
 		return strings.TrimSpace(crawContent)
+	case site.TheStreetTag:
+		return content
 	}
 	return ""
 }
 
-func filterArticleUrl(url string, tag string) bool {
+func filterArticle(item craw_data.ExportData, tag string) bool {
 	switch tag {
 	case site.FoolTag:
-		if len(url) == 0 {
+		if len(item.ArticleUrl) == 0 {
 			return true
 		}
-		return !strings.Contains(url, "investing")
+		return !strings.Contains(item.ArticleUrl, "investing")
+	case site.TheStreetTag:
+		if len(item.ArticleTitle) == 0 {
+			return true
+		}
+		return false
 	}
 	return false
 }
@@ -272,6 +291,20 @@ func (impl *DataCrawService) dealCrawArticleMeta(ctx context.Context, stock stri
 	case site.FoolTag:
 		list := strings.Split(strings.Replace(stock, " ", "", -1), ":")
 		symbolDO, err := impl.symbolRepo.GetBySymbol(ctx, list[1])
+		if err != nil {
+			klog.Errorf("get symbol error %v", err)
+			return result
+		}
+		if symbolDO == nil {
+			return result
+		}
+		result = append(result, &article.ArticleMeta{
+			MetaType:  article.StockMeteType,
+			MetaKey:   symbolDO.Symbol,
+			MetaValue: utils.Int64ToString(symbolDO.ID),
+		})
+	case site.TheStreetTag:
+		symbolDO, err := impl.symbolRepo.GetBySymbol(ctx, stock)
 		if err != nil {
 			klog.Errorf("get symbol error %v", err)
 			return result
