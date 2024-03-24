@@ -21,8 +21,8 @@ func main() {
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	//testEcho(client)
-	testArticleCount(client)
+	testEcho(client)
+	//testArticleCount(client)
 	//testImport(client)
 	//testGetSymbolList(client)
 }

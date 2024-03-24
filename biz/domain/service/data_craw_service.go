@@ -66,78 +66,95 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 }
 
 func (impl *DataCrawService) dealArticle4Rss(ctx context.Context, siteDO *site.Site) error {
-	var (
-		resp = &http.Response{}
-		err  error
-	)
 	if siteDO == nil {
 		return nil
 	}
-	resp, err = http.Get(siteDO.Url)
-	if err != nil {
-		klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, err)
-		return err
-	}
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
-		return err
-	}
-	defer resp.Body.Close()
 	switch siteDO.Tag {
 	case site.SeekingAlphaTag:
-		return impl.dealSeekingAlpha(ctx, body, siteDO)
+		symbolList, err := impl.symbolRepo.GetList(ctx)
+		if err != nil {
+			klog.CtxErrorf(ctx, "Error get symbol list: %v", err)
+		}
+		return impl.dealSeekingAlpha(ctx, symbolList, siteDO)
 	default:
 		return nil
 	}
 }
 
-func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, body []byte, siteDO *site.Site) error {
-	data := craw_data.SeekingAlpha{}
-	err := xml.Unmarshal(body, &data)
-	if err != nil {
-		fmt.Printf("error: %v", err)
-		return err
-	}
-	articleSvc := NewArticleService()
-	for _, item := range data.Channel.Item {
-		publishAt, err := time.Parse(time.RFC1123Z, item.PubDate)
-		if err != nil {
+func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []*symbol.Symbol, siteDO *site.Site) error {
+	for _, symbolDO := range symbolList {
+		if symbolDO == nil {
 			continue
 		}
-		itemType := ""
-		articleUrl := item.ArticleUrl
-		if strings.Contains(item.ArticleUrl, "article") {
-			itemType = article.TypeArticle
-			articleUrl = item.ArticleUrl
-		} else if strings.Contains(item.ArticleUrl, "news") {
-			itemType = article.TypeNew
-			flagList := strings.Split(item.Guid, ":")
-			articleUrl = "https://seekingalpha.com/news/" + flagList[2]
+		tmpSymbol := symbolDO.Symbol
+		parts := strings.Split(symbolDO.Symbol, "^")
+		if len(parts) > 1 {
+			tmpSymbol = parts[0]
 		}
-		id, err := articleSvc.CreateArticle(ctx, &article.Article{
-			Author: &article.Author{
-				AuthorName: item.AuthorName,
-			},
-			SourceSite: &site.Site{
-				Url:         siteDO.Url,
-				Tag:         site.SeekingAlphaTag,
-				Description: site.SeekingAlphaTag,
-				Type:        siteDO.Type,
-				TypeKey:     siteDO.TypeKey,
-			},
-			ArticleMetaList: impl.dealSeekingAlphaMeta(ctx, item.Stock),
-			Status:          article.StatusInit,
-			Url:             articleUrl,
-			Title:           item.Title,
-			PublishAt:       publishAt,
-			Type:            itemType,
-		})
-		if err != nil {
-			klog.CtxErrorf(ctx, "create article error is %v", err)
+		url := "https://seekingalpha.com/api/sa/combined/XXXX.xml"
+		url = strings.Replace(url, "XXXX", tmpSymbol, -1)
+		resp, httpErr := http.Get(url)
+		if httpErr != nil {
+			klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, httpErr)
+			return httpErr
+		}
+		if resp.StatusCode != http.StatusOK {
+			klog.CtxInfof(ctx, "url %s not exist", url)
 			continue
 		}
-		klog.CtxInfof(ctx, "create article success, id is %d", id)
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
+			return err
+		}
+		defer resp.Body.Close()
+
+		data := craw_data.SeekingAlpha{}
+		err = xml.Unmarshal(body, &data)
+		if err != nil {
+			fmt.Printf("error: %v", err)
+			return err
+		}
+		articleSvc := NewArticleService()
+		for _, item := range data.Channel.Item {
+			publishAt, err := time.Parse(time.RFC1123Z, item.PubDate)
+			if err != nil {
+				continue
+			}
+			itemType := ""
+			articleUrl := item.ArticleUrl
+			if strings.Contains(item.ArticleUrl, "article") {
+				itemType = article.TypeArticle
+				articleUrl = item.ArticleUrl
+			} else if strings.Contains(item.ArticleUrl, "news") {
+				itemType = article.TypeNew
+				flagList := strings.Split(item.Guid, ":")
+				articleUrl = "https://seekingalpha.com/news/" + flagList[2]
+			}
+			id, err := articleSvc.CreateArticle(ctx, &article.Article{
+				Author: &article.Author{
+					AuthorName: item.AuthorName,
+				},
+				SourceSite: &site.Site{
+					Url:         siteDO.Url,
+					Tag:         site.SeekingAlphaTag,
+					Description: site.SeekingAlphaTag,
+					Type:        siteDO.Type,
+					TypeKey:     siteDO.TypeKey,
+				},
+				ArticleMetaList: impl.dealSeekingAlphaMeta(ctx, item.Stock),
+				Status:          article.StatusInit,
+				Url:             articleUrl,
+				Title:           item.Title,
+				PublishAt:       publishAt,
+				Type:            itemType,
+			})
+			if err != nil {
+				klog.CtxErrorf(ctx, "create article error is %v", err)
+				continue
+			}
+			klog.CtxInfof(ctx, "create article success, id is %d", id)
+		}
 	}
 	return nil
 }
