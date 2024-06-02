@@ -154,13 +154,12 @@ struct ArticleSummary {
     1: required string ID
     2: required Article Article
     3: required string Title
-    4: required string Content // 原文内容
-    5: required string Summary // 摘要
-    6: required ArticleContentSummary ContentSummary // 一句话原文
-    7: required list<SummaryOutline> Outline
-    8: required list<string> tags
-    9: required string CreatedAt
-    10: required i32 TradingProposal  // 买卖建议
+    4: required string Summary // 摘要
+    5: required ArticleContentSummary ContentSummary // 一句话原文
+    6: required list<SummaryOutline> Outline
+    7: required list<string> tags
+    8: required string CreatedAt
+    9: required i32 TradingProposal  // 买卖建议
 }
 
 struct ArticleContentSummary {

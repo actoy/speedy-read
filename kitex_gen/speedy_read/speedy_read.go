@@ -7208,13 +7208,12 @@ type ArticleSummary struct {
 	ID              string                 `thrift:"ID,1,required" frugal:"1,required,string" json:"ID"`
 	Article         *Article               `thrift:"Article,2,required" frugal:"2,required,Article" json:"Article"`
 	Title           string                 `thrift:"Title,3,required" frugal:"3,required,string" json:"Title"`
-	Content         string                 `thrift:"Content,4,required" frugal:"4,required,string" json:"Content"`
-	Summary         string                 `thrift:"Summary,5,required" frugal:"5,required,string" json:"Summary"`
-	ContentSummary  *ArticleContentSummary `thrift:"ContentSummary,6,required" frugal:"6,required,ArticleContentSummary" json:"ContentSummary"`
-	Outline         []*SummaryOutline      `thrift:"Outline,7,required" frugal:"7,required,list<SummaryOutline>" json:"Outline"`
-	Tags            []string               `thrift:"tags,8,required" frugal:"8,required,list<string>" json:"tags"`
-	CreatedAt       string                 `thrift:"CreatedAt,9,required" frugal:"9,required,string" json:"CreatedAt"`
-	TradingProposal int32                  `thrift:"TradingProposal,10,required" frugal:"10,required,i32" json:"TradingProposal"`
+	Summary         string                 `thrift:"Summary,4,required" frugal:"4,required,string" json:"Summary"`
+	ContentSummary  *ArticleContentSummary `thrift:"ContentSummary,5,required" frugal:"5,required,ArticleContentSummary" json:"ContentSummary"`
+	Outline         []*SummaryOutline      `thrift:"Outline,6,required" frugal:"6,required,list<SummaryOutline>" json:"Outline"`
+	Tags            []string               `thrift:"tags,7,required" frugal:"7,required,list<string>" json:"tags"`
+	CreatedAt       string                 `thrift:"CreatedAt,8,required" frugal:"8,required,string" json:"CreatedAt"`
+	TradingProposal int32                  `thrift:"TradingProposal,9,required" frugal:"9,required,i32" json:"TradingProposal"`
 }
 
 func NewArticleSummary() *ArticleSummary {
@@ -7240,10 +7239,6 @@ func (p *ArticleSummary) GetArticle() (v *Article) {
 
 func (p *ArticleSummary) GetTitle() (v string) {
 	return p.Title
-}
-
-func (p *ArticleSummary) GetContent() (v string) {
-	return p.Content
 }
 
 func (p *ArticleSummary) GetSummary() (v string) {
@@ -7283,9 +7278,6 @@ func (p *ArticleSummary) SetArticle(val *Article) {
 func (p *ArticleSummary) SetTitle(val string) {
 	p.Title = val
 }
-func (p *ArticleSummary) SetContent(val string) {
-	p.Content = val
-}
 func (p *ArticleSummary) SetSummary(val string) {
 	p.Summary = val
 }
@@ -7306,16 +7298,15 @@ func (p *ArticleSummary) SetTradingProposal(val int32) {
 }
 
 var fieldIDToName_ArticleSummary = map[int16]string{
-	1:  "ID",
-	2:  "Article",
-	3:  "Title",
-	4:  "Content",
-	5:  "Summary",
-	6:  "ContentSummary",
-	7:  "Outline",
-	8:  "tags",
-	9:  "CreatedAt",
-	10: "TradingProposal",
+	1: "ID",
+	2: "Article",
+	3: "Title",
+	4: "Summary",
+	5: "ContentSummary",
+	6: "Outline",
+	7: "tags",
+	8: "CreatedAt",
+	9: "TradingProposal",
 }
 
 func (p *ArticleSummary) IsSetArticle() bool {
@@ -7333,7 +7324,6 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 	var issetID bool = false
 	var issetArticle bool = false
 	var issetTitle bool = false
-	var issetContent bool = false
 	var issetSummary bool = false
 	var issetContentSummary bool = false
 	var issetOutline bool = false
@@ -7387,25 +7377,25 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetContent = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 5:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField5(iprot); err != nil {
-					goto ReadFieldError
-				}
 				issetSummary = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 6:
+		case 5:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField6(iprot); err != nil {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetContentSummary = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetOutline = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -7414,31 +7404,22 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetOutline = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 8:
-			if fieldTypeId == thrift.LIST {
-				if err = p.ReadField8(iprot); err != nil {
-					goto ReadFieldError
-				}
 				issetTags = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 9:
+		case 8:
 			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField9(iprot); err != nil {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetCreatedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 10:
+		case 9:
 			if fieldTypeId == thrift.I32 {
-				if err = p.ReadField10(iprot); err != nil {
+				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetTradingProposal = true
@@ -7473,38 +7454,33 @@ func (p *ArticleSummary) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetContent {
+	if !issetSummary {
 		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetSummary {
+	if !issetContentSummary {
 		fieldId = 5
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetContentSummary {
+	if !issetOutline {
 		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetOutline {
+	if !issetTags {
 		fieldId = 7
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetTags {
+	if !issetCreatedAt {
 		fieldId = 8
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetCreatedAt {
-		fieldId = 9
-		goto RequiredFieldNotSetError
-	}
-
 	if !issetTradingProposal {
-		fieldId = 10
+		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -7555,27 +7531,18 @@ func (p *ArticleSummary) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.Content = v
-	}
-	return nil
-}
-func (p *ArticleSummary) ReadField5(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
 		p.Summary = v
 	}
 	return nil
 }
-func (p *ArticleSummary) ReadField6(iprot thrift.TProtocol) error {
+func (p *ArticleSummary) ReadField5(iprot thrift.TProtocol) error {
 	p.ContentSummary = NewArticleContentSummary()
 	if err := p.ContentSummary.Read(iprot); err != nil {
 		return err
 	}
 	return nil
 }
-func (p *ArticleSummary) ReadField7(iprot thrift.TProtocol) error {
+func (p *ArticleSummary) ReadField6(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -7594,7 +7561,7 @@ func (p *ArticleSummary) ReadField7(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *ArticleSummary) ReadField8(iprot thrift.TProtocol) error {
+func (p *ArticleSummary) ReadField7(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -7616,7 +7583,7 @@ func (p *ArticleSummary) ReadField8(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *ArticleSummary) ReadField9(iprot thrift.TProtocol) error {
+func (p *ArticleSummary) ReadField8(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -7625,7 +7592,7 @@ func (p *ArticleSummary) ReadField9(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *ArticleSummary) ReadField10(iprot thrift.TProtocol) error {
+func (p *ArticleSummary) ReadField9(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
@@ -7675,10 +7642,6 @@ func (p *ArticleSummary) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
-			goto WriteFieldError
-		}
-		if err = p.writeField10(oprot); err != nil {
-			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -7751,10 +7714,10 @@ WriteFieldEndError:
 }
 
 func (p *ArticleSummary) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Content", thrift.STRING, 4); err != nil {
+	if err = oprot.WriteFieldBegin("Summary", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Content); err != nil {
+	if err := oprot.WriteString(p.Summary); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -7768,10 +7731,10 @@ WriteFieldEndError:
 }
 
 func (p *ArticleSummary) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Summary", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRUCT, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Summary); err != nil {
+	if err := p.ContentSummary.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -7785,24 +7748,7 @@ WriteFieldEndError:
 }
 
 func (p *ArticleSummary) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("ContentSummary", thrift.STRUCT, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := p.ContentSummary.Write(oprot); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
-}
-
-func (p *ArticleSummary) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Outline", thrift.LIST, 7); err != nil {
+	if err = oprot.WriteFieldBegin("Outline", thrift.LIST, 6); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Outline)); err != nil {
@@ -7821,13 +7767,13 @@ func (p *ArticleSummary) writeField7(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
-func (p *ArticleSummary) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 8); err != nil {
+func (p *ArticleSummary) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("tags", thrift.LIST, 7); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRING, len(p.Tags)); err != nil {
@@ -7846,13 +7792,13 @@ func (p *ArticleSummary) writeField8(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
-func (p *ArticleSummary) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("CreatedAt", thrift.STRING, 9); err != nil {
+func (p *ArticleSummary) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CreatedAt", thrift.STRING, 8); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.CreatedAt); err != nil {
@@ -7863,13 +7809,13 @@ func (p *ArticleSummary) writeField9(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
-func (p *ArticleSummary) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TradingProposal", thrift.I32, 10); err != nil {
+func (p *ArticleSummary) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TradingProposal", thrift.I32, 9); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI32(p.TradingProposal); err != nil {
@@ -7880,9 +7826,9 @@ func (p *ArticleSummary) writeField10(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
 func (p *ArticleSummary) String() string {
@@ -7908,25 +7854,22 @@ func (p *ArticleSummary) DeepEqual(ano *ArticleSummary) bool {
 	if !p.Field3DeepEqual(ano.Title) {
 		return false
 	}
-	if !p.Field4DeepEqual(ano.Content) {
+	if !p.Field4DeepEqual(ano.Summary) {
 		return false
 	}
-	if !p.Field5DeepEqual(ano.Summary) {
+	if !p.Field5DeepEqual(ano.ContentSummary) {
 		return false
 	}
-	if !p.Field6DeepEqual(ano.ContentSummary) {
+	if !p.Field6DeepEqual(ano.Outline) {
 		return false
 	}
-	if !p.Field7DeepEqual(ano.Outline) {
+	if !p.Field7DeepEqual(ano.Tags) {
 		return false
 	}
-	if !p.Field8DeepEqual(ano.Tags) {
+	if !p.Field8DeepEqual(ano.CreatedAt) {
 		return false
 	}
-	if !p.Field9DeepEqual(ano.CreatedAt) {
-		return false
-	}
-	if !p.Field10DeepEqual(ano.TradingProposal) {
+	if !p.Field9DeepEqual(ano.TradingProposal) {
 		return false
 	}
 	return true
@@ -7955,26 +7898,19 @@ func (p *ArticleSummary) Field3DeepEqual(src string) bool {
 }
 func (p *ArticleSummary) Field4DeepEqual(src string) bool {
 
-	if strings.Compare(p.Content, src) != 0 {
-		return false
-	}
-	return true
-}
-func (p *ArticleSummary) Field5DeepEqual(src string) bool {
-
 	if strings.Compare(p.Summary, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *ArticleSummary) Field6DeepEqual(src *ArticleContentSummary) bool {
+func (p *ArticleSummary) Field5DeepEqual(src *ArticleContentSummary) bool {
 
 	if !p.ContentSummary.DeepEqual(src) {
 		return false
 	}
 	return true
 }
-func (p *ArticleSummary) Field7DeepEqual(src []*SummaryOutline) bool {
+func (p *ArticleSummary) Field6DeepEqual(src []*SummaryOutline) bool {
 
 	if len(p.Outline) != len(src) {
 		return false
@@ -7987,7 +7923,7 @@ func (p *ArticleSummary) Field7DeepEqual(src []*SummaryOutline) bool {
 	}
 	return true
 }
-func (p *ArticleSummary) Field8DeepEqual(src []string) bool {
+func (p *ArticleSummary) Field7DeepEqual(src []string) bool {
 
 	if len(p.Tags) != len(src) {
 		return false
@@ -8000,14 +7936,14 @@ func (p *ArticleSummary) Field8DeepEqual(src []string) bool {
 	}
 	return true
 }
-func (p *ArticleSummary) Field9DeepEqual(src string) bool {
+func (p *ArticleSummary) Field8DeepEqual(src string) bool {
 
 	if strings.Compare(p.CreatedAt, src) != 0 {
 		return false
 	}
 	return true
 }
-func (p *ArticleSummary) Field10DeepEqual(src int32) bool {
+func (p *ArticleSummary) Field9DeepEqual(src int32) bool {
 
 	if p.TradingProposal != src {
 		return false
