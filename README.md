@@ -26,7 +26,7 @@
 * yum install mysql-server
 * 服务启动: service mysqld restart
 * 查看临时密码：grep "password" /var/log/mysqld.log
-* 修改mysql密码: ALTER USER 'root'@'localhost' IDENTIFIED BY '@Free4me';
+* 修改mysql密码: ALTER USER 'root'@'localhost' IDENTIFIED BY 'xxxx';
 
 ### 错误处理
 如遇到mysql-community-client-plugins-8.0.35-1.el7.x86_64.rpm 的公钥尚未安装
