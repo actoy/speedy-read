@@ -25,14 +25,15 @@ func ArticleSummaryDOToThrift(do *article_summary.ArticleSummary) *speedy_read.A
 		return &speedy_read.ArticleSummary{}
 	}
 	return &speedy_read.ArticleSummary{
-		ID:             utils.Int64ToString(do.ID),
-		Article:        ArticleDOToThrift(do.Article),
-		Title:          do.Title,
-		Summary:        do.Summary,
-		ContentSummary: ConvertContentSummaryToThrift(do.ContentSummary),
-		Outline:        CovertSummaryOutlineListToThrift(do.Outline),
-		Tags:           GetLabelDescription(do.LabelList),
-		CreatedAt:      do.CreatedAt.Format(constants.DateTimeLayout),
+		ID:              utils.Int64ToString(do.ID),
+		Article:         ArticleDOToThrift(do.Article),
+		Title:           do.Title,
+		Summary:         do.Summary,
+		ContentSummary:  ConvertContentSummaryToThrift(do.ContentSummary),
+		Outline:         CovertSummaryOutlineListToThrift(do.Outline),
+		Tags:            GetLabelDescription(do.LabelList),
+		CreatedAt:       do.CreatedAt.Format(constants.DateTimeLayout),
+		TradingProposal: do.TradingProposal,
 	}
 }
 
