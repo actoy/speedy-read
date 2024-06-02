@@ -5,6 +5,7 @@ import "context"
 type SummaryListParams struct {
 	Limit  int32
 	OffSet int32
+	Symbol string
 }
 
 type ArticleSummaryRepo interface {

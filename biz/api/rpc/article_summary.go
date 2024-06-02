@@ -57,7 +57,7 @@ func (s *ArticleSummaryHandler) Save(ctx context.Context, req *speedy_read.SaveA
 }
 
 func (s *ArticleSummaryHandler) ArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest) (resp *speedy_read.ArticleSummaryListResponse, err error) {
-	articleSummaryList, err := s.articleSummarySvc.GetArticleSummaryList(ctx, req.GetLimit(), req.GetOffset())
+	articleSummaryList, err := s.articleSummarySvc.GetArticleSummaryList(ctx, req.GetLimit(), req.GetOffset(), req.GetSymbol())
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article summary list error %v", err)
 		return nil, err

@@ -148,6 +148,7 @@ struct SaveArticleSummaryResponse {
 struct ArticleSummaryListRequest {
     1: required i32 Limit
     2: required i32 Offset
+    3: optional string Symbol
 }
 
 struct ArticleSummary {

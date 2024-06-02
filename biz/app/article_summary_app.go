@@ -12,7 +12,7 @@ import (
 
 type ArticleSummaryApplicationI interface {
 	CreateArticle(ctx context.Context, articleSummary *article_summary.ArticleSummary, content string) (int64, error)
-	GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*article_summary.ArticleSummary, error)
+	GetArticleSummaryList(ctx context.Context, limit, offSet int32, symbol string) ([]*article_summary.ArticleSummary, error)
 	GetArticleSummaryDetailByID(ctx context.Context, summaryID string) (*article_summary.ArticleSummary, error)
 	ArticleSummaryCount(ctx context.Context) int32
 }
@@ -35,10 +35,11 @@ func (impl *ArticleSummaryApplication) CreateArticle(ctx context.Context, articl
 	return impl.articleSummarySvc.CreateArticleSummary(ctx, articleSummary, content)
 }
 
-func (impl *ArticleSummaryApplication) GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*article_summary.ArticleSummary, error) {
+func (impl *ArticleSummaryApplication) GetArticleSummaryList(ctx context.Context, limit, offSet int32, symbol string) ([]*article_summary.ArticleSummary, error) {
 	return impl.articleSummarySvc.GetArticleSummaryList(ctx, article_summary.SummaryListParams{
 		Limit:  limit,
 		OffSet: offSet,
+		Symbol: symbol,
 	})
 }
 

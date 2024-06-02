@@ -6971,8 +6971,9 @@ func (p *SaveArticleSummaryResponse) Field1DeepEqual(src string) bool {
 }
 
 type ArticleSummaryListRequest struct {
-	Limit  int32 `thrift:"Limit,1,required" frugal:"1,required,i32" json:"Limit"`
-	Offset int32 `thrift:"Offset,2,required" frugal:"2,required,i32" json:"Offset"`
+	Limit  int32   `thrift:"Limit,1,required" frugal:"1,required,i32" json:"Limit"`
+	Offset int32   `thrift:"Offset,2,required" frugal:"2,required,i32" json:"Offset"`
+	Symbol *string `thrift:"Symbol,3,optional" frugal:"3,optional,string" json:"Symbol,omitempty"`
 }
 
 func NewArticleSummaryListRequest() *ArticleSummaryListRequest {
@@ -6990,16 +6991,33 @@ func (p *ArticleSummaryListRequest) GetLimit() (v int32) {
 func (p *ArticleSummaryListRequest) GetOffset() (v int32) {
 	return p.Offset
 }
+
+var ArticleSummaryListRequest_Symbol_DEFAULT string
+
+func (p *ArticleSummaryListRequest) GetSymbol() (v string) {
+	if !p.IsSetSymbol() {
+		return ArticleSummaryListRequest_Symbol_DEFAULT
+	}
+	return *p.Symbol
+}
 func (p *ArticleSummaryListRequest) SetLimit(val int32) {
 	p.Limit = val
 }
 func (p *ArticleSummaryListRequest) SetOffset(val int32) {
 	p.Offset = val
 }
+func (p *ArticleSummaryListRequest) SetSymbol(val *string) {
+	p.Symbol = val
+}
 
 var fieldIDToName_ArticleSummaryListRequest = map[int16]string{
 	1: "Limit",
 	2: "Offset",
+	3: "Symbol",
+}
+
+func (p *ArticleSummaryListRequest) IsSetSymbol() bool {
+	return p.Symbol != nil
 }
 
 func (p *ArticleSummaryListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -7038,6 +7056,14 @@ func (p *ArticleSummaryListRequest) Read(iprot thrift.TProtocol) (err error) {
 					goto ReadFieldError
 				}
 				issetOffset = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -7099,6 +7125,15 @@ func (p *ArticleSummaryListRequest) ReadField2(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
+func (p *ArticleSummaryListRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Symbol = &v
+	}
+	return nil
+}
 
 func (p *ArticleSummaryListRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -7112,6 +7147,10 @@ func (p *ArticleSummaryListRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -7166,6 +7205,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *ArticleSummaryListRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSymbol() {
+		if err = oprot.WriteFieldBegin("Symbol", thrift.STRING, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Symbol); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *ArticleSummaryListRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -7186,6 +7244,9 @@ func (p *ArticleSummaryListRequest) DeepEqual(ano *ArticleSummaryListRequest) bo
 	if !p.Field2DeepEqual(ano.Offset) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.Symbol) {
+		return false
+	}
 	return true
 }
 
@@ -7199,6 +7260,18 @@ func (p *ArticleSummaryListRequest) Field1DeepEqual(src int32) bool {
 func (p *ArticleSummaryListRequest) Field2DeepEqual(src int32) bool {
 
 	if p.Offset != src {
+		return false
+	}
+	return true
+}
+func (p *ArticleSummaryListRequest) Field3DeepEqual(src *string) bool {
+
+	if p.Symbol == src {
+		return true
+	} else if p.Symbol == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Symbol, *src) != 0 {
 		return false
 	}
 	return true
