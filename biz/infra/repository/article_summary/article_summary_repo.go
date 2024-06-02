@@ -50,7 +50,7 @@ func (r *Repository) CreateSummary(ctx context.Context, articleSummaryDO *articl
 }
 
 func (r *Repository) ArticleSummaryList(ctx context.Context, params article_summary.SummaryListParams) ([]*article_summary.ArticleSummary, error) {
-	summaryPOList, err := r.articleSummaryRepo.GetArticleSummaryList(ctx, params.Limit, params.OffSet)
+	summaryPOList, err := r.articleSummaryRepo.GetArticleSummaryList(ctx, params.Limit, params.OffSet, params.Symbol)
 	if err != nil {
 		return nil, err
 	}

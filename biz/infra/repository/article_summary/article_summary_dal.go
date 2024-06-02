@@ -36,12 +36,21 @@ func (r *ArticleSummaryRepo) Save(ctx context.Context, articleSummaryPO *Article
 	return articleSummaryPO.ID, nil
 }
 
-func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*ArticleSummary, error) {
+func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, offSet int32, symbol string) ([]*ArticleSummary, error) {
 	summaryList := make([]*ArticleSummary, 0)
-	result := infra.DB.WithContext(ctx).Limit(int(limit)).
-		Offset(int(offSet * limit)).
-		Order("created_at desc").
-		Find(&summaryList)
+	var result *gorm.DB
+	if symbol != "" {
+		result = infra.DB.WithContext(ctx).
+			Joins("JOIN article_metas ON article_summarys.article_id = article_metas.article_id").
+			Where("article_metas.meta_key = ?", symbol).
+			Limit(int(limit)).Offset(int(offSet * limit)).
+			Find(&summaryList)
+	} else {
+		result = infra.DB.WithContext(ctx).Limit(int(limit)).
+			Offset(int(offSet * limit)).
+			Order("created_at desc").
+			Find(&summaryList)
+	}
 	if result.Error == nil {
 		return summaryList, nil
 	} else if result.Error == gorm.ErrRecordNotFound {

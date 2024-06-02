@@ -20,10 +20,10 @@ func main() {
 	//testCreateArticle(client)
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
-	//testArticleSummaryList(client)
+	testArticleSummaryList(client)
 	//testEcho(client)
 	//testArticleCount(client)
-	testArticleDetail(client)
+	//testArticleDetail(client)
 	//testImport(client)
 	//testGetSymbolList(client)
 }
@@ -173,6 +173,7 @@ func testArticleSummaryList(client speedyread.Client) {
 	SummaryList, err := client.GetArticleSummaryList(context.Background(), &speedy_read.ArticleSummaryListRequest{
 		Limit:  10,
 		Offset: 0,
+		Symbol: stringPtr("TSLA"),
 	})
 	if err != nil {
 		klog.Error(err)
