@@ -106,6 +106,9 @@ func (r *Repository) GetArticleSummaryByID(ctx context.Context, summaryID int64)
 		klog.CtxErrorf(ctx, "get summary detail error %v", err)
 		return nil, err
 	}
+	if summaryPO == nil {
+		return &article_summary.ArticleSummary{}, nil
+	}
 	summaryOutlineList, err := r.summaryOutlineRepo.GetOutlineListBySummaryID(ctx, []int64{summaryPO.ID})
 	if err != nil {
 		klog.CtxErrorf(ctx, "get summary outline error %v", err)

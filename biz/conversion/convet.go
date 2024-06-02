@@ -21,6 +21,9 @@ var (
 )
 
 func ArticleSummaryDOToThrift(do *article_summary.ArticleSummary) *speedy_read.ArticleSummary {
+	if do == nil {
+		return &speedy_read.ArticleSummary{}
+	}
 	return &speedy_read.ArticleSummary{
 		ID:             utils.Int64ToString(do.ID),
 		Article:        ArticleDOToThrift(do.Article),
@@ -59,6 +62,9 @@ func CovertSummaryContentToDO(contentSummary *speedy_read.ArticleContentSummary)
 }
 
 func ConvertContentSummaryToThrift(contentSummary *article_summary.SummaryContent) *speedy_read.ArticleContentSummary {
+	if contentSummary == nil {
+		return &speedy_read.ArticleContentSummary{}
+	}
 	return &speedy_read.ArticleContentSummary{
 		Original:    contentSummary.Original,
 		Translation: contentSummary.Translation,

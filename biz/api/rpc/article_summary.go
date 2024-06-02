@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/pkg/errors"
 	"speedy/read/biz/app"
 	"speedy/read/biz/conversion"
 	"speedy/read/biz/domain/aggregates/article"
@@ -82,6 +83,9 @@ func (s *ArticleSummaryHandler) ArticleSummaryDetail(ctx context.Context, req *s
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article summary detail error %v", err)
 		return nil, err
+	}
+	if articleSummary.ID == 0 {
+		return &speedy_read.ArticleSummaryDetailResponse{}, errors.New("get article detail fail")
 	}
 	return &speedy_read.ArticleSummaryDetailResponse{
 		ArticleSummaryDetail: conversion.ArticleSummaryDOToThrift(articleSummary),

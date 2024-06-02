@@ -11,7 +11,7 @@ type ArticleSummaryServiceI interface {
 	CreateArticleSummary(ctx context.Context, articleSummaryDO *article_summary.ArticleSummary, content string) (int64, error)
 	GetArticleSummaryList(ctx context.Context, params article_summary.SummaryListParams) (
 		resp []*article_summary.ArticleSummary, err error)
-	GetArticleSummaryDetailByID(ctx context.Context, summaryID int64) (resp *article_summary.ArticleSummary, err error)
+	GetArticleSummaryDetailByID(ctx context.Context, summaryID int64) (*article_summary.ArticleSummary, error)
 }
 
 type ArticleSummaryService struct {
@@ -85,21 +85,23 @@ func (impl *ArticleSummaryService) buildArticle(articleList []*article.Article, 
 	return nil
 }
 
-func (impl *ArticleSummaryService) GetArticleSummaryDetailByID(ctx context.Context, summaryID int64) (resp *article_summary.ArticleSummary, err error) {
+func (impl *ArticleSummaryService) GetArticleSummaryDetailByID(ctx context.Context, summaryID int64) (*article_summary.ArticleSummary, error) {
 	summary, summaryErr := impl.summaryRepo.GetArticleSummaryByID(ctx, summaryID)
 	if summaryErr != nil {
-		return resp, err
+		return nil, summaryErr
 	}
 	labelList, err := impl.labelRepo.GetLabelListBySource(ctx, summary.ID, article_summary.SourceTypeSummary)
 	if err != nil {
 		klog.CtxErrorf(ctx, "get label list error %v", err)
-		return resp, err
+		return nil, err
 	}
 	summary.LabelList = labelList
-	articleList, err := impl.articleRepo.GetArticleByID(ctx, []int64{summary.Article.ID})
-	if err != nil {
-		klog.CtxErrorf(ctx, "get label list error %v", err)
+	if summary.Article != nil {
+		articleList, err := impl.articleRepo.GetArticleByID(ctx, []int64{summary.Article.ID})
+		if err != nil {
+			klog.CtxErrorf(ctx, "get label list error %v", err)
+		}
+		summary.Article = impl.buildArticle(articleList, summary.Article.ID)
 	}
-	summary.Article = impl.buildArticle(articleList, summary.Article.ID)
-	return resp, nil
+	return summary, nil
 }

@@ -21,8 +21,9 @@ func main() {
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	testEcho(client)
+	//testEcho(client)
 	//testArticleCount(client)
+	testArticleDetail(client)
 	//testImport(client)
 	//testGetSymbolList(client)
 }
@@ -220,4 +221,15 @@ func testGetSymbolList(client speedyread.Client) {
 		klog.Error(err)
 	}
 	fmt.Print(list)
+}
+
+func testArticleDetail(client speedyread.Client) {
+	req := &speedy_read.ArticleSummaryDetailRequest{
+		SummaryID: "1769266733262049280",
+	}
+	resp, err := client.ArticleSummaryDetail(context.Background(), req)
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(resp)
 }
