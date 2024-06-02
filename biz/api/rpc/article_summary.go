@@ -14,6 +14,8 @@ import (
 type ArticleSummaryHandlerI interface {
 	Save(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest) (resp *speedy_read.SaveArticleSummaryResponse, err error)
 	ArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest) (resp *speedy_read.ArticleSummaryListResponse, err error)
+	ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest) (resp *speedy_read.ArticleSummaryCountResponse, err error)
+	ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest) (resp *speedy_read.ArticleSummaryDetailResponse, err error)
 }
 
 type ArticleSummaryHandler struct {
@@ -72,5 +74,16 @@ func (s *ArticleSummaryHandler) ArticleSummaryCount(ctx context.Context, req *sp
 	count := s.articleSummarySvc.ArticleSummaryCount(ctx)
 	return &speedy_read.ArticleSummaryCountResponse{
 		Count: count,
+	}, nil
+}
+
+func (s *ArticleSummaryHandler) ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest) (resp *speedy_read.ArticleSummaryDetailResponse, err error) {
+	articleSummary, err := s.articleSummarySvc.GetArticleSummaryDetailByID(ctx, req.GetSummaryID())
+	if err != nil {
+		klog.CtxErrorf(ctx, "get article summary detail error %v", err)
+		return nil, err
+	}
+	return &speedy_read.ArticleSummaryDetailResponse{
+		ArticleSummaryDetail: conversion.ArticleSummaryDOToThrift(articleSummary),
 	}, nil
 }

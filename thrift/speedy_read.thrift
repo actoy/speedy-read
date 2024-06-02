@@ -196,6 +196,14 @@ struct ArticleSummaryCountResponse {
     1: required i32 Count
 }
 
+struct ArticleSummaryDetailRequest {
+    1: required string SummaryID
+}
+
+struct ArticleSummaryDetailResponse {
+    1: required ArticleSummary ArticleSummaryDetail
+}
+
 struct SymbolListRequest {
 }
 
@@ -224,6 +232,7 @@ service SpeedyRead {
     SaveArticleSummaryResponse SaveArticleSummary(1:SaveArticleSummaryRequest req) // 文章总结生成后更新
     ArticleSummaryListResponse GetArticleSummaryList(1: ArticleSummaryListRequest req)
     ArticleSummaryCountResponse ArticleSummaryCount(1: ArticleSummaryCountRequest req) //
+    ArticleSummaryDetailResponse ArticleSummaryDetail(1: ArticleSummaryDetailRequest req) //
     // import symbol
     Response importSymbol(1: Request req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)

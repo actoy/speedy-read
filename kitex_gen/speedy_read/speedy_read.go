@@ -9543,6 +9543,353 @@ func (p *ArticleSummaryCountResponse) Field1DeepEqual(src int32) bool {
 	return true
 }
 
+type ArticleSummaryDetailRequest struct {
+	SummaryID string `thrift:"SummaryID,1,required" frugal:"1,required,string" json:"SummaryID"`
+}
+
+func NewArticleSummaryDetailRequest() *ArticleSummaryDetailRequest {
+	return &ArticleSummaryDetailRequest{}
+}
+
+func (p *ArticleSummaryDetailRequest) InitDefault() {
+	*p = ArticleSummaryDetailRequest{}
+}
+
+func (p *ArticleSummaryDetailRequest) GetSummaryID() (v string) {
+	return p.SummaryID
+}
+func (p *ArticleSummaryDetailRequest) SetSummaryID(val string) {
+	p.SummaryID = val
+}
+
+var fieldIDToName_ArticleSummaryDetailRequest = map[int16]string{
+	1: "SummaryID",
+}
+
+func (p *ArticleSummaryDetailRequest) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetSummaryID bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetSummaryID = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetSummaryID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ArticleSummaryDetailRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummaryDetailRequest[fieldId]))
+}
+
+func (p *ArticleSummaryDetailRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.SummaryID = v
+	}
+	return nil
+}
+
+func (p *ArticleSummaryDetailRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ArticleSummaryDetailRequest"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ArticleSummaryDetailRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SummaryID", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.SummaryID); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ArticleSummaryDetailRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ArticleSummaryDetailRequest(%+v)", *p)
+
+}
+
+func (p *ArticleSummaryDetailRequest) DeepEqual(ano *ArticleSummaryDetailRequest) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.SummaryID) {
+		return false
+	}
+	return true
+}
+
+func (p *ArticleSummaryDetailRequest) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.SummaryID, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type ArticleSummaryDetailResponse struct {
+	ArticleSummaryDetail *ArticleSummary `thrift:"ArticleSummaryDetail,1,required" frugal:"1,required,ArticleSummary" json:"ArticleSummaryDetail"`
+}
+
+func NewArticleSummaryDetailResponse() *ArticleSummaryDetailResponse {
+	return &ArticleSummaryDetailResponse{}
+}
+
+func (p *ArticleSummaryDetailResponse) InitDefault() {
+	*p = ArticleSummaryDetailResponse{}
+}
+
+var ArticleSummaryDetailResponse_ArticleSummaryDetail_DEFAULT *ArticleSummary
+
+func (p *ArticleSummaryDetailResponse) GetArticleSummaryDetail() (v *ArticleSummary) {
+	if !p.IsSetArticleSummaryDetail() {
+		return ArticleSummaryDetailResponse_ArticleSummaryDetail_DEFAULT
+	}
+	return p.ArticleSummaryDetail
+}
+func (p *ArticleSummaryDetailResponse) SetArticleSummaryDetail(val *ArticleSummary) {
+	p.ArticleSummaryDetail = val
+}
+
+var fieldIDToName_ArticleSummaryDetailResponse = map[int16]string{
+	1: "ArticleSummaryDetail",
+}
+
+func (p *ArticleSummaryDetailResponse) IsSetArticleSummaryDetail() bool {
+	return p.ArticleSummaryDetail != nil
+}
+
+func (p *ArticleSummaryDetailResponse) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetArticleSummaryDetail bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetArticleSummaryDetail = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetArticleSummaryDetail {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ArticleSummaryDetailResponse[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_ArticleSummaryDetailResponse[fieldId]))
+}
+
+func (p *ArticleSummaryDetailResponse) ReadField1(iprot thrift.TProtocol) error {
+	p.ArticleSummaryDetail = NewArticleSummary()
+	if err := p.ArticleSummaryDetail.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *ArticleSummaryDetailResponse) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ArticleSummaryDetailResponse"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ArticleSummaryDetailResponse) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ArticleSummaryDetail", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.ArticleSummaryDetail.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *ArticleSummaryDetailResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ArticleSummaryDetailResponse(%+v)", *p)
+
+}
+
+func (p *ArticleSummaryDetailResponse) DeepEqual(ano *ArticleSummaryDetailResponse) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.ArticleSummaryDetail) {
+		return false
+	}
+	return true
+}
+
+func (p *ArticleSummaryDetailResponse) Field1DeepEqual(src *ArticleSummary) bool {
+
+	if !p.ArticleSummaryDetail.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
 type SymbolListRequest struct {
 }
 
@@ -10213,6 +10560,8 @@ type SpeedyRead interface {
 
 	ArticleSummaryCount(ctx context.Context, req *ArticleSummaryCountRequest) (r *ArticleSummaryCountResponse, err error)
 
+	ArticleSummaryDetail(ctx context.Context, req *ArticleSummaryDetailRequest) (r *ArticleSummaryDetailResponse, err error)
+
 	ImportSymbol(ctx context.Context, req *Request) (r *Response, err error)
 
 	GetSymbolList(ctx context.Context, req *SymbolListRequest) (r *SymbolListResponse, err error)
@@ -10334,6 +10683,15 @@ func (p *SpeedyReadClient) ArticleSummaryCount(ctx context.Context, req *Article
 	}
 	return _result.GetSuccess(), nil
 }
+func (p *SpeedyReadClient) ArticleSummaryDetail(ctx context.Context, req *ArticleSummaryDetailRequest) (r *ArticleSummaryDetailResponse, err error) {
+	var _args SpeedyReadArticleSummaryDetailArgs
+	_args.Req = req
+	var _result SpeedyReadArticleSummaryDetailResult
+	if err = p.Client_().Call(ctx, "ArticleSummaryDetail", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
 func (p *SpeedyReadClient) ImportSymbol(ctx context.Context, req *Request) (r *Response, err error) {
 	var _args SpeedyReadImportSymbolArgs
 	_args.Req = req
@@ -10383,6 +10741,7 @@ func NewSpeedyReadProcessor(handler SpeedyRead) *SpeedyReadProcessor {
 	self.AddToProcessorMap("SaveArticleSummary", &speedyReadProcessorSaveArticleSummary{handler: handler})
 	self.AddToProcessorMap("GetArticleSummaryList", &speedyReadProcessorGetArticleSummaryList{handler: handler})
 	self.AddToProcessorMap("ArticleSummaryCount", &speedyReadProcessorArticleSummaryCount{handler: handler})
+	self.AddToProcessorMap("ArticleSummaryDetail", &speedyReadProcessorArticleSummaryDetail{handler: handler})
 	self.AddToProcessorMap("importSymbol", &speedyReadProcessorImportSymbol{handler: handler})
 	self.AddToProcessorMap("GetSymbolList", &speedyReadProcessorGetSymbolList{handler: handler})
 	return self
@@ -10868,6 +11227,54 @@ func (p *speedyReadProcessorArticleSummaryCount) Process(ctx context.Context, se
 		result.Success = retval
 	}
 	if err2 = oprot.WriteMessageBegin("ArticleSummaryCount", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(ctx); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type speedyReadProcessorArticleSummaryDetail struct {
+	handler SpeedyRead
+}
+
+func (p *speedyReadProcessorArticleSummaryDetail) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := SpeedyReadArticleSummaryDetailArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("ArticleSummaryDetail", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	var err2 error
+	result := SpeedyReadArticleSummaryDetailResult{}
+	var retval *ArticleSummaryDetailResponse
+	if retval, err2 = p.handler.ArticleSummaryDetail(ctx, args.Req); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing ArticleSummaryDetail: "+err2.Error())
+		oprot.WriteMessageBegin("ArticleSummaryDetail", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return true, err2
+	} else {
+		result.Success = retval
+	}
+	if err2 = oprot.WriteMessageBegin("ArticleSummaryDetail", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -14374,6 +14781,346 @@ func (p *SpeedyReadArticleSummaryCountResult) DeepEqual(ano *SpeedyReadArticleSu
 }
 
 func (p *SpeedyReadArticleSummaryCountResult) Field0DeepEqual(src *ArticleSummaryCountResponse) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SpeedyReadArticleSummaryDetailArgs struct {
+	Req *ArticleSummaryDetailRequest `thrift:"req,1" frugal:"1,default,ArticleSummaryDetailRequest" json:"req"`
+}
+
+func NewSpeedyReadArticleSummaryDetailArgs() *SpeedyReadArticleSummaryDetailArgs {
+	return &SpeedyReadArticleSummaryDetailArgs{}
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) InitDefault() {
+	*p = SpeedyReadArticleSummaryDetailArgs{}
+}
+
+var SpeedyReadArticleSummaryDetailArgs_Req_DEFAULT *ArticleSummaryDetailRequest
+
+func (p *SpeedyReadArticleSummaryDetailArgs) GetReq() (v *ArticleSummaryDetailRequest) {
+	if !p.IsSetReq() {
+		return SpeedyReadArticleSummaryDetailArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *SpeedyReadArticleSummaryDetailArgs) SetReq(val *ArticleSummaryDetailRequest) {
+	p.Req = val
+}
+
+var fieldIDToName_SpeedyReadArticleSummaryDetailArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SpeedyReadArticleSummaryDetailArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) ReadField1(iprot thrift.TProtocol) error {
+	p.Req = NewArticleSummaryDetailRequest()
+	if err := p.Req.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ArticleSummaryDetail_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SpeedyReadArticleSummaryDetailArgs(%+v)", *p)
+
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) DeepEqual(ano *SpeedyReadArticleSummaryDetailArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *SpeedyReadArticleSummaryDetailArgs) Field1DeepEqual(src *ArticleSummaryDetailRequest) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SpeedyReadArticleSummaryDetailResult struct {
+	Success *ArticleSummaryDetailResponse `thrift:"success,0,optional" frugal:"0,optional,ArticleSummaryDetailResponse" json:"success,omitempty"`
+}
+
+func NewSpeedyReadArticleSummaryDetailResult() *SpeedyReadArticleSummaryDetailResult {
+	return &SpeedyReadArticleSummaryDetailResult{}
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) InitDefault() {
+	*p = SpeedyReadArticleSummaryDetailResult{}
+}
+
+var SpeedyReadArticleSummaryDetailResult_Success_DEFAULT *ArticleSummaryDetailResponse
+
+func (p *SpeedyReadArticleSummaryDetailResult) GetSuccess() (v *ArticleSummaryDetailResponse) {
+	if !p.IsSetSuccess() {
+		return SpeedyReadArticleSummaryDetailResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *SpeedyReadArticleSummaryDetailResult) SetSuccess(x interface{}) {
+	p.Success = x.(*ArticleSummaryDetailResponse)
+}
+
+var fieldIDToName_SpeedyReadArticleSummaryDetailResult = map[int16]string{
+	0: "success",
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SpeedyReadArticleSummaryDetailResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) ReadField0(iprot thrift.TProtocol) error {
+	p.Success = NewArticleSummaryDetailResponse()
+	if err := p.Success.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("ArticleSummaryDetail_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SpeedyReadArticleSummaryDetailResult(%+v)", *p)
+
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) DeepEqual(ano *SpeedyReadArticleSummaryDetailResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *SpeedyReadArticleSummaryDetailResult) Field0DeepEqual(src *ArticleSummaryDetailResponse) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

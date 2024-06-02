@@ -29,6 +29,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"SaveArticleSummary":    kitex.NewMethodInfo(saveArticleSummaryHandler, newSpeedyReadSaveArticleSummaryArgs, newSpeedyReadSaveArticleSummaryResult, false),
 		"GetArticleSummaryList": kitex.NewMethodInfo(getArticleSummaryListHandler, newSpeedyReadGetArticleSummaryListArgs, newSpeedyReadGetArticleSummaryListResult, false),
 		"ArticleSummaryCount":   kitex.NewMethodInfo(articleSummaryCountHandler, newSpeedyReadArticleSummaryCountArgs, newSpeedyReadArticleSummaryCountResult, false),
+		"ArticleSummaryDetail":  kitex.NewMethodInfo(articleSummaryDetailHandler, newSpeedyReadArticleSummaryDetailArgs, newSpeedyReadArticleSummaryDetailResult, false),
 		"importSymbol":          kitex.NewMethodInfo(importSymbolHandler, newSpeedyReadImportSymbolArgs, newSpeedyReadImportSymbolResult, false),
 		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
 	}
@@ -227,6 +228,24 @@ func newSpeedyReadArticleSummaryCountResult() interface{} {
 	return speedy_read.NewSpeedyReadArticleSummaryCountResult()
 }
 
+func articleSummaryDetailHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadArticleSummaryDetailArgs)
+	realResult := result.(*speedy_read.SpeedyReadArticleSummaryDetailResult)
+	success, err := handler.(speedy_read.SpeedyRead).ArticleSummaryDetail(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadArticleSummaryDetailArgs() interface{} {
+	return speedy_read.NewSpeedyReadArticleSummaryDetailArgs()
+}
+
+func newSpeedyReadArticleSummaryDetailResult() interface{} {
+	return speedy_read.NewSpeedyReadArticleSummaryDetailResult()
+}
+
 func importSymbolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*speedy_read.SpeedyReadImportSymbolArgs)
 	realResult := result.(*speedy_read.SpeedyReadImportSymbolResult)
@@ -368,6 +387,16 @@ func (p *kClient) ArticleSummaryCount(ctx context.Context, req *speedy_read.Arti
 	_args.Req = req
 	var _result speedy_read.SpeedyReadArticleSummaryCountResult
 	if err = p.c.Call(ctx, "ArticleSummaryCount", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest) (r *speedy_read.ArticleSummaryDetailResponse, err error) {
+	var _args speedy_read.SpeedyReadArticleSummaryDetailArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadArticleSummaryDetailResult
+	if err = p.c.Call(ctx, "ArticleSummaryDetail", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

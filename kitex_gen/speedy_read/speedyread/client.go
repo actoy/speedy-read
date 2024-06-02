@@ -21,6 +21,7 @@ type Client interface {
 	SaveArticleSummary(ctx context.Context, req *speedy_read.SaveArticleSummaryRequest, callOptions ...callopt.Option) (r *speedy_read.SaveArticleSummaryResponse, err error)
 	GetArticleSummaryList(ctx context.Context, req *speedy_read.ArticleSummaryListRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryListResponse, err error)
 	ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryCountResponse, err error)
+	ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryDetailResponse, err error)
 	ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest, callOptions ...callopt.Option) (r *speedy_read.SymbolListResponse, err error)
 }
@@ -102,6 +103,11 @@ func (p *kSpeedyReadClient) GetArticleSummaryList(ctx context.Context, req *spee
 func (p *kSpeedyReadClient) ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryCountResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ArticleSummaryCount(ctx, req)
+}
+
+func (p *kSpeedyReadClient) ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryDetailResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ArticleSummaryDetail(ctx, req)
 }
 
 func (p *kSpeedyReadClient) ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error) {

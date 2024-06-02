@@ -7,11 +7,13 @@ import (
 	"speedy/read/biz/domain/service"
 	articleInfra "speedy/read/biz/infra/repository/article"
 	articleSummaryInfra "speedy/read/biz/infra/repository/article_summary"
+	"speedy/read/biz/utils"
 )
 
 type ArticleSummaryApplicationI interface {
 	CreateArticle(ctx context.Context, articleSummary *article_summary.ArticleSummary, content string) (int64, error)
 	GetArticleSummaryList(ctx context.Context, limit, offSet int32) ([]*article_summary.ArticleSummary, error)
+	GetArticleSummaryDetailByID(ctx context.Context, summaryID string) (*article_summary.ArticleSummary, error)
 	ArticleSummaryCount(ctx context.Context) int32
 }
 
@@ -47,4 +49,8 @@ func (impl *ArticleSummaryApplication) ArticleSummaryCount(ctx context.Context) 
 		return int32(0)
 	}
 	return count
+}
+
+func (impl *ArticleSummaryApplication) GetArticleSummaryDetailByID(ctx context.Context, summaryID string) (*article_summary.ArticleSummary, error) {
+	return impl.articleSummarySvc.GetArticleSummaryDetailByID(ctx, utils.StringToInt64(summaryID))
 }

@@ -68,3 +68,8 @@ func (s *SpeedyReadImpl) ImportSymbol(ctx context.Context, req *speedy_read.Requ
 func (s *SpeedyReadImpl) GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SymbolListResponse, err error) {
 	return rpc.NewSymbolHandler().GetSymbolList(ctx, req)
 }
+
+// ArticleSummaryDetail implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest) (resp *speedy_read.ArticleSummaryDetailResponse, err error) {
+	return rpc.NewArticleSummaryHandler().ArticleSummaryDetail(ctx, req)
+}

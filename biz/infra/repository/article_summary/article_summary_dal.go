@@ -57,3 +57,14 @@ func (r *ArticleSummaryRepo) GetArticleSummaryCount(ctx context.Context) (int32,
 	}
 	return int32(count), result.Error
 }
+
+func (r *ArticleSummaryRepo) GetArticleSummaryDetailByID(ctx context.Context, id int64) (*ArticleSummary, error) {
+	var summaryPO *ArticleSummary
+	result := infra.DB.WithContext(ctx).First(&summaryPO, id)
+	if result.Error == nil {
+		return summaryPO, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}

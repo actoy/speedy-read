@@ -65,7 +65,7 @@ func (r *Repository) ArticleSummaryList(ctx context.Context, params article_summ
 	}
 	summaryContentList, err := r.summaryContentRepo.GetSummaryContentBySummaryID(ctx, summaryIDs)
 	if err != nil {
-		klog.CtxErrorf(ctx, "get summary outline error %v", err)
+		klog.CtxErrorf(ctx, "get summary content error %v", err)
 		return nil, err
 	}
 	return convertArticleSummaryDO(summaryPOList, summaryContentList, summaryOutlineList), nil
@@ -98,4 +98,23 @@ func (r *Repository) CreateLabel(ctx context.Context, descriptionList []string, 
 
 func (r *Repository) GetArticleSummaryCount(ctx context.Context) (int32, error) {
 	return r.articleSummaryRepo.GetArticleSummaryCount(ctx)
+}
+
+func (r *Repository) GetArticleSummaryByID(ctx context.Context, summaryID int64) (*article_summary.ArticleSummary, error) {
+	summaryPO, err := r.articleSummaryRepo.GetArticleSummaryDetailByID(ctx, summaryID)
+	if err != nil {
+		klog.CtxErrorf(ctx, "get summary detail error %v", err)
+		return nil, err
+	}
+	summaryOutlineList, err := r.summaryOutlineRepo.GetOutlineListBySummaryID(ctx, []int64{summaryPO.ID})
+	if err != nil {
+		klog.CtxErrorf(ctx, "get summary outline error %v", err)
+		return nil, err
+	}
+	summaryContentList, err := r.summaryContentRepo.GetSummaryContentBySummaryID(ctx, []int64{summaryPO.ID})
+	if err != nil {
+		klog.CtxErrorf(ctx, "get summary content error %v", err)
+		return nil, err
+	}
+	return convertArticleSummaryPOToDO(summaryPO, summaryContentList, summaryOutlineList), nil
 }
