@@ -40,7 +40,7 @@ func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, o
 	summaryList := make([]*ArticleSummary, 0)
 	result := infra.DB.WithContext(ctx).Limit(int(limit)).
 		Offset(int(offSet * limit)).
-		Order("created_at").
+		Order("created_at desc").
 		Find(&summaryList)
 	if result.Error == nil {
 		return summaryList, nil
