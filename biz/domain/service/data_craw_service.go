@@ -118,9 +118,10 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []
 			fmt.Printf("error: %v", err)
 			return err
 		}
+		location, _ := time.LoadLocation("loc")
 		articleSvc := NewArticleService()
 		for _, item := range data.Channel.Item {
-			publishAt, err := time.Parse(time.RFC1123Z, item.PubDate)
+			publishAt, err := time.ParseInLocation(time.RFC1123Z, item.PubDate, location)
 			if err != nil {
 				continue
 			}
