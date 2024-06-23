@@ -49,8 +49,7 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 	for _, siteDO := range siteList {
 		switch siteDO.Type {
 		case site.SiteTypeRss:
-			//rssErr = impl.dealArticle4Rss(ctx, siteDO)
-			continue
+			rssErr = impl.dealArticle4Rss(ctx, siteDO)
 		case site.SiteTypeCraw:
 			crawErr = impl.dealArticle4Craw(ctx, siteDO)
 		default:
