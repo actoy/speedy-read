@@ -6971,9 +6971,10 @@ func (p *SaveArticleSummaryResponse) Field1DeepEqual(src string) bool {
 }
 
 type ArticleSummaryListRequest struct {
-	Limit  int32   `thrift:"Limit,1,required" frugal:"1,required,i32" json:"Limit"`
-	Offset int32   `thrift:"Offset,2,required" frugal:"2,required,i32" json:"Offset"`
-	Symbol *string `thrift:"Symbol,3,optional" frugal:"3,optional,string" json:"Symbol,omitempty"`
+	Limit       int32   `thrift:"Limit,1,required" frugal:"1,required,i32" json:"Limit"`
+	Offset      int32   `thrift:"Offset,2,required" frugal:"2,required,i32" json:"Offset"`
+	Symbol      *string `thrift:"Symbol,3,optional" frugal:"3,optional,string" json:"Symbol,omitempty"`
+	ArticleType *string `thrift:"ArticleType,4,optional" frugal:"4,optional,string" json:"ArticleType,omitempty"`
 }
 
 func NewArticleSummaryListRequest() *ArticleSummaryListRequest {
@@ -7000,6 +7001,15 @@ func (p *ArticleSummaryListRequest) GetSymbol() (v string) {
 	}
 	return *p.Symbol
 }
+
+var ArticleSummaryListRequest_ArticleType_DEFAULT string
+
+func (p *ArticleSummaryListRequest) GetArticleType() (v string) {
+	if !p.IsSetArticleType() {
+		return ArticleSummaryListRequest_ArticleType_DEFAULT
+	}
+	return *p.ArticleType
+}
 func (p *ArticleSummaryListRequest) SetLimit(val int32) {
 	p.Limit = val
 }
@@ -7009,15 +7019,23 @@ func (p *ArticleSummaryListRequest) SetOffset(val int32) {
 func (p *ArticleSummaryListRequest) SetSymbol(val *string) {
 	p.Symbol = val
 }
+func (p *ArticleSummaryListRequest) SetArticleType(val *string) {
+	p.ArticleType = val
+}
 
 var fieldIDToName_ArticleSummaryListRequest = map[int16]string{
 	1: "Limit",
 	2: "Offset",
 	3: "Symbol",
+	4: "ArticleType",
 }
 
 func (p *ArticleSummaryListRequest) IsSetSymbol() bool {
 	return p.Symbol != nil
+}
+
+func (p *ArticleSummaryListRequest) IsSetArticleType() bool {
+	return p.ArticleType != nil
 }
 
 func (p *ArticleSummaryListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -7062,6 +7080,14 @@ func (p *ArticleSummaryListRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -7134,6 +7160,15 @@ func (p *ArticleSummaryListRequest) ReadField3(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
+func (p *ArticleSummaryListRequest) ReadField4(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ArticleType = &v
+	}
+	return nil
+}
 
 func (p *ArticleSummaryListRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -7151,6 +7186,10 @@ func (p *ArticleSummaryListRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -7224,6 +7263,25 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
+func (p *ArticleSummaryListRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if p.IsSetArticleType() {
+		if err = oprot.WriteFieldBegin("ArticleType", thrift.STRING, 4); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.ArticleType); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
 func (p *ArticleSummaryListRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -7245,6 +7303,9 @@ func (p *ArticleSummaryListRequest) DeepEqual(ano *ArticleSummaryListRequest) bo
 		return false
 	}
 	if !p.Field3DeepEqual(ano.Symbol) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.ArticleType) {
 		return false
 	}
 	return true
@@ -7272,6 +7333,18 @@ func (p *ArticleSummaryListRequest) Field3DeepEqual(src *string) bool {
 		return false
 	}
 	if strings.Compare(*p.Symbol, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *ArticleSummaryListRequest) Field4DeepEqual(src *string) bool {
+
+	if p.ArticleType == src {
+		return true
+	} else if p.ArticleType == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.ArticleType, *src) != 0 {
 		return false
 	}
 	return true

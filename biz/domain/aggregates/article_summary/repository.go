@@ -3,9 +3,10 @@ package article_summary
 import "context"
 
 type SummaryListParams struct {
-	Limit  int32
-	OffSet int32
-	Symbol string
+	Limit       int32
+	OffSet      int32
+	Symbol      string
+	ArticleType string
 }
 
 type ArticleSummaryRepo interface {

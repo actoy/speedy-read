@@ -171,9 +171,10 @@ func testSaveArticleSummary(client speedyread.Client) {
 
 func testArticleSummaryList(client speedyread.Client) {
 	SummaryList, err := client.GetArticleSummaryList(context.Background(), &speedy_read.ArticleSummaryListRequest{
-		Limit:  10,
-		Offset: 0,
-		Symbol: stringPtr("TSLA"),
+		Limit:       10,
+		Offset:      0,
+		Symbol:      stringPtr("TSLA"),
+		ArticleType: stringPtr("article"),
 	})
 	if err != nil {
 		klog.Error(err)

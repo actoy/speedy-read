@@ -5822,6 +5822,20 @@ func (p *ArticleSummaryListRequest) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField4(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -5909,6 +5923,19 @@ func (p *ArticleSummaryListRequest) FastReadField3(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *ArticleSummaryListRequest) FastReadField4(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+		p.ArticleType = &v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *ArticleSummaryListRequest) FastWrite(buf []byte) int {
 	return 0
@@ -5921,6 +5948,7 @@ func (p *ArticleSummaryListRequest) FastWriteNocopy(buf []byte, binaryWriter bth
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
+		offset += p.fastWriteField4(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -5934,6 +5962,7 @@ func (p *ArticleSummaryListRequest) BLength() int {
 		l += p.field1Length()
 		l += p.field2Length()
 		l += p.field3Length()
+		l += p.field4Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -5969,6 +5998,17 @@ func (p *ArticleSummaryListRequest) fastWriteField3(buf []byte, binaryWriter bth
 	return offset
 }
 
+func (p *ArticleSummaryListRequest) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	if p.IsSetArticleType() {
+		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ArticleType", thrift.STRING, 4)
+		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ArticleType)
+
+		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	}
+	return offset
+}
+
 func (p *ArticleSummaryListRequest) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Limit", thrift.I32, 1)
@@ -5992,6 +6032,17 @@ func (p *ArticleSummaryListRequest) field3Length() int {
 	if p.IsSetSymbol() {
 		l += bthrift.Binary.FieldBeginLength("Symbol", thrift.STRING, 3)
 		l += bthrift.Binary.StringLengthNocopy(*p.Symbol)
+
+		l += bthrift.Binary.FieldEndLength()
+	}
+	return l
+}
+
+func (p *ArticleSummaryListRequest) field4Length() int {
+	l := 0
+	if p.IsSetArticleType() {
+		l += bthrift.Binary.FieldBeginLength("ArticleType", thrift.STRING, 4)
+		l += bthrift.Binary.StringLengthNocopy(*p.ArticleType)
 
 		l += bthrift.Binary.FieldEndLength()
 	}
