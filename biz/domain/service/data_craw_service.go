@@ -260,11 +260,11 @@ func dealCrawPublishAt(publishAt string, tag string) time.Time {
 		return publishTime
 	case site.TheStreetTag:
 		// 定义时间字符串和格式
-		timeStr := "Mar 2, 2024 4:04 PM EST"
+		//timeStr := "Mar 2, 2024 4:04 PM EST"
 		layout := "Jan 2, 2006 3:04 PM MST" // 使用Go语言的基准时间
 
 		// 将时间字符串解析为time.Time类型
-		parsedTime, err := time.Parse(layout, timeStr)
+		parsedTime, err := time.Parse(layout, publishAt)
 		if err != nil {
 			klog.Errorf("time parse error %v", err)
 			return time.Time{}
