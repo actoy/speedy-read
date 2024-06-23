@@ -61,7 +61,7 @@ func (dal *ArticleRepo) GetArticleList(ctx context.Context, params article.Artic
 	}
 	db = db.Limit(int(params.Limit)).
 		Offset(int(params.OffSet * params.Limit)).
-		Order("articles.created_at").
+		Order("articles.publish_at").
 		Find(&articleList)
 	if db.Error == nil {
 		return articleList, nil
