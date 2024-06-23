@@ -21,7 +21,7 @@ import (
 )
 
 type DataCrawServiceI interface {
-	CrawArticle(ctx context.Context) error
+	CrawArticle(ctx context.Context, siteType string) error
 }
 
 type DataCrawService struct {
@@ -36,7 +36,7 @@ func NewDataCrawService() DataCrawServiceI {
 	}
 }
 
-func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
+func (impl *DataCrawService) CrawArticle(ctx context.Context, siteType string) error {
 	siteList, err := impl.siteRepo.GetSiteList(ctx)
 	if err != nil {
 		klog.CtxErrorf(ctx, "get site list err: %v", err)
@@ -47,6 +47,9 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 		crawErr error
 	)
 	for _, siteDO := range siteList {
+		if siteDO.Type != siteType {
+			continue
+		}
 		switch siteDO.Type {
 		case site.SiteTypeRss:
 			rssErr = impl.dealArticle4Rss(ctx, siteDO)

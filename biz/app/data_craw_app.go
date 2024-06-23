@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"speedy/read/biz/domain/aggregates/site"
 	"speedy/read/biz/domain/service"
 )
 
@@ -20,5 +21,7 @@ func NewDateCrawApplication() DateCrawApplicationI {
 }
 
 func (impl *DateCrawApplication) Craw(ctx context.Context) error {
-	return impl.dataCrawSvc.CrawArticle(ctx)
+	go impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
+	go impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
+	return nil
 }
