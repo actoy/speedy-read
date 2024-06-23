@@ -49,7 +49,8 @@ func (impl *DataCrawService) CrawArticle(ctx context.Context) error {
 	for _, siteDO := range siteList {
 		switch siteDO.Type {
 		case site.SiteTypeRss:
-			rssErr = impl.dealArticle4Rss(ctx, siteDO)
+			//rssErr = impl.dealArticle4Rss(ctx, siteDO)
+			continue
 		case site.SiteTypeCraw:
 			crawErr = impl.dealArticle4Craw(ctx, siteDO)
 		default:
@@ -160,6 +161,7 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []
 }
 
 func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.Site) error {
+	klog.CtxInfof(ctx, "dealArticle4Craw start")
 	if siteDO == nil {
 		return nil
 	}
@@ -206,16 +208,16 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 			}
 			id, err := articleSvc.CreateArticle(ctx, articleDO)
 			if err != nil {
-				klog.CtxErrorf(ctx, "create article error is %v", err)
+				klog.CtxErrorf(ctx, "dealArticle4Craw create article error is %v", err)
 				continue
 			}
-			klog.CtxInfof(ctx, "create article success, id is %d", id)
+			klog.CtxInfof(ctx, "dealArticle4Craw create article success, id is %d", id)
 		}
 
 		// 标记数据为已处理
 		marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
 		if !marked {
-			klog.CtxErrorf(ctx, "failed mark exported %s", siteDO.TypeKey)
+			klog.CtxErrorf(ctx, "dealArticle4Craw failed mark exported %s", siteDO.TypeKey)
 		}
 	}
 	return nil
