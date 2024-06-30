@@ -219,6 +219,16 @@ struct Symbol {
     4: required string Source
 }
 
+struct SearchSymbolRequest {
+    1: required string KeyWord
+}
+
+struct SearchSymbolResponse {
+    1: list<Symbol> SymbolList
+}
+
+
+
 service SpeedyRead {
     Response echo(1: Request req)
     // site
@@ -237,4 +247,5 @@ service SpeedyRead {
     // import symbol
     Response importSymbol(1: Request req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)
+    SearchSymbolResponse SearchSymbol(1: SymbolListRequest req)
 }

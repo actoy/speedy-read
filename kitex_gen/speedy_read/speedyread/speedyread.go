@@ -32,6 +32,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"ArticleSummaryDetail":  kitex.NewMethodInfo(articleSummaryDetailHandler, newSpeedyReadArticleSummaryDetailArgs, newSpeedyReadArticleSummaryDetailResult, false),
 		"importSymbol":          kitex.NewMethodInfo(importSymbolHandler, newSpeedyReadImportSymbolArgs, newSpeedyReadImportSymbolResult, false),
 		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
+		"SearchSymbol":          kitex.NewMethodInfo(searchSymbolHandler, newSpeedyReadSearchSymbolArgs, newSpeedyReadSearchSymbolResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -282,6 +283,24 @@ func newSpeedyReadGetSymbolListResult() interface{} {
 	return speedy_read.NewSpeedyReadGetSymbolListResult()
 }
 
+func searchSymbolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadSearchSymbolArgs)
+	realResult := result.(*speedy_read.SpeedyReadSearchSymbolResult)
+	success, err := handler.(speedy_read.SpeedyRead).SearchSymbol(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadSearchSymbolArgs() interface{} {
+	return speedy_read.NewSpeedyReadSearchSymbolArgs()
+}
+
+func newSpeedyReadSearchSymbolResult() interface{} {
+	return speedy_read.NewSpeedyReadSearchSymbolResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -417,6 +436,16 @@ func (p *kClient) GetSymbolList(ctx context.Context, req *speedy_read.SymbolList
 	_args.Req = req
 	var _result speedy_read.SpeedyReadGetSymbolListResult
 	if err = p.c.Call(ctx, "GetSymbolList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SearchSymbol(ctx context.Context, req *speedy_read.SymbolListRequest) (r *speedy_read.SearchSymbolResponse, err error) {
+	var _args speedy_read.SpeedyReadSearchSymbolArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadSearchSymbolResult
+	if err = p.c.Call(ctx, "SearchSymbol", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

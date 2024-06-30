@@ -73,3 +73,9 @@ func (s *SpeedyReadImpl) GetSymbolList(ctx context.Context, req *speedy_read.Sym
 func (s *SpeedyReadImpl) ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest) (resp *speedy_read.ArticleSummaryDetailResponse, err error) {
 	return rpc.NewArticleSummaryHandler().ArticleSummaryDetail(ctx, req)
 }
+
+// SearchSymbol implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) SearchSymbol(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SearchSymbolResponse, err error) {
+	// TODO: Your code here...
+	return
+}
