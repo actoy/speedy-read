@@ -50,3 +50,17 @@ func (dal *SymbolRepo) GetList(ctx context.Context) ([]*Symbol, error) {
 	}
 	return nil, result.Error
 }
+
+func (dal *SymbolRepo) SearchSymbolByKeyWord(ctx context.Context, keyword string) ([]*Symbol, error) {
+	list := make([]*Symbol, 0)
+	result := infra.DB.WithContext(ctx).
+		Where("symbol like ?", "%"+keyword+"%").
+		Or("company like ?", "%"+keyword+"%").
+		Find(&list)
+	if result.Error == nil {
+		return list, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}

@@ -13,6 +13,7 @@ import (
 type SymbolApplicationI interface {
 	Import(ctx context.Context) error
 	GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error)
+	SearchSymbolByKeyword(ctx context.Context, keyword string) ([]*symbol.Symbol, error)
 }
 
 type SymbolApplication struct {
@@ -85,4 +86,8 @@ func (impl *SymbolApplication) Import(ctx context.Context) error {
 
 func (impl *SymbolApplication) GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error) {
 	return impl.symbolRepo.GetList(ctx)
+}
+
+func (impl *SymbolApplication) SearchSymbolByKeyword(ctx context.Context, keyword string) ([]*symbol.Symbol, error) {
+	return impl.symbolRepo.SearchSymbol(ctx, keyword)
 }

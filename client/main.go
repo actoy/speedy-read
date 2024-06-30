@@ -20,12 +20,13 @@ func main() {
 	//testCreateArticle(client)
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
-	testArticleSummaryList(client)
+	//testArticleSummaryList(client)
 	//testEcho(client)
 	//testArticleCount(client)
 	//testArticleDetail(client)
 	//testImport(client)
 	//testGetSymbolList(client)
+	testSearchSymbolList(client)
 }
 
 func stringPtr(s string) *string {
@@ -234,4 +235,14 @@ func testArticleDetail(client speedyread.Client) {
 		klog.Error(err)
 	}
 	fmt.Print(resp)
+}
+
+func testSearchSymbolList(client speedyread.Client) {
+	list, err := client.SearchSymbol(context.Background(), &speedy_read.SearchSymbolRequest{
+		KeyWord: "tesla",
+	})
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(list)
 }

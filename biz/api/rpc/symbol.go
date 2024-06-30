@@ -11,6 +11,7 @@ import (
 type SymbolHandlerI interface {
 	Import(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SymbolListResponse, err error)
+	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (resp *speedy_read.SearchSymbolResponse, err error)
 }
 
 type SymbolHandler struct {
@@ -43,5 +44,20 @@ func (s *SymbolHandler) GetSymbolList(ctx context.Context, req *speedy_read.Symb
 		symbolList = append(symbolList, conversion.SymbolDOToThrift(info))
 	}
 	resp.Symbol = symbolList
+	return resp, nil
+}
+
+func (s *SymbolHandler) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (resp *speedy_read.SearchSymbolResponse, err error) {
+	resp = &speedy_read.SearchSymbolResponse{}
+	list, err := s.SymbolSvc.SearchSymbolByKeyword(ctx, req.GetKeyWord())
+	if err != nil {
+		klog.CtxErrorf(ctx, "import symbol err %v", err)
+		return resp, err
+	}
+	symbolList := make([]*speedy_read.Symbol, 0)
+	for _, info := range list {
+		symbolList = append(symbolList, conversion.SymbolDOToThrift(info))
+	}
+	resp.SymbolList = symbolList
 	return resp, nil
 }

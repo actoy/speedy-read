@@ -2,6 +2,7 @@ package symbol
 
 import (
 	"context"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/domain/aggregates/symbol"
 )
 
@@ -41,4 +42,17 @@ func (r *Repository) GetBySymbol(ctx context.Context, symbol string) (*symbol.Sy
 		return nil, err
 	}
 	return CovertDO(po), nil
+}
+
+func (r *Repository) SearchSymbol(ctx context.Context, keyword string) ([]*symbol.Symbol, error) {
+	klog.CtxInfof(ctx, "repo search symbol")
+	poList, err := r.SymbolRepo.SearchSymbolByKeyWord(ctx, keyword)
+	if err != nil {
+		return nil, err
+	}
+	list := make([]*symbol.Symbol, 0)
+	for _, po := range poList {
+		list = append(list, CovertDO(po))
+	}
+	return list, nil
 }
