@@ -14,7 +14,7 @@ type ArticleSummaryApplicationI interface {
 	CreateArticle(ctx context.Context, articleSummary *article_summary.ArticleSummary, content string) (int64, error)
 	GetArticleSummaryList(ctx context.Context, limit, offSet int32, symbol, articleType string) ([]*article_summary.ArticleSummary, error)
 	GetArticleSummaryDetailByID(ctx context.Context, summaryID string) (*article_summary.ArticleSummary, error)
-	ArticleSummaryCount(ctx context.Context) int32
+	ArticleSummaryCount(ctx context.Context, articleType string) int32
 }
 
 type ArticleSummaryApplication struct {
@@ -44,8 +44,8 @@ func (impl *ArticleSummaryApplication) GetArticleSummaryList(ctx context.Context
 	})
 }
 
-func (impl *ArticleSummaryApplication) ArticleSummaryCount(ctx context.Context) int32 {
-	count, err := impl.articleSummaryRepo.GetArticleSummaryCount(ctx)
+func (impl *ArticleSummaryApplication) ArticleSummaryCount(ctx context.Context, articleType string) int32 {
+	count, err := impl.articleSummaryRepo.GetArticleSummaryCount(ctx, articleType)
 	if err != nil {
 		klog.CtxErrorf(ctx, "get article summary count error is %v", err)
 		return int32(0)

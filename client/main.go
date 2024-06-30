@@ -26,7 +26,8 @@ func main() {
 	//testArticleDetail(client)
 	//testImport(client)
 	//testGetSymbolList(client)
-	testSearchSymbolList(client)
+	//testSearchSymbolList(client)
+	testArticleSummaryCount(client)
 }
 
 func stringPtr(s string) *string {
@@ -199,8 +200,20 @@ func testArticleCount(client speedyread.Client) {
 		Status:       1,
 		SymbolIdList: []string{"1769215432683687936", "1769215428673933312"},
 		SiteIdList:   []string{"1751484813790941184", "1769262327066005504", "1746385683192221696"},
+		ArticleType:  stringPtr("news"),
 	}
 	resp, err := client.ArticleCount(context.Background(), req)
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(resp)
+}
+
+func testArticleSummaryCount(client speedyread.Client) {
+	req := &speedy_read.ArticleSummaryCountRequest{
+		ArticleType: stringPtr("news"),
+	}
+	resp, err := client.ArticleSummaryCount(context.Background(), req)
 	if err != nil {
 		klog.Error(err)
 	}

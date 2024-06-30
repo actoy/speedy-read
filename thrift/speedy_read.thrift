@@ -190,7 +190,7 @@ struct ArticleCountResponse {
 }
 
 struct ArticleSummaryCountRequest {
-
+    1: optional string ArticleType
 }
 
 struct ArticleSummaryCountResponse {

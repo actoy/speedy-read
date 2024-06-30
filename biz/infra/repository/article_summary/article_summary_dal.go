@@ -60,9 +60,13 @@ func (r *ArticleSummaryRepo) GetArticleSummaryList(ctx context.Context, limit, o
 	return summaryList, result.Error
 }
 
-func (r *ArticleSummaryRepo) GetArticleSummaryCount(ctx context.Context) (int32, error) {
+func (r *ArticleSummaryRepo) GetArticleSummaryCount(ctx context.Context, articleType string) (int32, error) {
 	var count int64
-	result := infra.DB.WithContext(ctx).Model(&ArticleSummary{}).Count(&count)
+	result := infra.DB.WithContext(ctx).Model(&ArticleSummary{}).Joins("JOIN articles ON articles.id = article_summarys.article_id")
+	if articleType != "" {
+		result = result.Where("articles.type = ?", articleType)
+	}
+	result.Count(&count)
 	if result.Error != nil {
 		return int32(0), nil
 	}

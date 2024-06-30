@@ -9363,6 +9363,7 @@ func (p *ArticleCountResponse) Field1DeepEqual(src int32) bool {
 }
 
 type ArticleSummaryCountRequest struct {
+	ArticleType *string `thrift:"ArticleType,1,optional" frugal:"1,optional,string" json:"ArticleType,omitempty"`
 }
 
 func NewArticleSummaryCountRequest() *ArticleSummaryCountRequest {
@@ -9373,7 +9374,25 @@ func (p *ArticleSummaryCountRequest) InitDefault() {
 	*p = ArticleSummaryCountRequest{}
 }
 
-var fieldIDToName_ArticleSummaryCountRequest = map[int16]string{}
+var ArticleSummaryCountRequest_ArticleType_DEFAULT string
+
+func (p *ArticleSummaryCountRequest) GetArticleType() (v string) {
+	if !p.IsSetArticleType() {
+		return ArticleSummaryCountRequest_ArticleType_DEFAULT
+	}
+	return *p.ArticleType
+}
+func (p *ArticleSummaryCountRequest) SetArticleType(val *string) {
+	p.ArticleType = val
+}
+
+var fieldIDToName_ArticleSummaryCountRequest = map[int16]string{
+	1: "ArticleType",
+}
+
+func (p *ArticleSummaryCountRequest) IsSetArticleType() bool {
+	return p.ArticleType != nil
+}
 
 func (p *ArticleSummaryCountRequest) Read(iprot thrift.TProtocol) (err error) {
 
@@ -9392,8 +9411,20 @@ func (p *ArticleSummaryCountRequest) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 		if err = iprot.ReadFieldEnd(); err != nil {
 			goto ReadFieldEndError
@@ -9408,8 +9439,10 @@ ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ArticleSummaryCountRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
@@ -9417,11 +9450,26 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
+func (p *ArticleSummaryCountRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ArticleType = &v
+	}
+	return nil
+}
+
 func (p *ArticleSummaryCountRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
 	if err = oprot.WriteStructBegin("ArticleSummaryCountRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -9432,10 +9480,31 @@ func (p *ArticleSummaryCountRequest) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *ArticleSummaryCountRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if p.IsSetArticleType() {
+		if err = oprot.WriteFieldBegin("ArticleType", thrift.STRING, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.ArticleType); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
 func (p *ArticleSummaryCountRequest) String() string {
@@ -9450,6 +9519,22 @@ func (p *ArticleSummaryCountRequest) DeepEqual(ano *ArticleSummaryCountRequest) 
 	if p == ano {
 		return true
 	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.ArticleType) {
+		return false
+	}
+	return true
+}
+
+func (p *ArticleSummaryCountRequest) Field1DeepEqual(src *string) bool {
+
+	if p.ArticleType == src {
+		return true
+	} else if p.ArticleType == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.ArticleType, *src) != 0 {
 		return false
 	}
 	return true

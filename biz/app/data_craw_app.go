@@ -22,17 +22,17 @@ func NewDateCrawApplication() DateCrawApplicationI {
 }
 
 func (impl *DateCrawApplication) Craw(ctx context.Context) error {
-	go func() {
-		err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
-		if err != nil {
-			klog.CtxErrorf(ctx, "craw article, types is rss, err: %v", err)
-		}
-	}()
-	go func() {
-		err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
-		if err != nil {
-			klog.CtxErrorf(ctx, "craw article, types is craw, err: %v", err)
-		}
-	}()
+	//go func() {
+	err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
+	if err != nil {
+		klog.CtxErrorf(ctx, "craw article, types is rss, err: %v", err)
+	}
+	//}()
+	//go func() {
+	err = impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
+	if err != nil {
+		klog.CtxErrorf(ctx, "craw article, types is craw, err: %v", err)
+	}
+	//}()
 	return nil
 }
