@@ -12454,7 +12454,7 @@ ReadStructEndError:
 func (p *SpeedyReadSearchSymbolArgs) FastReadField1(buf []byte) (int, error) {
 	offset := 0
 
-	tmp := NewSymbolListRequest()
+	tmp := NewSearchSymbolRequest()
 	if l, err := tmp.FastRead(buf[offset:]); err != nil {
 		return offset, err
 	} else {

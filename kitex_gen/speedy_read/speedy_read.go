@@ -11004,7 +11004,7 @@ type SpeedyRead interface {
 
 	GetSymbolList(ctx context.Context, req *SymbolListRequest) (r *SymbolListResponse, err error)
 
-	SearchSymbol(ctx context.Context, req *SymbolListRequest) (r *SearchSymbolResponse, err error)
+	SearchSymbol(ctx context.Context, req *SearchSymbolRequest) (r *SearchSymbolResponse, err error)
 }
 
 type SpeedyReadClient struct {
@@ -11150,7 +11150,7 @@ func (p *SpeedyReadClient) GetSymbolList(ctx context.Context, req *SymbolListReq
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *SpeedyReadClient) SearchSymbol(ctx context.Context, req *SymbolListRequest) (r *SearchSymbolResponse, err error) {
+func (p *SpeedyReadClient) SearchSymbol(ctx context.Context, req *SearchSymbolRequest) (r *SearchSymbolResponse, err error) {
 	var _args SpeedyReadSearchSymbolArgs
 	_args.Req = req
 	var _result SpeedyReadSearchSymbolResult
@@ -16307,7 +16307,7 @@ func (p *SpeedyReadGetSymbolListResult) Field0DeepEqual(src *SymbolListResponse)
 }
 
 type SpeedyReadSearchSymbolArgs struct {
-	Req *SymbolListRequest `thrift:"req,1" frugal:"1,default,SymbolListRequest" json:"req"`
+	Req *SearchSymbolRequest `thrift:"req,1" frugal:"1,default,SearchSymbolRequest" json:"req"`
 }
 
 func NewSpeedyReadSearchSymbolArgs() *SpeedyReadSearchSymbolArgs {
@@ -16318,15 +16318,15 @@ func (p *SpeedyReadSearchSymbolArgs) InitDefault() {
 	*p = SpeedyReadSearchSymbolArgs{}
 }
 
-var SpeedyReadSearchSymbolArgs_Req_DEFAULT *SymbolListRequest
+var SpeedyReadSearchSymbolArgs_Req_DEFAULT *SearchSymbolRequest
 
-func (p *SpeedyReadSearchSymbolArgs) GetReq() (v *SymbolListRequest) {
+func (p *SpeedyReadSearchSymbolArgs) GetReq() (v *SearchSymbolRequest) {
 	if !p.IsSetReq() {
 		return SpeedyReadSearchSymbolArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *SpeedyReadSearchSymbolArgs) SetReq(val *SymbolListRequest) {
+func (p *SpeedyReadSearchSymbolArgs) SetReq(val *SearchSymbolRequest) {
 	p.Req = val
 }
 
@@ -16395,7 +16395,7 @@ ReadStructEndError:
 }
 
 func (p *SpeedyReadSearchSymbolArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Req = NewSymbolListRequest()
+	p.Req = NewSearchSymbolRequest()
 	if err := p.Req.Read(iprot); err != nil {
 		return err
 	}
@@ -16467,7 +16467,7 @@ func (p *SpeedyReadSearchSymbolArgs) DeepEqual(ano *SpeedyReadSearchSymbolArgs) 
 	return true
 }
 
-func (p *SpeedyReadSearchSymbolArgs) Field1DeepEqual(src *SymbolListRequest) bool {
+func (p *SpeedyReadSearchSymbolArgs) Field1DeepEqual(src *SearchSymbolRequest) bool {
 
 	if !p.Req.DeepEqual(src) {
 		return false

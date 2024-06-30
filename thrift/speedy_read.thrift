@@ -247,5 +247,5 @@ service SpeedyRead {
     // import symbol
     Response importSymbol(1: Request req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)
-    SearchSymbolResponse SearchSymbol(1: SymbolListRequest req)
+    SearchSymbolResponse SearchSymbol(1: SearchSymbolRequest req)
 }

@@ -441,7 +441,7 @@ func (p *kClient) GetSymbolList(ctx context.Context, req *speedy_read.SymbolList
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) SearchSymbol(ctx context.Context, req *speedy_read.SymbolListRequest) (r *speedy_read.SearchSymbolResponse, err error) {
+func (p *kClient) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (r *speedy_read.SearchSymbolResponse, err error) {
 	var _args speedy_read.SpeedyReadSearchSymbolArgs
 	_args.Req = req
 	var _result speedy_read.SpeedyReadSearchSymbolResult
