@@ -171,7 +171,9 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 	typeKeyList := siteDO.GetTypeKeyList(ctx)
 	for _, typeKey := range typeKeyList {
 		// 获取未处理的导出数据
+		klog.CtxInfof(ctx, "Exported task id is %s", typeKey.TaskID)
 		exportedDataList, err := craw_data.GetNotExportedData(ctx, typeKey.TaskID)
+		klog.CtxInfof(ctx, "not Exported count is %d", len(exportedDataList))
 		if err != nil {
 			klog.CtxErrorf(ctx, "Error get not exported data %s: %v", siteDO.TypeKey, err)
 			return err
@@ -218,7 +220,7 @@ func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.
 		}
 
 		// 标记数据为已处理
-		marked := craw_data.MarkExported(ctx, siteDO.TypeKey)
+		marked := craw_data.MarkExported(ctx, typeKey.TaskID)
 		if !marked {
 			klog.CtxErrorf(ctx, "dealArticle4Craw failed mark exported %s", siteDO.TypeKey)
 		}
