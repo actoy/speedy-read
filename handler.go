@@ -78,3 +78,8 @@ func (s *SpeedyReadImpl) ArticleSummaryDetail(ctx context.Context, req *speedy_r
 func (s *SpeedyReadImpl) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (resp *speedy_read.SearchSymbolResponse, err error) {
 	return rpc.NewSymbolHandler().SearchSymbol(ctx, req)
 }
+
+// CrawData implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (resp *speedy_read.Response, err error) {
+	return rpc.NewDataCrawHandler().CrawData(ctx, req)
+}

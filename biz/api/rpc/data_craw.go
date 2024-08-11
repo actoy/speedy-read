@@ -8,6 +8,7 @@ import (
 
 type DateCrawI interface {
 	Echo(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error)
+	CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (resp *speedy_read.Response, err error)
 }
 
 type DataCrawHandler struct {
@@ -22,6 +23,11 @@ func NewDataCrawHandler() DateCrawI {
 
 // Echo implements the SpeedyReadImpl interface.
 func (s *DataCrawHandler) Echo(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
-	s.crawSvc.Craw(ctx)
+	s.crawSvc.Craw(ctx, "")
 	return &speedy_read.Response{Message: req.Message}, nil
+}
+
+func (s *DataCrawHandler) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (resp *speedy_read.Response, err error) {
+	s.crawSvc.Craw(ctx, req.GetSource())
+	return &speedy_read.Response{Message: "success"}, nil
 }

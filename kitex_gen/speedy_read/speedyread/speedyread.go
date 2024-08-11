@@ -33,6 +33,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"importSymbol":          kitex.NewMethodInfo(importSymbolHandler, newSpeedyReadImportSymbolArgs, newSpeedyReadImportSymbolResult, false),
 		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
 		"SearchSymbol":          kitex.NewMethodInfo(searchSymbolHandler, newSpeedyReadSearchSymbolArgs, newSpeedyReadSearchSymbolResult, false),
+		"CrawData":              kitex.NewMethodInfo(crawDataHandler, newSpeedyReadCrawDataArgs, newSpeedyReadCrawDataResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "speedy_read",
@@ -301,6 +302,24 @@ func newSpeedyReadSearchSymbolResult() interface{} {
 	return speedy_read.NewSpeedyReadSearchSymbolResult()
 }
 
+func crawDataHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadCrawDataArgs)
+	realResult := result.(*speedy_read.SpeedyReadCrawDataResult)
+	success, err := handler.(speedy_read.SpeedyRead).CrawData(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadCrawDataArgs() interface{} {
+	return speedy_read.NewSpeedyReadCrawDataArgs()
+}
+
+func newSpeedyReadCrawDataResult() interface{} {
+	return speedy_read.NewSpeedyReadCrawDataResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -446,6 +465,16 @@ func (p *kClient) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbo
 	_args.Req = req
 	var _result speedy_read.SpeedyReadSearchSymbolResult
 	if err = p.c.Call(ctx, "SearchSymbol", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (r *speedy_read.Response, err error) {
+	var _args speedy_read.SpeedyReadCrawDataArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadCrawDataResult
+	if err = p.c.Call(ctx, "CrawData", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

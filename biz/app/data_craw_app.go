@@ -8,7 +8,7 @@ import (
 )
 
 type DateCrawApplicationI interface {
-	Craw(ctx context.Context) error
+	Craw(ctx context.Context, source string) error
 }
 
 type DateCrawApplication struct {
@@ -21,18 +21,26 @@ func NewDateCrawApplication() DateCrawApplicationI {
 	}
 }
 
-func (impl *DateCrawApplication) Craw(ctx context.Context) error {
-	//go func() {
-	err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
-	if err != nil {
-		klog.CtxErrorf(ctx, "craw article, types is rss, err: %v", err)
+func (impl *DateCrawApplication) Craw(ctx context.Context, source string) error {
+	if source == "rss" {
+		err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
+		if err != nil {
+			klog.CtxErrorf(ctx, "craw article, types is rss, err: %v", err)
+		}
+	} else if source == "craw" {
+		err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
+		if err != nil {
+			klog.CtxErrorf(ctx, "craw article, types is craw, err: %v", err)
+		}
+	} else {
+		err := impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeRss)
+		if err != nil {
+			klog.CtxErrorf(ctx, "craw article, types is rss, err: %v", err)
+		}
+		err = impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
+		if err != nil {
+			klog.CtxErrorf(ctx, "craw article, types is craw, err: %v", err)
+		}
 	}
-	//}()
-	//go func() {
-	err = impl.dataCrawSvc.CrawArticle(ctx, site.SiteTypeCraw)
-	if err != nil {
-		klog.CtxErrorf(ctx, "craw article, types is craw, err: %v", err)
-	}
-	//}()
 	return nil
 }

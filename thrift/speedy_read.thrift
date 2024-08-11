@@ -227,7 +227,9 @@ struct SearchSymbolResponse {
     1: list<Symbol> SymbolList
 }
 
-
+struct CrawDataRequest {
+    1: optional string Source
+}
 
 service SpeedyRead {
     Response echo(1: Request req)
@@ -248,4 +250,6 @@ service SpeedyRead {
     Response importSymbol(1: Request req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)
     SearchSymbolResponse SearchSymbol(1: SearchSymbolRequest req)
+    // craw data
+    Response CrawData(1: CrawDataRequest req)
 }

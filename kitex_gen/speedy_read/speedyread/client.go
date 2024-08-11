@@ -25,6 +25,7 @@ type Client interface {
 	ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest, callOptions ...callopt.Option) (r *speedy_read.SymbolListResponse, err error)
 	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.SearchSymbolResponse, err error)
+	CrawData(ctx context.Context, req *speedy_read.CrawDataRequest, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -124,4 +125,9 @@ func (p *kSpeedyReadClient) GetSymbolList(ctx context.Context, req *speedy_read.
 func (p *kSpeedyReadClient) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.SearchSymbolResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.SearchSymbol(ctx, req)
+}
+
+func (p *kSpeedyReadClient) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest, callOptions ...callopt.Option) (r *speedy_read.Response, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CrawData(ctx, req)
 }
