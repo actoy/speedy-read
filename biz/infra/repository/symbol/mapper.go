@@ -7,12 +7,17 @@ func CovertPO(symbolDO *symbol.Symbol) *Symbol {
 		return nil
 	}
 	return &Symbol{
-		ID:        symbolDO.ID,
-		Symbol:    symbolDO.Symbol,
-		Company:   symbolDO.Company,
-		Source:    symbolDO.Source,
-		CreatedAt: symbolDO.CreatedAt,
-		UpdatedAt: symbolDO.UpdatedAt,
+		ID:              symbolDO.ID,
+		Symbol:          symbolDO.Symbol,
+		Company:         symbolDO.Company,
+		CompanyZH:       symbolDO.CompanyZH,
+		CompanyUrl:      symbolDO.CompanyUrl,
+		Description:     symbolDO.Description,
+		CompanyAddress:  symbolDO.CompanyAddress,
+		CompanyBusiness: symbolDO.CompanyBusiness,
+		Source:          symbolDO.Source,
+		CreatedAt:       symbolDO.CreatedAt,
+		UpdatedAt:       symbolDO.UpdatedAt,
 	}
 }
 
@@ -21,11 +26,16 @@ func CovertDO(symbolPO *Symbol) *symbol.Symbol {
 		return nil
 	}
 	return &symbol.Symbol{
-		ID:        symbolPO.ID,
-		Symbol:    symbolPO.Symbol,
-		Company:   symbolPO.Company,
-		Source:    symbolPO.Source,
-		CreatedAt: symbolPO.CreatedAt,
-		UpdatedAt: symbolPO.UpdatedAt,
+		ID:              symbolPO.ID,
+		Symbol:          symbolPO.Symbol,
+		Company:         symbolPO.Company,
+		CompanyZH:       symbolPO.CompanyZH,
+		CompanyUrl:      symbolPO.CompanyUrl,
+		Description:     symbolPO.Description,
+		CompanyAddress:  symbolPO.CompanyAddress,
+		CompanyBusiness: symbolPO.CompanyBusiness,
+		Source:          symbolPO.Source,
+		CreatedAt:       symbolPO.CreatedAt,
+		UpdatedAt:       symbolPO.UpdatedAt,
 	}
 }

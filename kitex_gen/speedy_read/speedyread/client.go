@@ -23,6 +23,7 @@ type Client interface {
 	ArticleSummaryCount(ctx context.Context, req *speedy_read.ArticleSummaryCountRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryCountResponse, err error)
 	ArticleSummaryDetail(ctx context.Context, req *speedy_read.ArticleSummaryDetailRequest, callOptions ...callopt.Option) (r *speedy_read.ArticleSummaryDetailResponse, err error)
 	ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
+	UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.UpdateSymbolResponse, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest, callOptions ...callopt.Option) (r *speedy_read.SymbolListResponse, err error)
 	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.SearchSymbolResponse, err error)
 	CrawData(ctx context.Context, req *speedy_read.CrawDataRequest, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
@@ -115,6 +116,11 @@ func (p *kSpeedyReadClient) ArticleSummaryDetail(ctx context.Context, req *speed
 func (p *kSpeedyReadClient) ImportSymbol(ctx context.Context, req *speedy_read.Request, callOptions ...callopt.Option) (r *speedy_read.Response, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.ImportSymbol(ctx, req)
+}
+
+func (p *kSpeedyReadClient) UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.UpdateSymbolResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateSymbol(ctx, req)
 }
 
 func (p *kSpeedyReadClient) GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest, callOptions ...callopt.Option) (r *speedy_read.SymbolListResponse, err error) {

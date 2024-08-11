@@ -14,6 +14,7 @@ type SymbolApplicationI interface {
 	Import(ctx context.Context) error
 	GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error)
 	SearchSymbolByKeyword(ctx context.Context, keyword string) ([]*symbol.Symbol, error)
+	UpdateSymbol(ctx context.Context, params UpdateSymbolParams) error
 }
 
 type SymbolApplication struct {
@@ -90,4 +91,41 @@ func (impl *SymbolApplication) GetSymbolList(ctx context.Context) ([]*symbol.Sym
 
 func (impl *SymbolApplication) SearchSymbolByKeyword(ctx context.Context, keyword string) ([]*symbol.Symbol, error) {
 	return impl.symbolRepo.SearchSymbol(ctx, keyword)
+}
+
+type UpdateSymbolParams struct {
+	ID              string
+	Company         *string
+	CompanyZH       *string
+	CompanyUrl      *string
+	CompanyAddress  *string
+	Description     *string
+	CompanyBusiness *string
+}
+
+func (impl *SymbolApplication) UpdateSymbol(ctx context.Context, params UpdateSymbolParams) error {
+	symbol, err := impl.symbolRepo.FindByID(ctx, params.ID)
+	if err != nil {
+		klog.CtxErrorf(ctx, "find by id error is %v", err)
+		return err
+	}
+	if params.Company != nil {
+		symbol.Company = *params.Company
+	}
+	if params.CompanyZH != nil {
+		symbol.CompanyZH = *params.CompanyZH
+	}
+	if params.CompanyUrl != nil {
+		symbol.CompanyUrl = *params.CompanyUrl
+	}
+	if params.CompanyAddress != nil {
+		symbol.CompanyAddress = *params.CompanyAddress
+	}
+	if params.Description != nil {
+		symbol.Description = *params.Description
+	}
+	if params.CompanyBusiness != nil {
+		symbol.CompanyBusiness = *params.CompanyBusiness
+	}
+	return impl.symbolRepo.UpdateSymbol(ctx, symbol)
 }

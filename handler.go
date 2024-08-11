@@ -83,3 +83,8 @@ func (s *SpeedyReadImpl) SearchSymbol(ctx context.Context, req *speedy_read.Sear
 func (s *SpeedyReadImpl) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (resp *speedy_read.Response, err error) {
 	return rpc.NewDataCrawHandler().CrawData(ctx, req)
 }
+
+// UpdateSymbol implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (resp *speedy_read.UpdateSymbolResponse, err error) {
+	return rpc.NewSymbolHandler().UpdateSymbol(ctx, req)
+}

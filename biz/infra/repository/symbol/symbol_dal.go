@@ -29,6 +29,17 @@ func (dal *SymbolRepo) Save(ctx context.Context, symbolPO *Symbol) (int64, error
 	return symbolPO.ID, nil
 }
 
+func (dal *SymbolRepo) FindByID(ctx context.Context, ID string) (*Symbol, error) {
+	symbolPO := &Symbol{}
+	result := infra.DB.WithContext(ctx).First(&symbolPO, ID)
+	if result.Error == nil {
+		return symbolPO, nil
+	} else if result.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return nil, result.Error
+}
+
 func (dal *SymbolRepo) GetBySymbol(ctx context.Context, symbol string) (*Symbol, error) {
 	symbolPO := &Symbol{}
 	result := infra.DB.WithContext(ctx).Where("symbol = ?", symbol).First(&symbolPO)
@@ -63,4 +74,12 @@ func (dal *SymbolRepo) SearchSymbolByKeyWord(ctx context.Context, keyword string
 		return nil, nil
 	}
 	return nil, result.Error
+}
+
+func (dal *SymbolRepo) Update(ctx context.Context, symbolPO *Symbol) error {
+	result := infra.DB.WithContext(ctx).Save(symbolPO)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

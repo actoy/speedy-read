@@ -28,6 +28,7 @@ func main() {
 	//testGetSymbolList(client)
 	//testSearchSymbolList(client)
 	//testArticleSummaryCount(client)
+	//testUpdateSymbol(client)
 }
 
 func stringPtr(s string) *string {
@@ -253,6 +254,17 @@ func testArticleDetail(client speedyread.Client) {
 func testSearchSymbolList(client speedyread.Client) {
 	list, err := client.SearchSymbol(context.Background(), &speedy_read.SearchSymbolRequest{
 		KeyWord: "tesla",
+	})
+	if err != nil {
+		klog.Error(err)
+	}
+	fmt.Print(list)
+}
+
+func testUpdateSymbol(client speedyread.Client) {
+	list, err := client.UpdateSymbol(context.Background(), &speedy_read.UpdateSymbolRequest{
+		ID:        "1769215521942671360",
+		CompanyZH: stringPtr("特斯拉"),
 	})
 	if err != nil {
 		klog.Error(err)

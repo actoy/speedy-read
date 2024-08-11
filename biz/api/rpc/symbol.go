@@ -12,6 +12,7 @@ type SymbolHandlerI interface {
 	Import(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SymbolListResponse, err error)
 	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (resp *speedy_read.SearchSymbolResponse, err error)
+	UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (resp *speedy_read.UpdateSymbolResponse, err error)
 }
 
 type SymbolHandler struct {
@@ -59,5 +60,25 @@ func (s *SymbolHandler) SearchSymbol(ctx context.Context, req *speedy_read.Searc
 		symbolList = append(symbolList, conversion.SymbolDOToThrift(info))
 	}
 	resp.SymbolList = symbolList
+	return resp, nil
+}
+
+func (s *SymbolHandler) UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (resp *speedy_read.UpdateSymbolResponse, err error) {
+	resp = &speedy_read.UpdateSymbolResponse{
+		Success: false,
+	}
+	err = s.SymbolSvc.UpdateSymbol(ctx, app.UpdateSymbolParams{
+		ID:              req.GetID(),
+		Company:         req.Company,
+		CompanyZH:       req.CompanyZH,
+		CompanyUrl:      req.CompanyUrl,
+		CompanyAddress:  req.CompanyAddress,
+		CompanyBusiness: req.CompanyBusiness,
+	})
+	if err != nil {
+		klog.CtxErrorf(ctx, "update symbol err %v", err)
+		return resp, err
+	}
+	resp.Success = true
 	return resp, nil
 }

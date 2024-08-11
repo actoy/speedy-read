@@ -129,3 +129,9 @@ CREATE TABLE `symbols` (
      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update time',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='symbols 股票代码';
+
+alter table symbols add column `company_zh` varchar(512) NOT NULL DEFAULT '' COMMENT '公司中文名称' after `company`;
+alter table symbols add column `description` TEXT COMMENT '公司简介' after `company_zh`;
+alter table symbols add column `company_url` varchar(512) NOT NULL DEFAULT '' COMMENT '公司网址' after `description`;
+alter table symbols add column `company_address` varchar(1024) NOT NULL DEFAULT '' COMMENT '公司地址' after `company_url`;
+alter table symbols add column `company_business` TEXT COMMENT '公司业务' after `company_address`;

@@ -231,6 +231,20 @@ struct CrawDataRequest {
     1: optional string Source
 }
 
+struct UpdateSymbolRequest {
+    1: required string ID
+    2: optional string	Company
+    3: optional string	CompanyZH
+    4: optional string	CompanyUrl
+    5: optional string	CompanyAddress
+    6: optional string	Description
+    7: optional string	CompanyBusiness
+}
+
+struct UpdateSymbolResponse{
+    1: required bool Success
+}
+
 service SpeedyRead {
     Response echo(1: Request req)
     // site
@@ -248,6 +262,7 @@ service SpeedyRead {
     ArticleSummaryDetailResponse ArticleSummaryDetail(1: ArticleSummaryDetailRequest req) //
     // import symbol
     Response importSymbol(1: Request req)
+    UpdateSymbolResponse UpdateSymbol(1: UpdateSymbolRequest req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)
     SearchSymbolResponse SearchSymbol(1: SearchSymbolRequest req)
     // craw data

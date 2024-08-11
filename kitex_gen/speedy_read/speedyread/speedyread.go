@@ -31,6 +31,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"ArticleSummaryCount":   kitex.NewMethodInfo(articleSummaryCountHandler, newSpeedyReadArticleSummaryCountArgs, newSpeedyReadArticleSummaryCountResult, false),
 		"ArticleSummaryDetail":  kitex.NewMethodInfo(articleSummaryDetailHandler, newSpeedyReadArticleSummaryDetailArgs, newSpeedyReadArticleSummaryDetailResult, false),
 		"importSymbol":          kitex.NewMethodInfo(importSymbolHandler, newSpeedyReadImportSymbolArgs, newSpeedyReadImportSymbolResult, false),
+		"UpdateSymbol":          kitex.NewMethodInfo(updateSymbolHandler, newSpeedyReadUpdateSymbolArgs, newSpeedyReadUpdateSymbolResult, false),
 		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
 		"SearchSymbol":          kitex.NewMethodInfo(searchSymbolHandler, newSpeedyReadSearchSymbolArgs, newSpeedyReadSearchSymbolResult, false),
 		"CrawData":              kitex.NewMethodInfo(crawDataHandler, newSpeedyReadCrawDataArgs, newSpeedyReadCrawDataResult, false),
@@ -266,6 +267,24 @@ func newSpeedyReadImportSymbolResult() interface{} {
 	return speedy_read.NewSpeedyReadImportSymbolResult()
 }
 
+func updateSymbolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadUpdateSymbolArgs)
+	realResult := result.(*speedy_read.SpeedyReadUpdateSymbolResult)
+	success, err := handler.(speedy_read.SpeedyRead).UpdateSymbol(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadUpdateSymbolArgs() interface{} {
+	return speedy_read.NewSpeedyReadUpdateSymbolArgs()
+}
+
+func newSpeedyReadUpdateSymbolResult() interface{} {
+	return speedy_read.NewSpeedyReadUpdateSymbolResult()
+}
+
 func getSymbolListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*speedy_read.SpeedyReadGetSymbolListArgs)
 	realResult := result.(*speedy_read.SpeedyReadGetSymbolListResult)
@@ -445,6 +464,16 @@ func (p *kClient) ImportSymbol(ctx context.Context, req *speedy_read.Request) (r
 	_args.Req = req
 	var _result speedy_read.SpeedyReadImportSymbolResult
 	if err = p.c.Call(ctx, "importSymbol", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (r *speedy_read.UpdateSymbolResponse, err error) {
+	var _args speedy_read.SpeedyReadUpdateSymbolArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadUpdateSymbolResult
+	if err = p.c.Call(ctx, "UpdateSymbol", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
