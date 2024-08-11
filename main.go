@@ -10,10 +10,11 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
+	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 )
 
 func main() {
-	//logInit()
+	logInit()
 	// init infra
 	infra.Init()
 	addr, _ := net.ResolveTCPAddr("tcp", "127.0.0.1:3000")
@@ -25,6 +26,8 @@ func main() {
 }
 
 func logInit() {
+	klog.SetLogger(kitexlogrus.NewLogger())
+	klog.SetLevel(klog.LevelInfo)
 	f, err := os.OpenFile("./output.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
