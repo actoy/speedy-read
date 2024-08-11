@@ -21,13 +21,13 @@ func main() {
 	//testGetArticleList(client)
 	//testSaveArticleSummary(client)
 	//testArticleSummaryList(client)
-	//testEcho(client)
+	testEcho(client)
 	//testArticleCount(client)
 	//testArticleDetail(client)
 	//testImport(client)
 	//testGetSymbolList(client)
 	//testSearchSymbolList(client)
-	testArticleSummaryCount(client)
+	//testArticleSummaryCount(client)
 }
 
 func stringPtr(s string) *string {
@@ -185,10 +185,10 @@ func testArticleSummaryList(client speedyread.Client) {
 }
 
 func testEcho(client speedyread.Client) {
-	req := &speedy_read.Request{
-		Message: "message",
+	req := &speedy_read.CrawDataRequest{
+		Source: stringPtr("craw"),
 	}
-	resp, err := client.Echo(context.Background(), req)
+	resp, err := client.CrawData(context.Background(), req)
 	if err != nil {
 		klog.Error(err)
 	}
