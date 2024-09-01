@@ -10345,10 +10345,15 @@ func (p *SymbolListResponse) Field1DeepEqual(src []*Symbol) bool {
 }
 
 type Symbol struct {
-	ID      string `thrift:"ID,1,required" frugal:"1,required,string" json:"ID"`
-	Symbol  string `thrift:"Symbol,2,required" frugal:"2,required,string" json:"Symbol"`
-	Company string `thrift:"Company,3,required" frugal:"3,required,string" json:"Company"`
-	Source  string `thrift:"Source,4,required" frugal:"4,required,string" json:"Source"`
+	ID              string `thrift:"ID,1,required" frugal:"1,required,string" json:"ID"`
+	Symbol          string `thrift:"Symbol,2,required" frugal:"2,required,string" json:"Symbol"`
+	Company         string `thrift:"Company,3,required" frugal:"3,required,string" json:"Company"`
+	Source          string `thrift:"Source,4,required" frugal:"4,required,string" json:"Source"`
+	CompanyZH       string `thrift:"CompanyZH,5,required" frugal:"5,required,string" json:"CompanyZH"`
+	CompanyUrl      string `thrift:"CompanyUrl,6,required" frugal:"6,required,string" json:"CompanyUrl"`
+	CompanyAddress  string `thrift:"CompanyAddress,7,required" frugal:"7,required,string" json:"CompanyAddress"`
+	Description     string `thrift:"Description,8,required" frugal:"8,required,string" json:"Description"`
+	CompanyBusiness string `thrift:"CompanyBusiness,9,required" frugal:"9,required,string" json:"CompanyBusiness"`
 }
 
 func NewSymbol() *Symbol {
@@ -10374,6 +10379,26 @@ func (p *Symbol) GetCompany() (v string) {
 func (p *Symbol) GetSource() (v string) {
 	return p.Source
 }
+
+func (p *Symbol) GetCompanyZH() (v string) {
+	return p.CompanyZH
+}
+
+func (p *Symbol) GetCompanyUrl() (v string) {
+	return p.CompanyUrl
+}
+
+func (p *Symbol) GetCompanyAddress() (v string) {
+	return p.CompanyAddress
+}
+
+func (p *Symbol) GetDescription() (v string) {
+	return p.Description
+}
+
+func (p *Symbol) GetCompanyBusiness() (v string) {
+	return p.CompanyBusiness
+}
 func (p *Symbol) SetID(val string) {
 	p.ID = val
 }
@@ -10386,12 +10411,32 @@ func (p *Symbol) SetCompany(val string) {
 func (p *Symbol) SetSource(val string) {
 	p.Source = val
 }
+func (p *Symbol) SetCompanyZH(val string) {
+	p.CompanyZH = val
+}
+func (p *Symbol) SetCompanyUrl(val string) {
+	p.CompanyUrl = val
+}
+func (p *Symbol) SetCompanyAddress(val string) {
+	p.CompanyAddress = val
+}
+func (p *Symbol) SetDescription(val string) {
+	p.Description = val
+}
+func (p *Symbol) SetCompanyBusiness(val string) {
+	p.CompanyBusiness = val
+}
 
 var fieldIDToName_Symbol = map[int16]string{
 	1: "ID",
 	2: "Symbol",
 	3: "Company",
 	4: "Source",
+	5: "CompanyZH",
+	6: "CompanyUrl",
+	7: "CompanyAddress",
+	8: "Description",
+	9: "CompanyBusiness",
 }
 
 func (p *Symbol) Read(iprot thrift.TProtocol) (err error) {
@@ -10402,6 +10447,11 @@ func (p *Symbol) Read(iprot thrift.TProtocol) (err error) {
 	var issetSymbol bool = false
 	var issetCompany bool = false
 	var issetSource bool = false
+	var issetCompanyZH bool = false
+	var issetCompanyUrl bool = false
+	var issetCompanyAddress bool = false
+	var issetDescription bool = false
+	var issetCompanyBusiness bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -10453,6 +10503,51 @@ func (p *Symbol) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyZH = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyUrl = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyAddress = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetDescription = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyBusiness = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -10483,6 +10578,31 @@ func (p *Symbol) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetSource {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyZH {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyUrl {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyAddress {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetDescription {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyBusiness {
+		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -10539,6 +10659,51 @@ func (p *Symbol) ReadField4(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
+func (p *Symbol) ReadField5(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.CompanyZH = v
+	}
+	return nil
+}
+func (p *Symbol) ReadField6(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.CompanyUrl = v
+	}
+	return nil
+}
+func (p *Symbol) ReadField7(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.CompanyAddress = v
+	}
+	return nil
+}
+func (p *Symbol) ReadField8(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Description = v
+	}
+	return nil
+}
+func (p *Symbol) ReadField9(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.CompanyBusiness = v
+	}
+	return nil
+}
 
 func (p *Symbol) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -10560,6 +10725,26 @@ func (p *Symbol) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
+			goto WriteFieldError
+		}
+		if err = p.writeField7(oprot); err != nil {
+			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -10648,6 +10833,91 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
+func (p *Symbol) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CompanyZH", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CompanyZH); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *Symbol) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CompanyUrl", thrift.STRING, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CompanyUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
+func (p *Symbol) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CompanyAddress", thrift.STRING, 7); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CompanyAddress); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *Symbol) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Description", thrift.STRING, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Description); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *Symbol) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("CompanyBusiness", thrift.STRING, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.CompanyBusiness); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
 func (p *Symbol) String() string {
 	if p == nil {
 		return "<nil>"
@@ -10672,6 +10942,21 @@ func (p *Symbol) DeepEqual(ano *Symbol) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.Source) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.CompanyZH) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.CompanyUrl) {
+		return false
+	}
+	if !p.Field7DeepEqual(ano.CompanyAddress) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.Description) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.CompanyBusiness) {
 		return false
 	}
 	return true
@@ -10701,6 +10986,41 @@ func (p *Symbol) Field3DeepEqual(src string) bool {
 func (p *Symbol) Field4DeepEqual(src string) bool {
 
 	if strings.Compare(p.Source, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Symbol) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.CompanyZH, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Symbol) Field6DeepEqual(src string) bool {
+
+	if strings.Compare(p.CompanyUrl, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Symbol) Field7DeepEqual(src string) bool {
+
+	if strings.Compare(p.CompanyAddress, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Symbol) Field8DeepEqual(src string) bool {
+
+	if strings.Compare(p.Description, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Symbol) Field9DeepEqual(src string) bool {
+
+	if strings.Compare(p.CompanyBusiness, src) != 0 {
 		return false
 	}
 	return true

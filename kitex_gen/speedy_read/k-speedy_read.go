@@ -8498,6 +8498,11 @@ func (p *Symbol) FastRead(buf []byte) (int, error) {
 	var issetSymbol bool = false
 	var issetCompany bool = false
 	var issetSource bool = false
+	var issetCompanyZH bool = false
+	var issetCompanyUrl bool = false
+	var issetCompanyAddress bool = false
+	var issetDescription bool = false
+	var issetCompanyBusiness bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -8574,6 +8579,81 @@ func (p *Symbol) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField5(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyZH = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyUrl = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 7:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField7(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyAddress = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField8(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetDescription = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 9:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField9(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetCompanyBusiness = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -8611,6 +8691,31 @@ func (p *Symbol) FastRead(buf []byte) (int, error) {
 
 	if !issetSource {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyZH {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyUrl {
+		fieldId = 6
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyAddress {
+		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetDescription {
+		fieldId = 8
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetCompanyBusiness {
+		fieldId = 9
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -8686,6 +8791,76 @@ func (p *Symbol) FastReadField4(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *Symbol) FastReadField5(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.CompanyZH = v
+
+	}
+	return offset, nil
+}
+
+func (p *Symbol) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.CompanyUrl = v
+
+	}
+	return offset, nil
+}
+
+func (p *Symbol) FastReadField7(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.CompanyAddress = v
+
+	}
+	return offset, nil
+}
+
+func (p *Symbol) FastReadField8(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.Description = v
+
+	}
+	return offset, nil
+}
+
+func (p *Symbol) FastReadField9(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.CompanyBusiness = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *Symbol) FastWrite(buf []byte) int {
 	return 0
@@ -8699,6 +8874,11 @@ func (p *Symbol) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) 
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
+		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
+		offset += p.fastWriteField7(buf[offset:], binaryWriter)
+		offset += p.fastWriteField8(buf[offset:], binaryWriter)
+		offset += p.fastWriteField9(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -8713,6 +8893,11 @@ func (p *Symbol) BLength() int {
 		l += p.field2Length()
 		l += p.field3Length()
 		l += p.field4Length()
+		l += p.field5Length()
+		l += p.field6Length()
+		l += p.field7Length()
+		l += p.field8Length()
+		l += p.field9Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -8755,6 +8940,51 @@ func (p *Symbol) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter) 
 	return offset
 }
 
+func (p *Symbol) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "CompanyZH", thrift.STRING, 5)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.CompanyZH)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Symbol) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "CompanyUrl", thrift.STRING, 6)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.CompanyUrl)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Symbol) fastWriteField7(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "CompanyAddress", thrift.STRING, 7)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.CompanyAddress)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Symbol) fastWriteField8(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Description", thrift.STRING, 8)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Description)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Symbol) fastWriteField9(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "CompanyBusiness", thrift.STRING, 9)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.CompanyBusiness)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *Symbol) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("ID", thrift.STRING, 1)
@@ -8786,6 +9016,51 @@ func (p *Symbol) field4Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Source", thrift.STRING, 4)
 	l += bthrift.Binary.StringLengthNocopy(p.Source)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Symbol) field5Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("CompanyZH", thrift.STRING, 5)
+	l += bthrift.Binary.StringLengthNocopy(p.CompanyZH)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Symbol) field6Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("CompanyUrl", thrift.STRING, 6)
+	l += bthrift.Binary.StringLengthNocopy(p.CompanyUrl)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Symbol) field7Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("CompanyAddress", thrift.STRING, 7)
+	l += bthrift.Binary.StringLengthNocopy(p.CompanyAddress)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Symbol) field8Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("Description", thrift.STRING, 8)
+	l += bthrift.Binary.StringLengthNocopy(p.Description)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Symbol) field9Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("CompanyBusiness", thrift.STRING, 9)
+	l += bthrift.Binary.StringLengthNocopy(p.CompanyBusiness)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

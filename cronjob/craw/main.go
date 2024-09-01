@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/kitex_gen/speedy_read"
 	"speedy/read/kitex_gen/speedy_read/speedyread"
+
+	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 func main() {
@@ -14,10 +15,11 @@ func main() {
 	if err != nil {
 		klog.Error(err)
 	}
-	req := &speedy_read.Request{
-		Message: "message",
+	source := ""
+	req := &speedy_read.CrawDataRequest{
+		Source: &source,
 	}
-	resp, err := client.Echo(context.Background(), req)
+	resp, err := client.CrawData(context.Background(), req)
 	if err != nil {
 		klog.Error(err)
 	}

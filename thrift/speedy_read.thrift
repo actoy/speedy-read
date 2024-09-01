@@ -217,6 +217,11 @@ struct Symbol {
     2: required string Symbol
     3: required string Company
     4: required string Source
+    5: required string CompanyZH
+    6: required string CompanyUrl
+    7: required string CompanyAddress
+    8: required string Description
+    9: required string CompanyBusiness
 }
 
 struct SearchSymbolRequest {

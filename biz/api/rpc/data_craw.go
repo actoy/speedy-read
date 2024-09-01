@@ -28,6 +28,6 @@ func (s *DataCrawHandler) Echo(ctx context.Context, req *speedy_read.Request) (r
 }
 
 func (s *DataCrawHandler) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest) (resp *speedy_read.Response, err error) {
-	s.crawSvc.Craw(ctx, req.GetSource())
+	go s.crawSvc.Craw(ctx, req.GetSource())
 	return &speedy_read.Response{Message: "success"}, nil
 }

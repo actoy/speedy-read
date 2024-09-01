@@ -106,9 +106,14 @@ func ConvertSummaryOutlineStringToDO(outlineStrings []string) []*article_summary
 
 func SymbolDOToThrift(symbolDO *symbol.Symbol) *speedy_read.Symbol {
 	return &speedy_read.Symbol{
-		ID:      utils.Int64ToString(symbolDO.ID),
-		Symbol:  symbolDO.Symbol,
-		Company: symbolDO.Company,
-		Source:  symbolDO.Source,
+		ID:              utils.Int64ToString(symbolDO.ID),
+		Symbol:          symbolDO.Symbol,
+		Company:         symbolDO.Company,
+		Source:          symbolDO.Source,
+		CompanyZH:       symbolDO.CompanyZH,
+		CompanyUrl:      symbolDO.CompanyUrl,
+		CompanyAddress:  symbolDO.CompanyAddress,
+		Description:     symbolDO.Description,
+		CompanyBusiness: symbolDO.CompanyBusiness,
 	}
 }
