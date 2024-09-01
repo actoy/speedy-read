@@ -2,10 +2,11 @@ package rpc
 
 import (
 	"context"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/app"
 	"speedy/read/biz/conversion"
 	"speedy/read/kitex_gen/speedy_read"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type SymbolHandlerI interface {
@@ -74,6 +75,7 @@ func (s *SymbolHandler) UpdateSymbol(ctx context.Context, req *speedy_read.Updat
 		CompanyUrl:      req.CompanyUrl,
 		CompanyAddress:  req.CompanyAddress,
 		CompanyBusiness: req.CompanyBusiness,
+		Description:     req.Description,
 	})
 	if err != nil {
 		klog.CtxErrorf(ctx, "update symbol err %v", err)
