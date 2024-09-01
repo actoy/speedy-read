@@ -88,3 +88,8 @@ func (s *SpeedyReadImpl) CrawData(ctx context.Context, req *speedy_read.CrawData
 func (s *SpeedyReadImpl) UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (resp *speedy_read.UpdateSymbolResponse, err error) {
 	return rpc.NewSymbolHandler().UpdateSymbol(ctx, req)
 }
+
+// GetSymbol implements the SpeedyReadImpl interface.
+func (s *SpeedyReadImpl) GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest) (resp *speedy_read.GetSybmolResponse, err error) {
+	return rpc.NewSymbolHandler().GetSymbol(ctx, req)
+}

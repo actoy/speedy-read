@@ -3,8 +3,9 @@ package app
 import (
 	"context"
 	"encoding/csv"
-	"github.com/cloudwego/kitex/pkg/klog"
 	"os"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"speedy/read/biz/domain/aggregates/symbol"
 	symbolInfra "speedy/read/biz/infra/repository/symbol"
@@ -15,6 +16,8 @@ type SymbolApplicationI interface {
 	GetSymbolList(ctx context.Context) ([]*symbol.Symbol, error)
 	SearchSymbolByKeyword(ctx context.Context, keyword string) ([]*symbol.Symbol, error)
 	UpdateSymbol(ctx context.Context, params UpdateSymbolParams) error
+	GetSymbolByID(ctx context.Context, id string) (*symbol.Symbol, error)
+	GetBySymbol(ctx context.Context, symbolTag string) (*symbol.Symbol, error)
 }
 
 type SymbolApplication struct {
@@ -128,4 +131,12 @@ func (impl *SymbolApplication) UpdateSymbol(ctx context.Context, params UpdateSy
 		symbol.CompanyBusiness = *params.CompanyBusiness
 	}
 	return impl.symbolRepo.UpdateSymbol(ctx, symbol)
+}
+
+func (impl *SymbolApplication) GetSymbolByID(ctx context.Context, id string) (*symbol.Symbol, error) {
+	return impl.symbolRepo.FindByID(ctx, id)
+}
+
+func (impl *SymbolApplication) GetBySymbol(ctx context.Context, symbolTag string) (*symbol.Symbol, error) {
+	return impl.symbolRepo.GetBySymbol(ctx, symbolTag)
 }

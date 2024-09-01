@@ -212,6 +212,15 @@ struct SymbolListResponse {
   1: required list<Symbol> Symbol
 }
 
+struct GetSymbolRequest {
+    1: optional string ID
+    2: optional string SymbolTag
+}
+
+struct GetSybmolResponse {
+    1: required Symbol Symbol
+}
+
 struct Symbol {
     1: required string ID
     2: required string Symbol
@@ -270,6 +279,7 @@ service SpeedyRead {
     UpdateSymbolResponse UpdateSymbol(1: UpdateSymbolRequest req)
     SymbolListResponse GetSymbolList(1: SymbolListRequest req)
     SearchSymbolResponse SearchSymbol(1: SearchSymbolRequest req)
+    GetSybmolResponse GetSymbol(1: GetSymbolRequest req)
     // craw data
     Response CrawData(1: CrawDataRequest req)
 }

@@ -10344,6 +10344,434 @@ func (p *SymbolListResponse) Field1DeepEqual(src []*Symbol) bool {
 	return true
 }
 
+type GetSymbolRequest struct {
+	ID        *string `thrift:"ID,1,optional" frugal:"1,optional,string" json:"ID,omitempty"`
+	SymbolTag *string `thrift:"SymbolTag,2,optional" frugal:"2,optional,string" json:"SymbolTag,omitempty"`
+}
+
+func NewGetSymbolRequest() *GetSymbolRequest {
+	return &GetSymbolRequest{}
+}
+
+func (p *GetSymbolRequest) InitDefault() {
+	*p = GetSymbolRequest{}
+}
+
+var GetSymbolRequest_ID_DEFAULT string
+
+func (p *GetSymbolRequest) GetID() (v string) {
+	if !p.IsSetID() {
+		return GetSymbolRequest_ID_DEFAULT
+	}
+	return *p.ID
+}
+
+var GetSymbolRequest_SymbolTag_DEFAULT string
+
+func (p *GetSymbolRequest) GetSymbolTag() (v string) {
+	if !p.IsSetSymbolTag() {
+		return GetSymbolRequest_SymbolTag_DEFAULT
+	}
+	return *p.SymbolTag
+}
+func (p *GetSymbolRequest) SetID(val *string) {
+	p.ID = val
+}
+func (p *GetSymbolRequest) SetSymbolTag(val *string) {
+	p.SymbolTag = val
+}
+
+var fieldIDToName_GetSymbolRequest = map[int16]string{
+	1: "ID",
+	2: "SymbolTag",
+}
+
+func (p *GetSymbolRequest) IsSetID() bool {
+	return p.ID != nil
+}
+
+func (p *GetSymbolRequest) IsSetSymbolTag() bool {
+	return p.SymbolTag != nil
+}
+
+func (p *GetSymbolRequest) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetSymbolRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *GetSymbolRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ID = &v
+	}
+	return nil
+}
+func (p *GetSymbolRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.SymbolTag = &v
+	}
+	return nil
+}
+
+func (p *GetSymbolRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetSymbolRequest"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *GetSymbolRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if p.IsSetID() {
+		if err = oprot.WriteFieldBegin("ID", thrift.STRING, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.ID); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetSymbolRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSymbolTag() {
+		if err = oprot.WriteFieldBegin("SymbolTag", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.SymbolTag); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *GetSymbolRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("GetSymbolRequest(%+v)", *p)
+
+}
+
+func (p *GetSymbolRequest) DeepEqual(ano *GetSymbolRequest) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.ID) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.SymbolTag) {
+		return false
+	}
+	return true
+}
+
+func (p *GetSymbolRequest) Field1DeepEqual(src *string) bool {
+
+	if p.ID == src {
+		return true
+	} else if p.ID == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.ID, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *GetSymbolRequest) Field2DeepEqual(src *string) bool {
+
+	if p.SymbolTag == src {
+		return true
+	} else if p.SymbolTag == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.SymbolTag, *src) != 0 {
+		return false
+	}
+	return true
+}
+
+type GetSybmolResponse struct {
+	Symbol *Symbol `thrift:"Symbol,1,required" frugal:"1,required,Symbol" json:"Symbol"`
+}
+
+func NewGetSybmolResponse() *GetSybmolResponse {
+	return &GetSybmolResponse{}
+}
+
+func (p *GetSybmolResponse) InitDefault() {
+	*p = GetSybmolResponse{}
+}
+
+var GetSybmolResponse_Symbol_DEFAULT *Symbol
+
+func (p *GetSybmolResponse) GetSymbol() (v *Symbol) {
+	if !p.IsSetSymbol() {
+		return GetSybmolResponse_Symbol_DEFAULT
+	}
+	return p.Symbol
+}
+func (p *GetSybmolResponse) SetSymbol(val *Symbol) {
+	p.Symbol = val
+}
+
+var fieldIDToName_GetSybmolResponse = map[int16]string{
+	1: "Symbol",
+}
+
+func (p *GetSybmolResponse) IsSetSymbol() bool {
+	return p.Symbol != nil
+}
+
+func (p *GetSybmolResponse) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetSymbol bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetSymbol = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetSymbol {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetSybmolResponse[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetSybmolResponse[fieldId]))
+}
+
+func (p *GetSybmolResponse) ReadField1(iprot thrift.TProtocol) error {
+	p.Symbol = NewSymbol()
+	if err := p.Symbol.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *GetSybmolResponse) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetSybmolResponse"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *GetSybmolResponse) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Symbol", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Symbol.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GetSybmolResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("GetSybmolResponse(%+v)", *p)
+
+}
+
+func (p *GetSybmolResponse) DeepEqual(ano *GetSybmolResponse) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Symbol) {
+		return false
+	}
+	return true
+}
+
+func (p *GetSybmolResponse) Field1DeepEqual(src *Symbol) bool {
+
+	if !p.Symbol.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
 type Symbol struct {
 	ID              string `thrift:"ID,1,required" frugal:"1,required,string" json:"ID"`
 	Symbol          string `thrift:"Symbol,2,required" frugal:"2,required,string" json:"Symbol"`
@@ -12369,6 +12797,8 @@ type SpeedyRead interface {
 
 	SearchSymbol(ctx context.Context, req *SearchSymbolRequest) (r *SearchSymbolResponse, err error)
 
+	GetSymbol(ctx context.Context, req *GetSymbolRequest) (r *GetSybmolResponse, err error)
+
 	CrawData(ctx context.Context, req *CrawDataRequest) (r *Response, err error)
 }
 
@@ -12533,6 +12963,15 @@ func (p *SpeedyReadClient) SearchSymbol(ctx context.Context, req *SearchSymbolRe
 	}
 	return _result.GetSuccess(), nil
 }
+func (p *SpeedyReadClient) GetSymbol(ctx context.Context, req *GetSymbolRequest) (r *GetSybmolResponse, err error) {
+	var _args SpeedyReadGetSymbolArgs
+	_args.Req = req
+	var _result SpeedyReadGetSymbolResult
+	if err = p.Client_().Call(ctx, "GetSymbol", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
 func (p *SpeedyReadClient) CrawData(ctx context.Context, req *CrawDataRequest) (r *Response, err error) {
 	var _args SpeedyReadCrawDataArgs
 	_args.Req = req
@@ -12578,6 +13017,7 @@ func NewSpeedyReadProcessor(handler SpeedyRead) *SpeedyReadProcessor {
 	self.AddToProcessorMap("UpdateSymbol", &speedyReadProcessorUpdateSymbol{handler: handler})
 	self.AddToProcessorMap("GetSymbolList", &speedyReadProcessorGetSymbolList{handler: handler})
 	self.AddToProcessorMap("SearchSymbol", &speedyReadProcessorSearchSymbol{handler: handler})
+	self.AddToProcessorMap("GetSymbol", &speedyReadProcessorGetSymbol{handler: handler})
 	self.AddToProcessorMap("CrawData", &speedyReadProcessorCrawData{handler: handler})
 	return self
 }
@@ -13302,6 +13742,54 @@ func (p *speedyReadProcessorSearchSymbol) Process(ctx context.Context, seqId int
 		result.Success = retval
 	}
 	if err2 = oprot.WriteMessageBegin("SearchSymbol", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(ctx); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type speedyReadProcessorGetSymbol struct {
+	handler SpeedyRead
+}
+
+func (p *speedyReadProcessorGetSymbol) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := SpeedyReadGetSymbolArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("GetSymbol", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	var err2 error
+	result := SpeedyReadGetSymbolResult{}
+	var retval *GetSybmolResponse
+	if retval, err2 = p.handler.GetSymbol(ctx, args.Req); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetSymbol: "+err2.Error())
+		oprot.WriteMessageBegin("GetSymbol", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return true, err2
+	} else {
+		result.Success = retval
+	}
+	if err2 = oprot.WriteMessageBegin("GetSymbol", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -18460,6 +18948,346 @@ func (p *SpeedyReadSearchSymbolResult) DeepEqual(ano *SpeedyReadSearchSymbolResu
 }
 
 func (p *SpeedyReadSearchSymbolResult) Field0DeepEqual(src *SearchSymbolResponse) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SpeedyReadGetSymbolArgs struct {
+	Req *GetSymbolRequest `thrift:"req,1" frugal:"1,default,GetSymbolRequest" json:"req"`
+}
+
+func NewSpeedyReadGetSymbolArgs() *SpeedyReadGetSymbolArgs {
+	return &SpeedyReadGetSymbolArgs{}
+}
+
+func (p *SpeedyReadGetSymbolArgs) InitDefault() {
+	*p = SpeedyReadGetSymbolArgs{}
+}
+
+var SpeedyReadGetSymbolArgs_Req_DEFAULT *GetSymbolRequest
+
+func (p *SpeedyReadGetSymbolArgs) GetReq() (v *GetSymbolRequest) {
+	if !p.IsSetReq() {
+		return SpeedyReadGetSymbolArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *SpeedyReadGetSymbolArgs) SetReq(val *GetSymbolRequest) {
+	p.Req = val
+}
+
+var fieldIDToName_SpeedyReadGetSymbolArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *SpeedyReadGetSymbolArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *SpeedyReadGetSymbolArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SpeedyReadGetSymbolArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolArgs) ReadField1(iprot thrift.TProtocol) error {
+	p.Req = NewGetSymbolRequest()
+	if err := p.Req.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SpeedyReadGetSymbolArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetSymbol_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SpeedyReadGetSymbolArgs(%+v)", *p)
+
+}
+
+func (p *SpeedyReadGetSymbolArgs) DeepEqual(ano *SpeedyReadGetSymbolArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *SpeedyReadGetSymbolArgs) Field1DeepEqual(src *GetSymbolRequest) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SpeedyReadGetSymbolResult struct {
+	Success *GetSybmolResponse `thrift:"success,0,optional" frugal:"0,optional,GetSybmolResponse" json:"success,omitempty"`
+}
+
+func NewSpeedyReadGetSymbolResult() *SpeedyReadGetSymbolResult {
+	return &SpeedyReadGetSymbolResult{}
+}
+
+func (p *SpeedyReadGetSymbolResult) InitDefault() {
+	*p = SpeedyReadGetSymbolResult{}
+}
+
+var SpeedyReadGetSymbolResult_Success_DEFAULT *GetSybmolResponse
+
+func (p *SpeedyReadGetSymbolResult) GetSuccess() (v *GetSybmolResponse) {
+	if !p.IsSetSuccess() {
+		return SpeedyReadGetSymbolResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *SpeedyReadGetSymbolResult) SetSuccess(x interface{}) {
+	p.Success = x.(*GetSybmolResponse)
+}
+
+var fieldIDToName_SpeedyReadGetSymbolResult = map[int16]string{
+	0: "success",
+}
+
+func (p *SpeedyReadGetSymbolResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *SpeedyReadGetSymbolResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SpeedyReadGetSymbolResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolResult) ReadField0(iprot thrift.TProtocol) error {
+	p.Success = NewGetSybmolResponse()
+	if err := p.Success.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SpeedyReadGetSymbolResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("GetSymbol_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *SpeedyReadGetSymbolResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SpeedyReadGetSymbolResult(%+v)", *p)
+
+}
+
+func (p *SpeedyReadGetSymbolResult) DeepEqual(ano *SpeedyReadGetSymbolResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *SpeedyReadGetSymbolResult) Field0DeepEqual(src *GetSybmolResponse) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

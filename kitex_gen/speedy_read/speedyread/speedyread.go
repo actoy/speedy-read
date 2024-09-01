@@ -34,6 +34,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"UpdateSymbol":          kitex.NewMethodInfo(updateSymbolHandler, newSpeedyReadUpdateSymbolArgs, newSpeedyReadUpdateSymbolResult, false),
 		"GetSymbolList":         kitex.NewMethodInfo(getSymbolListHandler, newSpeedyReadGetSymbolListArgs, newSpeedyReadGetSymbolListResult, false),
 		"SearchSymbol":          kitex.NewMethodInfo(searchSymbolHandler, newSpeedyReadSearchSymbolArgs, newSpeedyReadSearchSymbolResult, false),
+		"GetSymbol":             kitex.NewMethodInfo(getSymbolHandler, newSpeedyReadGetSymbolArgs, newSpeedyReadGetSymbolResult, false),
 		"CrawData":              kitex.NewMethodInfo(crawDataHandler, newSpeedyReadCrawDataArgs, newSpeedyReadCrawDataResult, false),
 	}
 	extra := map[string]interface{}{
@@ -321,6 +322,24 @@ func newSpeedyReadSearchSymbolResult() interface{} {
 	return speedy_read.NewSpeedyReadSearchSymbolResult()
 }
 
+func getSymbolHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*speedy_read.SpeedyReadGetSymbolArgs)
+	realResult := result.(*speedy_read.SpeedyReadGetSymbolResult)
+	success, err := handler.(speedy_read.SpeedyRead).GetSymbol(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSpeedyReadGetSymbolArgs() interface{} {
+	return speedy_read.NewSpeedyReadGetSymbolArgs()
+}
+
+func newSpeedyReadGetSymbolResult() interface{} {
+	return speedy_read.NewSpeedyReadGetSymbolResult()
+}
+
 func crawDataHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*speedy_read.SpeedyReadCrawDataArgs)
 	realResult := result.(*speedy_read.SpeedyReadCrawDataResult)
@@ -494,6 +513,16 @@ func (p *kClient) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbo
 	_args.Req = req
 	var _result speedy_read.SpeedyReadSearchSymbolResult
 	if err = p.c.Call(ctx, "SearchSymbol", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest) (r *speedy_read.GetSybmolResponse, err error) {
+	var _args speedy_read.SpeedyReadGetSymbolArgs
+	_args.Req = req
+	var _result speedy_read.SpeedyReadGetSymbolResult
+	if err = p.c.Call(ctx, "GetSymbol", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -14,6 +14,7 @@ type SymbolHandlerI interface {
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest) (resp *speedy_read.SymbolListResponse, err error)
 	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest) (resp *speedy_read.SearchSymbolResponse, err error)
 	UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest) (resp *speedy_read.UpdateSymbolResponse, err error)
+	GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest) (resp *speedy_read.GetSybmolResponse, err error)
 }
 
 type SymbolHandler struct {
@@ -82,5 +83,25 @@ func (s *SymbolHandler) UpdateSymbol(ctx context.Context, req *speedy_read.Updat
 		return resp, err
 	}
 	resp.Success = true
+	return resp, nil
+}
+
+func (s *SymbolHandler) GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest) (resp *speedy_read.GetSybmolResponse, err error) {
+	resp = &speedy_read.GetSybmolResponse{}
+	if req.GetID() != "" {
+		info, err := s.SymbolSvc.GetSymbolByID(ctx, req.GetID())
+		if err != nil {
+			klog.CtxErrorf(ctx, "import symbol err %v", err)
+			return resp, err
+		}
+		resp.Symbol = conversion.SymbolDOToThrift(info)
+	} else if req.GetSymbolTag() != "" {
+		info, err := s.SymbolSvc.GetBySymbol(ctx, req.GetSymbolTag())
+		if err != nil {
+			klog.CtxErrorf(ctx, "import symbol err %v", err)
+			return resp, err
+		}
+		resp.Symbol = conversion.SymbolDOToThrift(info)
+	}
 	return resp, nil
 }

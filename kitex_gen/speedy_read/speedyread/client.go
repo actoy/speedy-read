@@ -26,6 +26,7 @@ type Client interface {
 	UpdateSymbol(ctx context.Context, req *speedy_read.UpdateSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.UpdateSymbolResponse, err error)
 	GetSymbolList(ctx context.Context, req *speedy_read.SymbolListRequest, callOptions ...callopt.Option) (r *speedy_read.SymbolListResponse, err error)
 	SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.SearchSymbolResponse, err error)
+	GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.GetSybmolResponse, err error)
 	CrawData(ctx context.Context, req *speedy_read.CrawDataRequest, callOptions ...callopt.Option) (r *speedy_read.Response, err error)
 }
 
@@ -131,6 +132,11 @@ func (p *kSpeedyReadClient) GetSymbolList(ctx context.Context, req *speedy_read.
 func (p *kSpeedyReadClient) SearchSymbol(ctx context.Context, req *speedy_read.SearchSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.SearchSymbolResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.SearchSymbol(ctx, req)
+}
+
+func (p *kSpeedyReadClient) GetSymbol(ctx context.Context, req *speedy_read.GetSymbolRequest, callOptions ...callopt.Option) (r *speedy_read.GetSybmolResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetSymbol(ctx, req)
 }
 
 func (p *kSpeedyReadClient) CrawData(ctx context.Context, req *speedy_read.CrawDataRequest, callOptions ...callopt.Option) (r *speedy_read.Response, err error) {
