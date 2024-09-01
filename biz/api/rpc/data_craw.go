@@ -23,7 +23,7 @@ func NewDataCrawHandler() DateCrawI {
 
 // Echo implements the SpeedyReadImpl interface.
 func (s *DataCrawHandler) Echo(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
-	s.crawSvc.Craw(ctx, "")
+	go s.crawSvc.Craw(ctx, "")
 	return &speedy_read.Response{Message: req.Message}, nil
 }
 
