@@ -1,4 +1,1 @@
-./output
-./output.log
-!output
- ./output/bin/speedy-read
+output
