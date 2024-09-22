@@ -58,6 +58,9 @@ func (r *Repository) ArticleSummaryList(ctx context.Context, params article_summ
 	for _, summary := range summaryPOList {
 		summaryIDs = append(summaryIDs, summary.ID)
 	}
+	if len(summaryIDs) == 0 {
+		return []*article_summary.ArticleSummary{}, nil
+	}
 	summaryOutlineList, err := r.summaryOutlineRepo.GetOutlineListBySummaryID(ctx, summaryIDs)
 	if err != nil {
 		klog.CtxErrorf(ctx, "get summary outline error %v", err)
