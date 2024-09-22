@@ -140,3 +140,11 @@ func (r *Repository) SetStatusPass(ctx context.Context, articleID int64, content
 func (r *Repository) GetArticleCount(ctx context.Context, status int32, params article.ArticleListParams) (int32, error) {
 	return r.articleRepo.GetArticleCount(ctx, status, params)
 }
+
+func (r *Repository) GetArticleByUrl(ctx context.Context, url string) (*article.Article, error) {
+	articlePO, err := r.articleRepo.GetArticleByUrl(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	return ConvertArticlePOToDO(articlePO, nil, nil, []*ArticleMeta{}), nil
+}

@@ -30,6 +30,14 @@ func NewArticleService() ArticleServiceI {
 }
 
 func (impl *ArticleService) CreateArticle(ctx context.Context, articleDO *article.Article) (int64, error) {
+	existArticle, err := impl.articleRepo.GetArticleByUrl(ctx, articleDO.Url)
+	if err != nil {
+		return int64(0), err
+	}
+	if existArticle != nil {
+		return existArticle.ID, nil
+	}
+
 	// create author
 	author, err := impl.authorRepo.GetAuthorByAuthorName(ctx, articleDO.Author.AuthorName)
 	if err != nil {
