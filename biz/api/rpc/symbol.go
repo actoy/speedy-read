@@ -28,6 +28,7 @@ func NewSymbolHandler() SymbolHandlerI {
 }
 
 func (s *SymbolHandler) Import(ctx context.Context, req *speedy_read.Request) (resp *speedy_read.Response, err error) {
+	klog.CtxErrorf(ctx, "import symbol start")
 	err = s.SymbolSvc.Import(ctx)
 	if err != nil {
 		klog.CtxErrorf(ctx, "import symbol err %v", err)
