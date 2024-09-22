@@ -21,11 +21,13 @@ type ArticleSummaryHandlerI interface {
 
 type ArticleSummaryHandler struct {
 	articleSummarySvc app.ArticleSummaryApplicationI
+	symbolSvc         app.SymbolApplicationI
 }
 
 func NewArticleSummaryHandler() *ArticleSummaryHandler {
 	return &ArticleSummaryHandler{
 		articleSummarySvc: app.NewArticleSummaryApplication(),
+		symbolSvc:         app.NewSymbolApplication(),
 	}
 }
 
@@ -63,9 +65,36 @@ func (s *ArticleSummaryHandler) ArticleSummaryList(ctx context.Context, req *spe
 		klog.CtxErrorf(ctx, "get article summary list error %v", err)
 		return nil, err
 	}
+	symbols := make([]string, 0)
+	for _, summaryInfo := range articleSummaryList {
+		if summaryInfo.Article == nil {
+			continue
+		}
+		for _, articleMeta := range summaryInfo.Article.ArticleMetaList {
+			if articleMeta.MetaType != article.StockMeteType {
+				continue
+			}
+			symbols = append(symbols, articleMeta.MetaKey)
+		}
+	}
+	symbolMap, err := s.symbolSvc.GetSymbolMapInfo(ctx, symbols)
+	if err != nil {
+		klog.CtxErrorf(ctx, "get symbol error %v", err)
+		return nil, err
+	}
 	summaryList := make([]*speedy_read.ArticleSummary, 0)
 	for _, summaryInfo := range articleSummaryList {
-		summaryList = append(summaryList, conversion.ArticleSummaryDOToThrift(summaryInfo))
+		summary := conversion.ArticleSummaryDOToThrift(summaryInfo)
+		symbolList := make([]*speedy_read.Symbol, 0)
+		if summaryInfo.Article != nil {
+			for _, articleMeta := range summaryInfo.Article.ArticleMetaList {
+				if symbol, exist := symbolMap[articleMeta.MetaKey]; exist {
+					symbolList = append(symbolList, conversion.SymbolDOToThrift(symbol))
+				}
+			}
+		}
+		summary.SymbolList = symbolList
+		summaryList = append(summaryList, summary)
 	}
 	return &speedy_read.ArticleSummaryListResponse{
 		ArticleSummaryList: summaryList,

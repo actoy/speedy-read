@@ -44,6 +44,18 @@ func (r *Repository) GetBySymbol(ctx context.Context, symbol string) (*symbol.Sy
 	return CovertDO(po), nil
 }
 
+func (r *Repository) GetBySymbolList(ctx context.Context, symbolList []string) ([]*symbol.Symbol, error) {
+	poList, err := r.SymbolRepo.GetBySymbolList(ctx, symbolList)
+	if err != nil {
+		return nil, err
+	}
+	list := make([]*symbol.Symbol, 0)
+	for _, po := range poList {
+		list = append(list, CovertDO(po))
+	}
+	return list, nil
+}
+
 func (r *Repository) FindByID(ctx context.Context, ID string) (*symbol.Symbol, error) {
 	po, err := r.SymbolRepo.FindByID(ctx, ID)
 	if err != nil {

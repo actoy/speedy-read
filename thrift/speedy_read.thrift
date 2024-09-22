@@ -162,6 +162,7 @@ struct ArticleSummary {
     7: required list<string> tags
     8: required string CreatedAt
     9: required i32 TradingProposal  // 买卖建议
+    10: optional list<Symbol> SymbolList
 }
 
 struct ArticleContentSummary {

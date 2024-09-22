@@ -2,6 +2,7 @@ package symbol
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"speedy/read/biz/infra"
 	"time"
@@ -34,7 +35,7 @@ func (dal *SymbolRepo) FindByID(ctx context.Context, ID string) (*Symbol, error)
 	result := infra.DB.WithContext(ctx).First(&symbolPO, ID)
 	if result.Error == nil {
 		return symbolPO, nil
-	} else if result.Error == gorm.ErrRecordNotFound {
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	return nil, result.Error
@@ -45,7 +46,18 @@ func (dal *SymbolRepo) GetBySymbol(ctx context.Context, symbol string) (*Symbol,
 	result := infra.DB.WithContext(ctx).Where("symbol = ?", symbol).First(&symbolPO)
 	if result.Error == nil {
 		return symbolPO, nil
-	} else if result.Error == gorm.ErrRecordNotFound {
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	return nil, result.Error
+}
+
+func (dal *SymbolRepo) GetBySymbolList(ctx context.Context, symbolList []string) ([]*Symbol, error) {
+	list := make([]*Symbol, 0)
+	result := infra.DB.WithContext(ctx).Where("symbol in ?", symbolList).Find(&list)
+	if result.Error == nil {
+		return list, nil
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	return nil, result.Error
@@ -56,7 +68,7 @@ func (dal *SymbolRepo) GetList(ctx context.Context) ([]*Symbol, error) {
 	result := infra.DB.WithContext(ctx).Find(&list)
 	if result.Error == nil {
 		return list, nil
-	} else if result.Error == gorm.ErrRecordNotFound {
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	return nil, result.Error
@@ -70,7 +82,7 @@ func (dal *SymbolRepo) SearchSymbolByKeyWord(ctx context.Context, keyword string
 		Find(&list)
 	if result.Error == nil {
 		return list, nil
-	} else if result.Error == gorm.ErrRecordNotFound {
+	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	return nil, result.Error

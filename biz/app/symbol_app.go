@@ -18,6 +18,9 @@ type SymbolApplicationI interface {
 	UpdateSymbol(ctx context.Context, params UpdateSymbolParams) error
 	GetSymbolByID(ctx context.Context, id string) (*symbol.Symbol, error)
 	GetBySymbol(ctx context.Context, symbolTag string) (*symbol.Symbol, error)
+	// GetSymbolMapInfo
+	// response key is Symbol
+	GetSymbolMapInfo(ctx context.Context, symbols []string) (map[string]*symbol.Symbol, error)
 }
 
 type SymbolApplication struct {
@@ -107,30 +110,30 @@ type UpdateSymbolParams struct {
 }
 
 func (impl *SymbolApplication) UpdateSymbol(ctx context.Context, params UpdateSymbolParams) error {
-	symbol, err := impl.symbolRepo.FindByID(ctx, params.ID)
+	sym, err := impl.symbolRepo.FindByID(ctx, params.ID)
 	if err != nil {
 		klog.CtxErrorf(ctx, "find by id error is %v", err)
 		return err
 	}
 	if params.Company != nil {
-		symbol.Company = *params.Company
+		sym.Company = *params.Company
 	}
 	if params.CompanyZH != nil {
-		symbol.CompanyZH = *params.CompanyZH
+		sym.CompanyZH = *params.CompanyZH
 	}
 	if params.CompanyUrl != nil {
-		symbol.CompanyUrl = *params.CompanyUrl
+		sym.CompanyUrl = *params.CompanyUrl
 	}
 	if params.CompanyAddress != nil {
-		symbol.CompanyAddress = *params.CompanyAddress
+		sym.CompanyAddress = *params.CompanyAddress
 	}
 	if params.Description != nil {
-		symbol.Description = *params.Description
+		sym.Description = *params.Description
 	}
 	if params.CompanyBusiness != nil {
-		symbol.CompanyBusiness = *params.CompanyBusiness
+		sym.CompanyBusiness = *params.CompanyBusiness
 	}
-	return impl.symbolRepo.UpdateSymbol(ctx, symbol)
+	return impl.symbolRepo.UpdateSymbol(ctx, sym)
 }
 
 func (impl *SymbolApplication) GetSymbolByID(ctx context.Context, id string) (*symbol.Symbol, error) {
@@ -139,4 +142,17 @@ func (impl *SymbolApplication) GetSymbolByID(ctx context.Context, id string) (*s
 
 func (impl *SymbolApplication) GetBySymbol(ctx context.Context, symbolTag string) (*symbol.Symbol, error) {
 	return impl.symbolRepo.GetBySymbol(ctx, symbolTag)
+}
+
+func (impl *SymbolApplication) GetSymbolMapInfo(ctx context.Context, symbols []string) (map[string]*symbol.Symbol, error) {
+	symbolList, err := impl.symbolRepo.GetBySymbolList(ctx, symbols)
+	if err != nil {
+		klog.CtxErrorf(ctx, "get symbol list error is %v", err)
+		return nil, err
+	}
+	symbolMap := make(map[string]*symbol.Symbol)
+	for _, sym := range symbolList {
+		symbolMap[sym.Symbol] = sym
+	}
+	return symbolMap, nil
 }

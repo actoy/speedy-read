@@ -11,4 +11,5 @@ type SymbolRepo interface {
 	SearchSymbol(ctx context.Context, keyword string) ([]*Symbol, error)
 	FindByID(ctx context.Context, ID string) (*Symbol, error)
 	UpdateSymbol(ctx context.Context, symbolDO *Symbol) error
+	GetBySymbolList(ctx context.Context, symbolList []string) ([]*Symbol, error)
 }
