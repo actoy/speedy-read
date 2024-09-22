@@ -73,6 +73,9 @@ func (dal *ArticleRepo) GetArticleList(ctx context.Context, params article.Artic
 
 func (dal *ArticleRepo) GetArticleListByIDs(ctx context.Context, articleIDs []int64) ([]*Article, error) {
 	articleList := make([]*Article, 0)
+	if len(articleIDs) == 0 {
+		return articleList, nil
+	}
 	result := infra.DB.WithContext(ctx).Find(&articleList, articleIDs)
 	if result.Error == nil {
 		return articleList, nil
