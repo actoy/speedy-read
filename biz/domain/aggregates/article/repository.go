@@ -3,11 +3,13 @@ package article
 import "context"
 
 type ArticleListParams struct {
-	SymbolIdList []int64
-	SiteIdList   []int64
-	ArticleType  string
-	Limit        int32
-	OffSet       int32
+	SymbolIdList       []int64
+	SiteIdList         []int64
+	ArticleType        string
+	PublishAtStartDate string
+	PublishAtEndDate   string
+	Limit              int32
+	OffSet             int32
 }
 
 type ArticleRepo interface {

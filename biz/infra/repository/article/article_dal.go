@@ -59,6 +59,12 @@ func (dal *ArticleRepo) GetArticleList(ctx context.Context, params article.Artic
 	if len(params.SiteIdList) > 0 {
 		db = db.Where("source_site_id in ?", params.SiteIdList)
 	}
+	if len(params.PublishAtStartDate) > 0 {
+		db = db.Where("articles.publish_at >= ?", params.PublishAtStartDate)
+	}
+	if len(params.PublishAtEndDate) > 0 {
+		db = db.Where("articles.publish_at <= ?", params.PublishAtStartDate)
+	}
 	db = db.Limit(int(params.Limit)).
 		Offset(int(params.OffSet * params.Limit)).
 		Order("articles.publish_at desc").

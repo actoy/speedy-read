@@ -69,6 +69,8 @@ struct GetArticleListRequest {
     3: optional list<string> SiteIdList
     4: required i32 Limit
     5: required i32 Offset
+    6: optional string PublistAtStartDate
+    7: optional string PublistAtEndDate
 }
 
 struct GetArticleListResponse {

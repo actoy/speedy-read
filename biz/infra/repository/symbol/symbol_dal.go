@@ -79,6 +79,7 @@ func (dal *SymbolRepo) SearchSymbolByKeyWord(ctx context.Context, keyword string
 	result := infra.DB.WithContext(ctx).
 		Where("symbol like ?", "%"+keyword+"%").
 		Or("company like ?", "%"+keyword+"%").
+		Or("company_zh like ?", "%"+keyword+"%").
 		Find(&list)
 	if result.Error == nil {
 		return list, nil
