@@ -20,6 +20,11 @@ func main() {
 		panic(err)
 	}
 	defer f.Close()
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("main goroutine error")
+		}
+	}()
 	klog.SetOutput(f)
 
 	// init infra
