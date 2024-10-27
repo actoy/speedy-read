@@ -13,11 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudwego/kitex/pkg/klog"
 	"speedy/read/biz/domain/aggregates/article"
 	"speedy/read/biz/domain/aggregates/site"
 	"speedy/read/biz/domain/service/craw_data"
 	siteInfra "speedy/read/biz/infra/repository/site"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type DataCrawServiceI interface {
@@ -94,29 +95,9 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []
 		if len(parts) > 1 {
 			tmpSymbol = parts[0]
 		}
-		url := "https://seekingalpha.com/api/sa/combined/XXXX.xml"
-		url = strings.Replace(url, "XXXX", tmpSymbol, -1)
-		resp, httpErr := http.Get(url)
-		if httpErr != nil {
-			klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, httpErr)
-			return httpErr
-		}
-		if resp.StatusCode != http.StatusOK {
-			klog.CtxInfof(ctx, "url %s not exist", url)
+		data, err := impl.getSeekingAlphaInfo(ctx, tmpSymbol, siteDO)
+		if err != nil {
 			continue
-		}
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
-			return err
-		}
-		defer resp.Body.Close()
-
-		data := craw_data.SeekingAlpha{}
-		err = xml.Unmarshal(body, &data)
-		if err != nil {
-			fmt.Printf("error: %v", err)
-			return err
 		}
 		location, _ := time.LoadLocation("loc")
 		articleSvc := NewArticleService()
@@ -135,7 +116,7 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []
 				flagList := strings.Split(item.Guid, ":")
 				articleUrl = "https://seekingalpha.com/news/" + flagList[2]
 			}
-			id, err := articleSvc.CreateArticle(ctx, &article.Article{
+			_, err = articleSvc.CreateArticle(ctx, &article.Article{
 				Author: &article.Author{
 					AuthorName: item.AuthorName,
 				},
@@ -157,10 +138,38 @@ func (impl *DataCrawService) dealSeekingAlpha(ctx context.Context, symbolList []
 				klog.CtxErrorf(ctx, "create article error is %v", err)
 				continue
 			}
-			klog.CtxInfof(ctx, "create article success, id is %d", id)
+			// klog.CtxInfof(ctx, "create article success, id is %d", id)
 		}
 	}
 	return nil
+}
+
+func (impl *DataCrawService) getSeekingAlphaInfo(ctx context.Context, tmpSymbol string, siteDO *site.Site) (craw_data.SeekingAlpha, error) {
+	url := "https://seekingalpha.com/api/sa/combined/XXXX.xml"
+	url = strings.Replace(url, "XXXX", tmpSymbol, -1)
+	resp, httpErr := http.Get(url)
+	if httpErr != nil {
+		klog.CtxErrorf(ctx, "Error making HTTP request to %s: %v", siteDO.Url, httpErr)
+		return craw_data.SeekingAlpha{}, httpErr
+	}
+	if resp.StatusCode != http.StatusOK {
+		klog.CtxInfof(ctx, "url %s not exist", url)
+		return craw_data.SeekingAlpha{}, nil
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		klog.CtxErrorf(ctx, "Error reading response body from URL %s: %v", siteDO.Url, err)
+		return craw_data.SeekingAlpha{}, err
+	}
+	defer resp.Body.Close()
+
+	data := craw_data.SeekingAlpha{}
+	err = xml.Unmarshal(body, &data)
+	if err != nil {
+		fmt.Printf("error: %v", err)
+		return craw_data.SeekingAlpha{}, err
+	}
+	return data, nil
 }
 
 func (impl *DataCrawService) dealArticle4Craw(ctx context.Context, siteDO *site.Site) error {
